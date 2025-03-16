@@ -31,7 +31,7 @@ const Footer = () => {
       {/* Main Footer Content */}
       <div className="footer-content">
         <h2 className="footer-heading">🚀 Let's Work Together</h2>
-        <a href="mailto:your.email@example.com" className="contact-btn">
+        <a href="mailto:your.email@example.com" className="contact-btn3">
           Contact Me <FaEnvelope />
         </a>
       </div>

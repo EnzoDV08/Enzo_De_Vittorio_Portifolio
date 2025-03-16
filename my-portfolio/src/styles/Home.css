@@ -1,3 +1,18 @@
+/* GLOBAL RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+    font-family: 'Poppins', sans-serif;
+    color: white;
+  }
+
 /* ✅ Home Container */
 .home {
   text-align: center;
@@ -56,7 +71,7 @@
 .highlight {
   font-weight: bold;
   text-decoration: underline;
-  color: #6A5ACD;
+  color: #208be4;
   font-size: 2.2rem;
 }
 
@@ -156,7 +171,7 @@
   content: "";
   width: 80px;
   height: 3px;
-  background-color: #6e44ff;
+  background-color: #f5f111;
   display: block;
   margin: 12px auto 0;
   border-radius: 3px;
@@ -169,6 +184,7 @@
   gap: 40px;
   max-width: 1400px;
   margin: auto;
+  
 }
 
 /* ✅ Skill Box */
@@ -181,30 +197,31 @@
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   position: relative;
   border: 1px solid #333;
+ cursor: pointer;
 }
 
 .skill-box:hover {
   transform: translateY(-5px);
   box-shadow: 0px 10px 30px rgba(255, 255, 255, 0.08);
-  border-color: #6e44ff;
+  border-color: #fc156d;
 }
 
 /* ✅ Highlighted Skill Box */
 .skill-box.highlighted {
   background: #333;
   color: white;
-  border: 1px solid #b6ff00;
+  border: 1px solid #f5f111;
 }
 
 .skill-box.highlighted h3 {
-  color: #b6ff00;
+  color: #f5f111;
 }
 
 /* ✅ Skill Icon */
 .skill-icon {
   font-size: 3rem;
   margin-bottom: 15px;
-  color: #6e44ff;
+  color: #fc156d;
   display: block;
   transition: transform 0.2s ease-in-out;
 }
@@ -214,7 +231,7 @@
 }
 
 .highlighted .skill-icon {
-  color: #b6ff00;
+  color: #f5f111;
 }
 
 /* ✅ Skill Title */
@@ -252,7 +269,7 @@
 /* ✅ Modern Checkmark Icon */
 .check-icon {
   font-size: 1.5rem;
-  color: #6e44ff;
+  color: #fc156d;
 }
 
 /* ✅ Responsive Design */
@@ -326,7 +343,7 @@
   padding: 30px;
   border-radius: 20px;
   text-align: left;
-  
+  cursor: pointer;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   border: 1px solid #e0e0e0;
   display: flex;
@@ -342,6 +359,7 @@
 .project-item:hover {
   transform: translateY(-5px);
   box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.15);
+  border-color: #f51170;
 }
 
 /* ✅ Project Image */
@@ -478,7 +496,7 @@
   font-weight: bold;
   color: #fff;
   text-decoration: none;
-  background: linear-gradient(90deg, #6A5ACD, #b6ff00, #6e44ff, #1a1a1a, #0a0a0a);
+  background: linear-gradient(90deg, #fc156d, #208be4, #f5f111, #1a1a1a, #0a0a0a);
   background-size: 400% 400%;
   animation: colorCycle 5s infinite linear; /* ✅ Homepage-Themed Color Cycle */
   padding: 18px 40px;
@@ -501,8 +519,8 @@
 
 /* ✅ Solid Color on Hover */
 .view-all-btn:hover {
-  background: #b6ff00; /* ✅ Matches other hover states */
-  box-shadow: 0px 10px 25px rgba(182, 255, 0, 0.7);
+  background: #fc156d; /* ✅ Matches other hover states */
+  box-shadow: 0px 10px 25px rgba(255, 0, 64, 0.7);
   transform: translateY(-3px) scale(1.05);
 }
 
@@ -526,7 +544,7 @@
 .view-all-btn:hover .arrow-box {
   transform: rotate(360deg) scale(1.2);
   background: #000;
-  color: #b6ff00;
+  color: #fc156d;
 }
 
 .arrow-icon{

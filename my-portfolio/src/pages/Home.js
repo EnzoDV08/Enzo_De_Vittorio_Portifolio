@@ -13,6 +13,8 @@ import mockup1 from "../assets/mockup1.png";
 import mockup2 from "../assets/Mockup2.jpg"; 
 import mockup3 from "../assets/Mockup3.avif"; 
 import mockup4 from "../assets/Mockup3.webp"; 
+import { Link } from "react-router-dom";
+
 
 // ✅ Animation Fix (No More Framer Motion Errors)
 const cardVariants = {
@@ -68,6 +70,7 @@ const Home = () => {
 
   return (
     <div className="home">
+      
       {/* ✅ Carousel Section */}
       <Carousel />
 
@@ -222,12 +225,12 @@ const Home = () => {
 
   {/* ✅ New Animated View All Button */}
   <div className="view-all-container">
-    <a href="/projects" className="view-all-btn">
-      <span className="view-text">View All Projects</span>
-      <span className="arrow-box">
-        <span className="arrow-icon">→</span>
-      </span>
-    </a>
+     <Link to="/projects" className="view-all-btn">
+            <span className="view-text">View All Projects</span>
+            <span className="arrow-box">
+              <span className="arrow-icon">→</span>
+            </span>
+          </Link>
   </div>
 </motion.div>
 
