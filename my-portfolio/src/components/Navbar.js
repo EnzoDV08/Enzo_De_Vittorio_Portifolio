@@ -12,10 +12,12 @@ function Navbar() {
         <li><Link to="/projects">Projects</Link></li>
         <li><Link to="/contact">Contact</Link></li>
       </ul>
-      <button className="contact-btn">Contact Me</button>
+      <button className="contact-btn1">Contact Me</button>
     </nav>
   );
 }
 
 export default Navbar;
+
+
 

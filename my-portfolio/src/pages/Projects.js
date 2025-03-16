@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import "../styles/global.css";
+import "../styles/Projects.css";
 
 const Projects = () => {
   return (

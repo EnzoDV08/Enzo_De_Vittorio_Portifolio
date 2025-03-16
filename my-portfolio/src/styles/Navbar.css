@@ -1,47 +1,100 @@
+/* ✅ Navbar Container */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 20px 50px;
-  background: transparent;
-  position: absolute;
+  background: transparent; /* ✅ Keeps background same */
+  position: fixed;
   width: 100%;
+  top: 0;
+  left: 0;
   z-index: 1000;
+  background: rgba(10, 10, 10, 0.9);
+  backdrop-filter: blur(10px);
 }
 
-.navbar .logo {
-  font-size: 24px;
+/* ✅ Logo Styling */
+.logo {
+  font-size: 28px;
   font-weight: bold;
   color: white;
+  letter-spacing: 1px;
+  transition: all 0.3s ease-in-out;
 }
 
+/* ✅ Logo Hover Effect */
+.logo:hover {
+  transform: scale(1.05);
+  color: #b6ff00;
+}
+
+/* ✅ Navigation Links */
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 25px;
 }
 
 .nav-links li {
-  display: inline;
+  display: inline-block;
+  position: relative;
 }
 
+/* ✅ NavLink Styling */
 .nav-links a {
   color: white;
   text-decoration: none;
   font-size: 18px;
   font-weight: 500;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding-bottom: 5px; /* ✅ Prevents shifting */
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.contact-btn {
+/* ✅ Underline Animation */
+.nav-links a::after {
+  content: "";
+  display: block;
+  height: 3px;
+  width: 0%;
+  background: #b6ff00;
+  position: absolute;
+  bottom: 0px; /* ✅ Fixes movement */
+  left: 50%;
+  transform: translateX(-50%);
+  transition: width 0.3s ease-in-out;
+}
+
+/* ✅ Hover Effect - Smooth Scaling */
+.nav-links a:hover {
+  color: #b6ff00;
+  transform: scale(1.05); /* ✅ Slightly bigger without shifting */
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* ✅ Contact Button */
+.contact-btn1 {
   background: #b6ff00;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 25px;
   font-size: 18px;
+  color: black;
   font-weight: bold;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 10px rgba(182, 255, 0, 0.4);
+  
 }
 
-.contact-btn:hover {
+/* ✅ Button Hover Effect */
+.contact-btn1:hover {
   background: #99cc00;
+  transform: scale(1.1);
+  box-shadow: 0px 6px 15px rgba(182, 255, 0, 0.6);
 }
