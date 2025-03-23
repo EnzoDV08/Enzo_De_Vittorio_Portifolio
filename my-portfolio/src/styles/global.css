@@ -1,59 +1,114 @@
 /* GLOBAL RESET */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  html, body {
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden; /* Prevents horizontal scrolling */
-    font-family: 'Poppins', sans-serif;
-    color: white;
-  }
-  
-  /* NAVBAR */
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 8%;
-    position: absolute;
-    width: 100%;
-    z-index: 1000;
-  }
-  
-  .navbar .logo {
-    font-size: 26px;
-    font-weight: bold;
-    color: white;
-  }
-  
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 30px;
-  }
-  
-  .nav-links a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: 500;
-  }
-  
-  .contact-btn {
-    background: #b6ff00;
-    border: none;
-    padding: 12px 24px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .contact-btn:hover {
-    background: #99cc00;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+  font-family: 'Poppins', sans-serif;
+  color: white;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 8%;
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+}
+
+.navbar .logo {
+  font-size: 26px;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.contact-btn {
+  background: #b6ff00;
+  border: none;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.contact-btn:hover {
+  background: #99cc00;
+}
+
+.breadcrumb-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 32px;
+  margin: 120px auto 40px; /* ⬅️ Increased top margin to push below navbar */
+  margin-left: 50px;
+  font-size: 1.05rem;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  max-width: max-content;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  position: relative;
+}
+
+/* Home link */
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2670a0;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.breadcrumb-link:hover {
+  color: #10476c;
+  transform: translateX(2px);
+}
+
+/* Separator arrow */
+.breadcrumb-separator {
+  font-size: 1rem;
+  color: #bbb;
+}
+
+/* Current page */
+.breadcrumb-active {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fc156d;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+/* Icons */
+.breadcrumb-icon {
+  font-size: 1.1rem;
+  opacity: 0.8;
+}

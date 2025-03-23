@@ -1,7 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaHome, FaChevronRight, FaFolderOpen } from "react-icons/fa";
 import "../styles/Projects.css";
 import mockup1 from "../assets/mockup1.png";
 import mockup2 from "../assets/Mockup2.jpg";
@@ -22,11 +20,6 @@ const projects = [
   { title: "Event Booking", description: "Ticket booking system.", techStack: ["React", "Firebase"], image: mockup2, github: "#" },
 ];
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0, transition: { duration: 1, ease: "easeOut" } },
-  hover: { scale: 1.05, transition: { duration: 0.4 } },
-};
 
 const Projects = () => {
   return (
@@ -36,41 +29,35 @@ const Projects = () => {
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 1 }}
     >
-      {/* ✅ Enhanced Breadcrumb Navigation */}
-      <motion.div 
-        className="breadcrumb-container"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <Link to="/" className="breadcrumb-link">
-          <FaHome className="breadcrumb-icon" />
-          Home
-        </Link>
-        <FaChevronRight className="breadcrumb-separator" />
-        <span className="breadcrumb-active">
-          <FaFolderOpen className="breadcrumb-icon" />
-          Projects
-        </span>
-      </motion.div>
+      
 
-      <h1>My Projects</h1>
-      <p>Here are some of my latest projects.</p>
+      <div className="projects-heading">
+  <h1>My Projects</h1>
+  <p>A showcase of the work I've crafted — from web apps to full platforms.</p>
+</div>
 
-      <div className="projects-wrapper">
-        {projects.map((project, index) => (
-          <motion.div key={index} className="project-item" variants={cardVariants} whileHover="hover">
+      <div className="projects-wrapper1">
+      {projects.map((project, index) => (
+ <motion.div
+ key={index}
+ className="project-item1"
+ initial={{ opacity: 0, y: 30 }} // Less distance = smoother entrance
+ whileInView={{ opacity: 1, y: 0 }}
+ viewport={{ once: true, amount: 0.2 }} // Triggers earlier (20% into view)
+ transition={{ duration: 0.9, ease: "easeInOut", delay: index * 0.08 }} // Slower + staggered
+ whileHover={{ scale: 1.04 }}
+>
             <div className="project-thumbnail">
               <img src={project.image} alt={project.title} />
             </div>
             <h3>{project.title}</h3>
             <p>{project.description}</p>
-            <div className="tech-list">
+            <div className="tech-list1">
               {project.techStack.map((tech, i) => (
-                <span key={i} className="tech-badge">{tech}</span>
+                <span key={i} className="tech-badge1">{tech}</span>
               ))}
             </div>
-            <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link">
+            <a href={project.github} target="_blank" rel="noopener noreferrer" className="project-link1">
               View Project <FaGithub />
             </a>
           </motion.div>
