@@ -6,6 +6,7 @@ import mockup1 from "../assets/mockup1.png";
 import mockup2 from "../assets/Mockup2.jpg";
 import mockup3 from "../assets/Mockup3.avif";
 import mockup4 from "../assets/Mockup3.webp";
+import { FaGithub } from "react-icons/fa";
 
 
 import {
@@ -56,11 +57,18 @@ const Skill = ({ Icon, name, level, subtitle }) => (
 );
 
 const projects = [
-  { title: "E-Commerce Website", description: "React & Node.js project.", image: mockup1 },
-  { title: "Portfolio Website", description: "Personal portfolio showcase.", image: mockup2 },
-  { title: "Jewelry Website", description: "Dynamic eCommerce site.", image: mockup3 },
-  { title: "Restaurant Website", description: "Local restaurant website.", image: mockup4 }
+  { title: "E-Commerce Website", description: "React & Node.js project.", image: mockup1, github: "#" },
+  { title: "Portfolio Website", description: "Personal portfolio showcase.", image: mockup2, github: "#" },
+  { title: "Jewelry Website", description: "Dynamic eCommerce site.", image: mockup3, github: "#" },
+  { title: "Restaurant Website", description: "Local restaurant website.", image: mockup4, github: "#" },
+  { title: "AI Chatbot", description: "Built an AI chatbot using NLP.", image: mockup1, github: "#" },
+  { title: "Fitness Tracker", description: "Mobile app for fitness tracking.", image: mockup2, github: "#" },
+  { title: "Blog CMS", description: "Content management system for bloggers.", image: mockup3, github: "#" },
+  { title: "Weather App", description: "Real-time weather forecast.", image: mockup4, github: "#" },
+  { title: "Finance Dashboard", description: "Data visualization dashboard.", image: mockup1, github: "#" },
+  { title: "Event Booking", description: "Ticket booking system.", image: mockup2, github: "#" },
 ];
+
 
 const About = () => {
   return (
@@ -94,6 +102,7 @@ const About = () => {
 
       <div className="stats-projects-wrapper">
   <div className="stats-columns">
+    <h2 className="section-title">Skills Overview</h2> 
    {/* Front-End and Back-End */}
    <div className="stats-wrapper">
         <div className="column">
@@ -134,21 +143,38 @@ const About = () => {
         </div>
       </div>
   </div>
-
-  <div className="mini-projects-column">
-    {projects.map((project, index) => (
-      <div className="mini-project-card" key={index}>
-        <div className="mini-thumbnail">
-          <img src={project.image} alt={project.title} />
-        </div>
-        <h4>{project.title}</h4>
-        <p>{project.description}</p>
+  <div className="vertical-line"></div> {/* ✅ Replace incorrect className */}
+<div className="tech-floating-wrapper"></div>
+<div className="mini-projects-column">
+  <h2 className="section-title1">Quick View</h2>
+  
+  <div className="mini-carousel">
+  <div className="carousel-track">
+  {[...projects, ...projects].map((project, index) => (
+    <div className="mini-project-card" key={index}>
+      <div className="mini-thumbnail">
+        <img src={project.image} alt={project.title} />
       </div>
-    ))}
+      <h4>{project.title}</h4>
+      <p>{project.description}</p>
+<a
+  href={project.github}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="github-link"
+>
+  <FaGithub /> View on GitHub
+</a>
+
+
+    </div>
+  ))}
+</div>
   </div>
 </div>
+</div>
 
-      <div className="about-section"></div>
+      
     </motion.div>
   );
 };
