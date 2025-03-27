@@ -7,7 +7,7 @@ import Breadcrumb from "./components/Breadcrumb"; // ✅ Import Breadcrumb
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Projects from "./pages/Projects";
-import "./styles/global.css";
+import "./styles/Global.css";
 
 function App() {
   const location = useLocation(); // ✅ Track current page
