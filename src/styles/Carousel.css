@@ -1,0 +1,76 @@
+/* ✅ Carousel Wrapper */
+.carousel-wrapper {
+    text-align: center;
+    margin-top: -90px; /* Proper spacing above the carousel */
+    padding: 20px 0;
+    margin-left: -670px;
+}
+
+/* ✅ Title Styling */
+.carousel-title {
+    font-size: 1.8rem; /* Smaller title */
+    font-weight: bold;
+    color: #fc156d;
+    margin-bottom: 90px; /* Spacing between title & carousel */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    display: flex; /* Use flexbox to align items */
+    align-items: center;
+    justify-content: center;
+    margin-left: -100px;
+}
+
+/* ✅ Underline Effect */
+.title-line {
+    width: 300px; /* Adjust width as needed */
+    height: 3px;
+    background: #fc156d;
+    margin-left: 10px; /* Space between title and underline */
+}
+
+/* ✅ Carousel Container */
+.carousel-container {
+    width: 42.5%;
+    overflow: hidden;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -95px;
+}
+
+/* ✅ Carousel */
+.carousel {
+    display: flex;
+    width: max-content;
+    gap: 20px;
+}
+
+/* ✅ Technology Item */
+.tech-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    padding: 20px;
+    min-width: 120px;
+    transition: transform 0.5s ease-in-out;
+    cursor: url('https://cur.cursors-4u.net/cursors/cur-13/cur1197.cur'), auto;
+}
+
+.tech-item span {
+    font-size: 1rem;
+    margin-top: 10px;
+    color: #ccc;
+}
+
+/* ✅ Hover Effect */
+.tech-item:hover {
+    transform: scale(1.2);
+}
+

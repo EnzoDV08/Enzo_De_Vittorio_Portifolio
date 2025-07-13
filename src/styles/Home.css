@@ -1,0 +1,552 @@
+/* GLOBAL RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+    font-family: 'Poppins', sans-serif;
+    color: white;
+  }
+
+/* ✅ Home Container */
+.home {
+  text-align: center;
+  padding: 120px 30px;
+  background: #fff;
+}
+
+/* ✅ Introduction Section */
+.intro-section {
+  max-width: 1000px;
+  margin: 80px auto 0;
+  font-size: 2rem;
+  color: #222;
+  font-family: "Poppins", sans-serif;
+  line-height: 1.8;
+  margin-top: 40px;
+  opacity: 0; /* ✅ Hidden initially */
+  transform: translateY(80px); /* ✅ More noticeable movement */
+  transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+}
+
+/* ✅ When the section is visible */
+.intro-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ✅ Wave Emoji */
+.wave {
+  font-size: 3rem;
+  display: inline-block;
+  animation: wave-animation 1s infinite alternate;
+  margin-right: 10px;
+}
+
+@keyframes wave-animation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(15deg); }
+}
+
+/* ✅ Bigger Title */
+.intro-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #000;
+}
+
+/* ✅ Divider */
+.divider {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0 15px;
+}
+
+/* ✅ Highlighted Text */
+.highlight {
+  font-weight: bold;
+  text-decoration: underline;
+  color: #208be4;
+  font-size: 2.2rem;
+}
+
+/* ✅ Social Media Section */
+.social-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60px;
+  text-align: center;
+  gap: 20px;
+  
+}
+
+/* ✅ "Follow Me" Text */
+.social-title {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #000;
+  margin-left: 290px;
+}
+
+/* ✅ Social Media Wrapper (For Icons & Text) */
+.social-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ✅ Social Icons */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* ✅ Social Media Circles */
+.social-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border: 2px solid black;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: black;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+
+/* ✅ Hover Effect */
+.social-circle:hover {
+  background: black;
+  color: white;
+}
+
+/* ✅ Left-Aligned Line */
+.social-line {
+  width: 400px;
+  height: 2px;
+  background-color: black;
+  margin-top: 45px;
+ 
+}
+
+.social-line1 {
+  width: 400px;
+  height: 2px;
+  background-color: black;
+  margin-top: 25px;
+}
+
+/* ✅ Skills Section */
+.skills-section {
+  text-align: center;
+  margin-top: 140px;
+  padding: 90px 40px;
+  background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+  border-radius: 20px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ✅ Title */
+.skills-title {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #ccc;
+  margin-bottom: 50px;
+  text-transform: uppercase;
+  position: relative;
+}
+
+.skills-title::after {
+  content: "";
+  width: 80px;
+  height: 3px;
+  background-color: #f5f111;
+  display: block;
+  margin: 12px auto 0;
+  border-radius: 3px;
+}
+
+/* ✅ Skills Grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 40px;
+  max-width: 1400px;
+  margin: auto;
+  
+}
+
+/* ✅ Skill Box */
+.skill-box {
+  background: #1a1a1a;
+  padding: 50px;
+  border-radius: 20px;
+  text-align: left;
+  box-shadow: 0px 6px 20px rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  position: relative;
+  border: 1px solid #333;
+ cursor: pointer;
+}
+
+.skill-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 30px rgba(255, 255, 255, 0.08);
+  border-color: #fc156d;
+}
+
+/* ✅ Highlighted Skill Box */
+.skill-box.highlighted {
+  background: #333;
+  color: white;
+  border: 1px solid #f5f111;
+}
+
+.skill-box.highlighted h3 {
+  color: #f5f111;
+}
+
+/* ✅ Skill Icon */
+.skill-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  color: #fc156d;
+  display: block;
+  transition: transform 0.2s ease-in-out;
+}
+
+.skill-box:hover .skill-icon {
+  transform: scale(1.1);
+}
+
+.highlighted .skill-icon {
+  color: #f5f111;
+}
+
+/* ✅ Skill Title */
+.skill-box h3 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ccc;
+  margin-bottom: 12px;
+}
+
+/* ✅ Skill Description */
+.skill-box p {
+  font-size: 1rem;
+  color: #aaa;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* ✅ Skill List */
+.skill-box ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.skill-box ul li {
+  font-size: 1rem;
+  color: #ccc;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ✅ Modern Checkmark Icon */
+.check-icon {
+  font-size: 1.5rem;
+  color: #fc156d;
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 1200px) {
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  .skill-box {
+    padding: 45px;
+  }
+
+  .skill-box h3 {
+    font-size: 1.6rem;
+  }
+
+  .skill-box p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .skills-title {
+    font-size: 2.5rem;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .skill-box {
+    padding: 40px;
+  }
+
+  .check-icon {
+    font-size: 1.3rem;
+  }
+}
+
+/* ✅ Projects Section */
+.projects-container {
+  text-align: center;
+  margin-top: 100px;
+  padding: 80px 20px;
+ 
+}
+
+/* ✅ Projects Title */
+.projects-heading {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #111;
+  margin-bottom: 60px;
+  text-transform: uppercase;
+}
+
+/* ✅ Projects Grid - Two Columns */
+.projects-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(500px, 1fr)); /* ✅ Two Equal Columns */
+  gap: 60px; /* ✅ Proper Spacing */
+  row-gap: 80px; /* ✅ Vertical space between rows */
+  max-width: 1300px;
+  margin: auto;
+  justify-content: center;
+}
+
+/* ✅ Project Card */
+.project-item {
+  background: #fff;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 600px;
+  height: 680px; /* ✅ Increased height */
+  background: #fff; /* ✅ White background */
+  overflow: hidden;
+}
+
+/* ✅ Hover Effect */
+.project-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.15);
+  border-color: #f51170;
+}
+
+/* ✅ Project Image */
+.project-thumbnail {
+  width: 100%;
+  height: 380px; /* ✅ Bigger image */
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f0f0f0; /* ✅ Light gray placeholder */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* ✅ Placeholder Styling */
+.image-placeholder {
+  font-size: 1.4rem;
+  color: #999;
+  text-align: center;
+}
+
+/* ✅ Project Title */
+.project-item h3 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #222;
+  margin-top: 20px;
+}
+
+/* ✅ Project Description */
+.project-item p {
+  font-size: 1.1rem;
+  color: #555;
+  margin: 15px 0;
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+/* ✅ Tech Stack Tags */
+.tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tech-badge {
+  background: #e0e0e0;
+  color: #333;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  text-transform: uppercase;
+}
+
+/* ✅ View Project Button */
+.project-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+  border: 2px solid #ddd;
+  padding: 12px 18px;
+  border-radius: 12px;
+  transition: all 0.3s ease-in-out;
+  width: fit-content;
+  margin: auto;
+}
+
+.project-link:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* ✅ Responsive Fixes */
+@media (max-width: 1200px) {
+  .projects-wrapper {
+    grid-template-columns: repeat(2, minmax(400px, 1fr));
+  }
+
+  .project-item {
+    max-width: 550px;
+    height: auto;
+  }
+}
+
+@media (max-width: 1024px) {
+  .projects-wrapper {
+    grid-template-columns: repeat(1, minmax(300px, 1fr)); /* ✅ One Column for Mobile */
+  }
+}
+
+@media (max-width: 768px) {
+  .projects-heading {
+    font-size: 2.5rem;
+  }
+
+  .projects-wrapper {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .project-item {
+    padding-bottom: 20px;
+  }
+
+  .tech-badge {
+    font-size: 0.85rem;
+  }
+}
+
+/* ✅ View All Projects Container */
+.view-all-container {
+  text-align: center;
+  margin-top: 80px;
+}
+
+/* ✅ Cool Animated Button */
+.view-all-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(90deg, #fc156d, #208be4, #f5f111, #1a1a1a, #0a0a0a);
+  background-size: 400% 400%;
+  animation: colorCycle 5s infinite linear; /* ✅ Homepage-Themed Color Cycle */
+  padding: 18px 40px;
+  border-radius: 50px;
+  transition: all 0.5s ease-in-out;
+  width: fit-content;
+  margin: auto;
+  gap: 12px;
+  box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ✅ Keyframe Animation for Color Cycle */
+@keyframes colorCycle {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ✅ Solid Color on Hover */
+.view-all-btn:hover {
+  background: #fc156d; /* ✅ Matches other hover states */
+  box-shadow: 0px 10px 25px rgba(255, 0, 64, 0.7);
+  transform: translateY(-3px) scale(1.05);
+}
+
+/* ✅ Arrow Container */
+.arrow-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  background: #fff;
+  color: #000;
+  border-radius: 50%;
+  transition: all 0.3s ease-in-out;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+/* ✅ Rotating & Expanding Arrow Effect */
+.view-all-btn:hover .arrow-box {
+  transform: rotate(360deg) scale(1.2);
+  background: #000;
+  color: #fc156d;
+}
+
+.arrow-icon{
+  margin-top: -1px;
+}

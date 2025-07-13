@@ -1,0 +1,137 @@
+/* ✅ Footer Container */
+.footer {
+    position: relative;
+    width: 100%;
+    background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    color: #fff;
+    text-align: center;
+    padding: 120px 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* ✅ Footer Main Heading */
+  .footer-heading {
+    font-size: 3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* ✅ Contact Button */
+  .contact-btn3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: black;
+    background: linear-gradient(90deg, #f5f111, #f5f111, #f5f111);
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 2;
+    gap: 10px;
+  }
+  
+  /* ✅ Contact Button Hover */
+  .contact-btn3:hover {
+    background: #f51170;
+    box-shadow: 0px 12px 30px rgb(235, 15, 63);
+    transform: translateY(-3px);
+  }
+  
+  /* ✅ Floating Tech Logos */
+  .tech-logo {
+    position: absolute;
+    font-size: 2.5rem;
+    opacity: 0.6;
+    animation: floatAnimation 10s infinite alternate ease-in-out;
+    z-index: 1;
+  }
+  
+  /* ✅ Individual Logo Colors */
+  .react { color: #61dafb; top: 20%; left: 10%; animation-duration: 6s; }
+  .node { color: #68a063; top: 30%; right: 15%; animation-duration: 7s; }
+  .html { color: #e34c26; top: 40%; left: 5%; animation-duration: 8s; }
+  .css { color: #1572b6; bottom: 30%; right: 10%; animation-duration: 9s; }
+  .js { color: #f7df1e; bottom: 20%; left: 15%; animation-duration: 7s; }
+  .python { color: #3776ab; top: 15%; right: 20%; animation-duration: 6s; }
+  .firebase { color: #ffcb2b; bottom: 15%; left: 20%; animation-duration: 8s; }
+  .mongodb { color: #47a248; top: 50%; right: 30%; animation-duration: 10s; }
+  .postgresql { color: #336791; bottom: 10%; right: 5%; animation-duration: 6s; }
+  .docker { color: #0db7ed; top: 5%; left: 50%; animation-duration: 7s; }
+  .database { color: #ff5733; bottom: 5%; right: 50%; animation-duration: 9s; }
+  
+  /* ✅ Floating Animation */
+  @keyframes floatAnimation {
+    0% { transform: translateY(0px) rotate(0deg); }
+    100% { transform: translateY(-20px) rotate(10deg); }
+  }
+  
+  /* ✅ Responsive Design */
+  @media (max-width: 768px) {
+    .footer-heading {
+      font-size: 2.5rem;
+    }
+  
+    .contact-btn {
+      font-size: 1.3rem;
+      padding: 12px 25px;
+    }
+  
+    .tech-logo {
+      font-size: 2rem;
+    }
+  }
+  
+  /* ✅ Contact Button Click Animation */
+.contact-btn3.contact-animate {
+  transform: scale(0.95) rotate(-2deg);
+  background: #34a853; /* Gmail green for smooth transition effect */
+  box-shadow: 0px 12px 30px rgba(52, 168, 83, 0.5);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ✅ Gmail Animation Overlay */
+.gmail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10,10,10,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* ✅ Optional: Typewriter cursor blink effect */
+.contact-btn3 {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.contact-btn3::after {
+  content: "";
+  display: inline-block;
+  width: 0.1em;
+  height: 1em;
+  background: black;
+  margin-left: 5px;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
+}
