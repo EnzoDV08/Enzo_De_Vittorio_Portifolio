@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -68,3 +69,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+=======
+# Enzo_De_Vittorio_Portifolio
+Welcome to my personal portfolio website! 🚀 This site showcases my skills, projects, and experiences in User Experience Design and Software Development. Built with a sleek and modern design, the portfolio reflects my expertise in frontend and backend technologies, along with my passion for crafting seamless digital experiences.
+>>>>>>> 2ba37d6f31c825782c6d2b062f22638b3c7fa083
