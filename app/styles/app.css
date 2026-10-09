@@ -1,1 +1,291 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* ---------------------------------------------------------------------------
+   Fonts — self-hosted, Latin subset only, woff2 only.
+   The Geist and Instrument Serif italic files are preloaded in root.tsx.
+--------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Geist";
+  src: url("../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2")
+    format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../../node_modules/@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2")
+    format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------------------
+   Design tokens
+--------------------------------------------------------------------------- */
+@theme {
+  /* Only our palette — Tailwind's default colours are switched off on purpose. */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-ink: #0b0b0d;
+  --color-ink-2: #131316;
+  --color-ink-3: #1c1c21;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.16);
+  --color-paper: #eeebe4;
+  --color-muted: #8c8a86;
+  --color-accent: #ff4f1a;
+  --color-accent-ink: #0b0b0d;
+  --color-signal: #3ddc84; /* availability dot only */
+
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+
+  /* Fluid type scale */
+  --text-xs: clamp(0.6875rem, 0.66rem + 0.12vw, 0.8125rem);
+  --text-xs--line-height: 1.4;
+  --text-sm: clamp(0.8125rem, 0.79rem + 0.12vw, 0.9375rem);
+  --text-sm--line-height: 1.5;
+  --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --text-base--line-height: 1.6;
+  --text-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  --text-lg--line-height: 1.45;
+  --text-xl: clamp(1.375rem, 1.2rem + 0.9vw, 2rem);
+  --text-xl--line-height: 1.2;
+  --text-2xl: clamp(1.75rem, 1.4rem + 1.8vw, 3rem);
+  --text-2xl--line-height: 1.05;
+  --text-3xl: clamp(2.25rem, 1.6rem + 3.4vw, 4.75rem);
+  --text-3xl--line-height: 0.95;
+  --text-4xl: clamp(2.75rem, 1.7rem + 5.6vw, 7.5rem);
+  --text-4xl--line-height: 0.92;
+  --text-display: clamp(3rem, 11vw, 11rem);
+  --text-display--line-height: 0.9;
+
+  --tracking-display: -0.04em;
+  --tracking-tight: -0.02em;
+  --tracking-meta: 0.08em;
+
+  --leading-display: 0.9;
+
+  --radius-sm: 2px;
+
+  --breakpoint-3xl: 120rem;
+
+  --container-site: 1600px;
+  --container-prose: 65ch;
+
+  --spacing-gutter: clamp(1rem, 3vw, 2.5rem);
+  --spacing-section: clamp(6rem, 14vw, 12rem);
+
+  /* GSAP-equivalent curves for CSS transitions */
+  --ease-out-3: cubic-bezier(0.215, 0.61, 0.355, 1); /* power3.out */
+  --ease-expo-in-out: cubic-bezier(0.87, 0, 0.13, 1); /* expo.inOut */
+
+  --animate-marquee: marquee var(--marquee-duration, 60s) linear infinite;
+  --animate-rise: rise 1s var(--ease-out-3) both;
+
+  @keyframes marquee {
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+  @keyframes rise {
+    from {
+      transform: translate3d(0, 105%, 0);
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scrollbar-color: var(--color-ink-3) var(--color-ink);
+  }
+
+  body {
+    min-height: 100svh;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  a,
+  button,
+  summary,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Utilities that Tailwind can't express cleanly
+--------------------------------------------------------------------------- */
+@utility meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  letter-spacing: var(--tracking-meta);
+  text-transform: uppercase;
+  font-feature-settings: "ss01", "tnum";
+}
+
+@utility display {
+  font-family: var(--font-sans);
+  font-weight: 560;
+  letter-spacing: var(--tracking-display);
+  line-height: var(--leading-display);
+}
+
+@utility serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility grid-site {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--spacing-gutter);
+}
+
+/* Line mask for text reveals: children slide up from below the clip. */
+@utility line-mask {
+  display: block;
+  overflow: clip;
+  /* room for descenders and italic overhang without showing the line below */
+  padding-block: 0.06em;
+  margin-block: -0.06em;
+  padding-inline: 0.08em;
+  margin-inline: -0.08em;
+}
+
+/* ---------------------------------------------------------------------------
+   Film grain — static SVG noise, shifted in steps. Static on reduced motion.
+--------------------------------------------------------------------------- */
+.grain {
+  position: fixed;
+  inset: -10%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 0.9s steps(6) infinite;
+}
+
+@keyframes grain {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  20% {
+    transform: translate3d(-4%, 3%, 0);
+  }
+  40% {
+    transform: translate3d(3%, -5%, 0);
+  }
+  60% {
+    transform: translate3d(-6%, -2%, 0);
+  }
+  80% {
+    transform: translate3d(5%, 4%, 0);
+  }
+  100% {
+    transform: translate3d(-2%, 6%, 0);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion: nothing moves, nothing is hidden.
+--------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain {
+    animation: none;
+  }
+}
+
+/* Static grain for placeholders and media frames. */
+.grain-local {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
