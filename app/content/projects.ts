@@ -1,5 +1,5 @@
 import { todo } from "./todo";
-import type { Discipline, Project } from "./types";
+import type { Project } from "./types";
 
 /*
  * Single source of truth for every project on the site.
@@ -127,13 +127,28 @@ export const projects: Project[] = [
       "Honeybee Heroes hero section — “Adopt a Hive. Support something bigger.” beside king proteas and Mellie the bee",
     gallery: [
       {
-        src: "projects/honeybee-heroes/gallery-2.jpg",
+        src: "projects/honeybee-heroes/gallery-1.jpg",
         alt: "Section on the beekeepers who care for each hive, with training, local impact and future-skill cards",
         caption: CAPTURED,
       },
       {
+        src: "projects/honeybee-heroes/gallery-2.jpg",
+        alt: "“One landing starts the whole chain.” — a honey bee on a pink flower, with Mellie's speech bubble above",
+        caption: CAPTURED,
+      },
+      {
         src: "projects/honeybee-heroes/gallery-3.jpg",
-        alt: "“You meet your bees” section on stacked honeycomb cards, with a photo of beekeepers at the hives",
+        alt: "“Explore the honey bee up close.” — an interactive Cape honey bee card with a range map of Southern Africa",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/honeybee-heroes/gallery-4.jpg",
+        alt: "Adoption steps on stacked honeycomb cards: “Your hive is yours.” and “You follow the story.”",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/honeybee-heroes/gallery-5.jpg",
+        alt: "“You have met Mellie. Now go meet your hive.” — the closing call to action beside painted hive boxes",
         caption: CAPTURED,
       },
     ],
@@ -228,8 +243,23 @@ export const projects: Project[] = [
         caption: CAPTURED,
       },
       {
+        src: "projects/mpg-foundation/gallery-2.jpg",
+        alt: "“Choosing action over silence” — the foundation's story beside the MPG logo",
+        caption: CAPTURED,
+      },
+      {
         src: "projects/mpg-foundation/gallery-3.jpg",
-        alt: "Video feature on the Centurion waterfront restoration, above the latest-news section",
+        alt: "“Bringing the Centurion waterfront back to life.” — the first project, with a strip of photos",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/mpg-foundation/gallery-4.jpg",
+        alt: "“Get Involved.” — volunteer, donation, partnership and nomination panels",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/mpg-foundation/gallery-5.jpg",
+        alt: "“This city belongs to all of us.” — the closing statement on dark green",
         caption: CAPTURED,
       },
     ],
@@ -285,6 +315,11 @@ export const projects: Project[] = [
       {
         src: "projects/chronovoyage/gallery-1.jpg",
         alt: "“We did. And now, we're inviting you.” above fan-favourite destination cards: Milan 1495, Iwo Jima 1945, London 1969",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/chronovoyage/gallery-2.jpg",
+        alt: "Fan-favourite destinations and “Three steps to an accident”: pick a moment, book your seat, cross paths",
         caption: CAPTURED,
       },
       {
@@ -589,4 +624,4 @@ export function nextCaseStudy(slug: string): Project {
   return caseStudies[(i + 1) % caseStudies.length]!;
 }
 
-export const disciplines: Discipline[] = ["Development", "UX", "Interactive", "Campaign"];
+export { disciplines } from "./disciplines";

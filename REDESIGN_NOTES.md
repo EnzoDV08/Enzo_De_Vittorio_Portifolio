@@ -72,3 +72,24 @@ The brief lists no names for the group projects. RentalFinder and Sportify are c
 - **Focus**: after each client navigation, focus moves to `<main tabindex=-1>` so screen readers start at the new content. There's a skip link. The mobile menu sets `inert` on `main` and the footer, locks scroll (Lenis stop + `overflow: hidden`), closes on Esc, and returns focus to the toggle — unless a link inside it navigated, in which case the new page takes focus.
 - **Cursor**: fine pointers with motion allowed only. The native cursor stays everywhere except over `[data-cursor]` media, and only after the follower has mounted (`.has-cursor`), so a JS failure can never hide the cursor.
 - **Scroll reveals** (`RevealText`, `RevealMedia`) skip elements already on screen at hydration, which avoids a visible-hidden-visible flash. The hero uses CSS keyframes rather than JS (see Phase 5).
+
+## Phase 5 — Pages
+
+### Data flows through loaders, not the JS bundle
+
+The first full build shipped about **190 KB** of initial JS against a 130 KB budget. React 19 + React Router alone are a fixed ~107 KB. I made two structural changes:
+
+1. **Motion islands.** Every GSAP/Lenis behaviour lives in a small lazily-loaded `fx` component (`components/motion/fx/*`). Each one still uses `useGSAP` and mounts only after hydration when motion is allowed. Content components render plain, prerendered markup, so GSAP, ScrollTrigger, SplitText and Lenis (~54 KB) are off the critical path. Each island sits inside an error boundary (`Island`), so an animation failure leaves static content instead of an error page.
+2. **Route loaders.** With `ssr: false` + `prerender`, React Router runs `loader`s at build time and embeds their data in the HTML, plus a `.data` file for client navigation. Project content and image metadata now go through `lib/content.server.ts`. That's a `.server` module, so React Router guarantees it never reaches the browser. Cards get a slim `ProjectSummary`, and case studies get the full entry with images resolved. `projects.ts` is still the single source of truth with the briefed schema.
+
+Result: **123–128 KB** initial JS per page. `postbuild` measures this on every build and fails above 130 KB.
+
+### Other decisions
+
+- **Hero size.** The display line is `clamp(3rem, 17vw, 11rem)` rather than `11vw`. At 11vw the phone hero was 48 px and used under 60% of the width. 17vw gives 61 px at 360 px (still fits with room), 66 px at 390, and the same 11 rem cap on desktop.
+- **Hero animation** is CSS (`@keyframes rise` in line masks), not SplitText. It plays at first paint without waiting for JS, so the LCP element isn't held back by a script. SplitText drives the scroll-in headings everywhere else ("How I work", the closing CTA, case-study challenge text). Each split pads its masks so descenders aren't clipped and reverts after playing.
+- **ScrollTriggers** use `toggleActions: "play none none none"` instead of `once: true`. Self-killing triggers crashed `ScrollTrigger.refresh()` when SplitText re-split during a refresh.
+- **Trailing slashes.** Prerendering requests `/contact/`; the browser sees `/contact`. `usePathname()` normalises this, otherwise nav state and the footer CTA differed between the static HTML and hydration.
+- **Section rhythm**: sections have top padding only, so neighbouring sections share one gap instead of stacking two.
+- **Case-study gallery**: the first gallery image sits between Challenge and Approach. If two or more remain, they form the pinned horizontal strip. One leftover stays inline. Honeybee and MPG have 5 images (pinned strip of 4); ChronoVoyage has 3 (strip of 2).
+- **404**: the `*` route is prerendered at `/404` and moved to `404.html`, which Firebase serves with a 404 status. A runtime 404 (e.g. client navigation to `/work/<unknown>`) renders the same page through the root error boundary.

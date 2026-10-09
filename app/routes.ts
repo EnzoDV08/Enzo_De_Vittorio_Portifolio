@@ -6,6 +6,10 @@ const devOnly =
 
 export default [
   index("routes/home.tsx"),
+  route("work", "routes/work.tsx"),
+  route("work/:slug", "routes/case-study.tsx"),
+  route("about", "routes/about.tsx"),
+  route("contact", "routes/contact.tsx"),
   ...devOnly,
   route("*", "routes/not-found.tsx"),
 ] satisfies RouteConfig;

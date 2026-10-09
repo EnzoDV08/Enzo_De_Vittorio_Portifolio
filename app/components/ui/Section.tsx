@@ -11,6 +11,8 @@ type Props = {
   containerClassName?: string;
   /** Hairline rule above the section. */
   rule?: boolean;
+  /** "tight" for runs of related sections (e.g. the About timelines). */
+  spacing?: "default" | "tight";
   id?: string;
 };
 
@@ -22,6 +24,7 @@ export function Section({
   className,
   containerClassName,
   rule = true,
+  spacing = "default",
   id,
 }: Props) {
   const labelId = useId();
@@ -29,7 +32,8 @@ export function Section({
     <section
       id={id}
       aria-labelledby={label ? labelId : undefined}
-      className={cn("py-section", className)}
+      // Top padding only: consecutive sections share one gap, and the footer CTA closes the page.
+      className={cn(spacing === "tight" ? "pt-20 md:pt-28" : "pt-section", className)}
     >
       <Container className={containerClassName}>
         {(rule || label) && (

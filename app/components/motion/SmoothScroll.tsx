@@ -1,12 +1,14 @@
-import Lenis from "lenis";
-import { createContext, useContext, useEffect, useState } from "react";
+import type Lenis from "lenis";
+import { Island } from "~/components/motion/Island";
+import { createContext, lazy, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigationType } from "react-router";
-import { ScrollTrigger, gsap } from "~/lib/gsap";
-import { useReducedMotion } from "~/lib/useReducedMotion";
+import { loadGsap, useMotionAllowed } from "~/lib/motion";
+import { usePathname } from "~/lib/usePathname";
 
+const LenisFx = lazy(() => import("./fx/LenisFx"));
 const LenisContext = createContext<Lenis | null>(null);
 
-/** The active Lenis instance, or null (reduced motion, prerender, before hydration). */
+/** The active Lenis instance, or null (reduced motion, prerender, before it loads). */
 export function useLenis() {
   return useContext(LenisContext);
 }
@@ -14,34 +16,14 @@ export function useLenis() {
 /**
  * Lenis smooth scrolling, driven by GSAP's ticker so ScrollTrigger and Lenis share one clock.
  * Uses native scroll position (no transforms), so keyboard scrolling, find-in-page and anchor
- * links all keep working. Off entirely with reduced motion.
+ * links keep working. Loaded after hydration as a lazy island; absent with reduced motion.
  */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
-  const reduced = useReducedMotion();
+  const motion = useMotionAllowed();
   const [lenis, setLenis] = useState<Lenis | null>(null);
-  const { pathname, hash } = useLocation();
+  const { hash } = useLocation();
+  const pathname = usePathname();
   const navigationType = useNavigationType();
-
-  useEffect(() => {
-    if (reduced) return;
-    const instance = new Lenis({
-      autoRaf: false,
-      anchors: { offset: -80 },
-      lerp: 0.11,
-      // Let nested scrollers (menus, galleries, textareas) scroll on their own.
-      allowNestedScroll: true,
-    });
-    instance.on("scroll", ScrollTrigger.update);
-    const tick = (time: number) => instance.raf(time * 1000);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
-    setLenis(instance);
-    return () => {
-      gsap.ticker.remove(tick);
-      instance.destroy();
-      setLenis(null);
-    };
-  }, [reduced]);
 
   // New page. <ScrollRestoration> has already set the position (top for links, the saved spot
   // for back/forward); bring Lenis in line so leftover inertia can't drag the page elsewhere.
@@ -51,10 +33,24 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       lenis.scrollTo(top, { immediate: true, force: true });
       lenis.resize();
     }
-    const id = requestAnimationFrame(() => ScrollTrigger.refresh());
-    return () => cancelAnimationFrame(id);
+    let frame = 0;
+    if (motion) {
+      void loadGsap().then(({ ScrollTrigger }) => {
+        frame = requestAnimationFrame(() => ScrollTrigger.refresh());
+      });
+    }
+    return () => cancelAnimationFrame(frame);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run per page, not per lenis change
   }, [pathname]);
 
-  return <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>;
+  return (
+    <LenisContext.Provider value={lenis}>
+      {children}
+      {motion && (
+        <Island>
+          <LenisFx onReady={setLenis} />
+        </Island>
+      )}
+    </LenisContext.Provider>
+  );
 }

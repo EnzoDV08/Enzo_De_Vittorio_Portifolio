@@ -1,10 +1,10 @@
-import { getPicture } from "~/lib/images";
+import type { Picture } from "~/lib/images";
 import { cn } from "~/lib/cn";
 import { ProjectPlaceholder } from "./ProjectPlaceholder";
 
 type Props = {
-  /** Path relative to app/assets, e.g. "projects/sportify/cover.jpg". */
-  src: string | undefined;
+  /** Resolved at build time by a route loader (see lib/content.server.ts). */
+  picture: Picture | undefined;
   /** Meaningful description, or "" when decorative. */
   alt: string;
   sizes?: string;
@@ -19,7 +19,7 @@ type Props = {
 
 /** <picture> with AVIF + WebP srcsets, intrinsic width/height (no CLS) and lazy loading. */
 export function ResponsiveImage({
-  src,
+  picture,
   alt,
   sizes = "100vw",
   priority = false,
@@ -27,8 +27,6 @@ export function ResponsiveImage({
   className,
   placeholder,
 }: Props) {
-  const picture = getPicture(src);
-
   if (!picture) {
     if (!placeholder) return null;
     return (

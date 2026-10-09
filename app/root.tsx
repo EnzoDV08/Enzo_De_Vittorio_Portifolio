@@ -1,6 +1,7 @@
 import geistFont from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
 import serifItalicFont from "@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2?url";
 import { useEffect, useRef } from "react";
+import { lazy } from "react";
 import {
   Links,
   Meta,
@@ -8,16 +9,19 @@ import {
   Scripts,
   ScrollRestoration,
   isRouteErrorResponse,
-  useLocation,
 } from "react-router";
 import type { Route } from "./+types/root";
 import { Footer } from "./components/layout/Footer";
 import { Nav } from "./components/layout/Nav";
 import { Cursor } from "./components/motion/Cursor";
+import { Island } from "./components/motion/Island";
 import { PageTransition } from "./components/motion/PageTransition";
 import { SmoothScroll } from "./components/motion/SmoothScroll";
 import { ui } from "./content/pages";
-import NotFound from "./routes/not-found";
+import { usePathname } from "./lib/usePathname";
+
+// Only needed when something throws a 404 at runtime (e.g. /work/<unknown> on client nav).
+const NotFound = lazy(() => import("./routes/not-found").then((m) => ({ default: m.NotFound })));
 import "./styles/app.css";
 
 export const links: Route.LinksFunction = () => [
@@ -57,7 +61,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 /** After client-side navigation, move focus to the new page and announce it. */
 function RouteFocus() {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
   const first = useRef(true);
   useEffect(() => {
     if (first.current) {
@@ -100,10 +104,14 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  // Unknown URLs normally render the "*" route. A 404 can still be thrown at runtime — e.g. a
+  // client navigation to /work/<unknown> finds no prerendered data — so show the same page.
   if (isRouteErrorResponse(error) && error.status === 404) {
     return (
       <Shell>
-        <NotFound />
+        <Island>
+          <NotFound />
+        </Island>
       </Shell>
     );
   }

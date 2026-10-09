@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
+/* Hover-capable, precise pointer (mouse/trackpad). Hover-driven UI lives behind this. */
+@custom-variant fine (@media (hover: hover) and (pointer: fine));
+
 /* ---------------------------------------------------------------------------
    Fonts — self-hosted, Latin subset only, woff2 only.
    The Geist and Instrument Serif italic files are preloaded in root.tsx.
@@ -103,6 +106,7 @@
 
   --animate-marquee: marquee var(--marquee-duration, 60s) linear infinite;
   --animate-rise: rise 1s var(--ease-out-3) both;
+  --animate-fade-up: fade-up 0.9s var(--ease-out-3) both;
 
   @keyframes marquee {
     to {
@@ -112,6 +116,12 @@
   @keyframes rise {
     from {
       transform: translate3d(0, 105%, 0);
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 0.75rem, 0);
     }
   }
 }

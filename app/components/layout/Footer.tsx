@@ -1,5 +1,4 @@
 import { ArrowRight, ArrowUp, Download } from "lucide-react";
-import { useLocation } from "react-router";
 import { RevealText } from "~/components/motion/RevealText";
 import { useLenis } from "~/components/motion/SmoothScroll";
 import { TransitionLink } from "~/components/motion/TransitionLink";
@@ -9,6 +8,7 @@ import { CopyEmail } from "~/components/ui/CopyEmail";
 import { Socials } from "~/components/ui/Socials";
 import { about, contactCta, nav, ui } from "~/content/pages";
 import { site } from "~/content/site";
+import { usePathname } from "~/lib/usePathname";
 
 /** The closing "Let's build something." block. Shown at the foot of every page but /contact. */
 function ContactCta() {
@@ -39,7 +39,7 @@ function ContactCta() {
 }
 
 export function Footer() {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
   const lenis = useLenis();
   const toTop = () => {
     if (lenis) lenis.scrollTo(0);

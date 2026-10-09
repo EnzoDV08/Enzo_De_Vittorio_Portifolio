@@ -18,8 +18,8 @@ export function ProjectPlaceholder({ title, accent, ratio = "16 / 10", fill, cla
     <div
       aria-hidden="true"
       className={cn(
-        "relative isolate flex items-end overflow-clip p-[6%]",
-        fill ? "absolute inset-0" : "w-full",
+        "isolate flex items-end overflow-clip p-[6%]",
+        fill ? "absolute inset-0" : "relative w-full",
         themed ? "text-ink" : "bg-ink-3 text-paper",
         className,
       )}

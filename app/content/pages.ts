@@ -77,8 +77,10 @@ export const work = {
   yearFilterLabel: "Filter earlier work by year",
   allYears: "All years",
   unknownYear: "Year to confirm",
+  yearTbc: "Year TBC",
   inProgress: "In progress",
   empty: "Nothing in this discipline yet.",
+  shown: "projects shown",
   caseStudy: "Case study",
 };
 

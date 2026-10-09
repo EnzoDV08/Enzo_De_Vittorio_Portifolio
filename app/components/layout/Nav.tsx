@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router";
 import { TransitionLink } from "~/components/motion/TransitionLink";
 import { useLenis } from "~/components/motion/SmoothScroll";
 import { AvailabilityPill } from "~/components/ui/AvailabilityPill";
@@ -9,13 +8,14 @@ import { Socials } from "~/components/ui/Socials";
 import { nav, ui } from "~/content/pages";
 import { site } from "~/content/site";
 import { cn } from "~/lib/cn";
+import { usePathname } from "~/lib/usePathname";
 
 function isActive(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`);
 }
 
 export function Nav() {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);

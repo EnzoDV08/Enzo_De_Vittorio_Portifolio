@@ -1,11 +1,13 @@
-import { createContext, useCallback, useContext, useLayoutEffect, useRef } from "react";
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { EASE_PAGE, gsap } from "~/lib/gsap";
+import { loadGsap, useMotionAllowed } from "~/lib/motion";
 import { routeLabel } from "~/lib/routeLabel";
+import { normalizePath } from "~/lib/usePathname";
 import { prefersReducedMotion } from "~/lib/useReducedMotion";
 import { useLenis } from "./SmoothScroll";
 
-type Go = (to: string) => void;
+type Go = (to: string, label?: string) => void;
+type GsapModule = Awaited<ReturnType<typeof loadGsap>>;
 const TransitionContext = createContext<Go | null>(null);
 
 /** Navigate with the ink-panel wipe (falls back to plain navigation). */
@@ -20,31 +22,40 @@ const REVEAL = 0.34;
 
 /**
  * Full-screen ink panel that wipes up over the old page, shows the destination title in mono,
- * then wipes off the new one. ~650ms end to end. Skipped entirely with reduced motion and on
- * back/forward (those should feel instant).
+ * then wipes off the new one. ~650ms end to end. Skipped with reduced motion, on back/forward,
+ * and before GSAP has loaded (it's fetched in the background right after hydration).
  */
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const location = useLocation();
   const lenis = useLenis();
+  const motion = useMotionAllowed();
   const panel = useRef<HTMLDivElement>(null);
   const label = useRef<HTMLParagraphElement>(null);
   const pending = useRef(false);
+  const lib = useRef<GsapModule | null>(null);
+
+  useEffect(() => {
+    if (!motion) return;
+    void loadGsap().then((mod) => (lib.current = mod));
+  }, [motion]);
 
   const go = useCallback<Go>(
-    (to) => {
-      const samePage = to.split(/[?#]/)[0] === location.pathname;
-      if (samePage || pending.current || prefersReducedMotion() || !panel.current) {
+    (to, title) => {
+      const samePage =
+        normalizePath(to.split(/[?#]/)[0] ?? "/") === normalizePath(location.pathname);
+      const g = lib.current;
+      if (samePage || pending.current || prefersReducedMotion() || !g || !panel.current) {
         void navigate(to);
         return;
       }
       pending.current = true;
-      if (label.current) label.current.textContent = routeLabel(to);
+      if (label.current) label.current.textContent = title ?? routeLabel(to);
       lenis?.stop();
-      gsap
+      g.gsap
         .timeline()
         .set(panel.current, { yPercent: 100, visibility: "visible" })
-        .to(panel.current, { yPercent: 0, duration: COVER, ease: EASE_PAGE })
+        .to(panel.current, { yPercent: 0, duration: COVER, ease: g.EASE_PAGE })
         .fromTo(
           label.current,
           { autoAlpha: 0, y: 14 },
@@ -58,13 +69,14 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
 
   // The new page has rendered underneath the panel: wipe it away.
   useLayoutEffect(() => {
-    if (!pending.current) return;
+    const g = lib.current;
+    if (!pending.current || !g) return;
     pending.current = false;
     lenis?.start();
-    gsap
+    g.gsap
       .timeline()
       .to(label.current, { autoAlpha: 0, duration: 0.12 })
-      .to(panel.current, { yPercent: -100, duration: REVEAL, ease: EASE_PAGE }, "<0.04")
+      .to(panel.current, { yPercent: -100, duration: REVEAL, ease: g.EASE_PAGE }, "<0.04")
       .set(panel.current, { visibility: "hidden" });
   }, [location.key, lenis]);
 

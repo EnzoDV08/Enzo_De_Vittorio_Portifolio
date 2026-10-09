@@ -35,7 +35,8 @@ export default tseslint.config(
   },
   {
     files: ["scripts/**/*.{js,mjs}", "*.config.{js,ts}"],
-    languageOptions: { globals: globals.node },
+    // Scripts run in Node, but Playwright callbacks inside them run in the page.
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
   {
     rules: {
