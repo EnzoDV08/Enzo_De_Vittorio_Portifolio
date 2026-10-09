@@ -25,3 +25,41 @@ The local `main` was 4 commits behind GitHub. The brief's audit (MockUp1–9, th
 - **ESLint 9** — `eslint-plugin-jsx-a11y` doesn't support 10 yet.
 - No loaders anywhere: content is imported statically, so prerendering works without `.data` requests and unknown URLs don't hit loader errors.
 - `npm run preview` is a small Node server that copies Firebase's behaviour (cleanUrls, no trailing slash, `404.html`), because `vite preview` doesn't apply those rules to a React Router static build.
+
+## Phase 3 — Content layer
+
+All copy and data live in `app/content/`. Anything I couldn't verify is a `todo()` value. `npm run todo` regenerates `CONTENT_TODO.md` from those values plus any missing image files, so the list stays in sync with the code. Every case-study block is ≤ 60 words and every tagline ≤ 12 words (checked with a script).
+
+### Years for earlier work — evidence
+
+| Project             | Year                               | Evidence                                                                                                                                     |
+| ------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| RentalFinder        | **2024**                           | `DV_200_Group2_Final` created 2024-05-09, first commit the same day. DV 200 = second year.                                                   |
+| SuperStore          | **2024**                           | `SuperStore_DV200_Term_4` created 2024-10-29, first commit the same day.                                                                     |
+| Code Kids Academy   | **2024**                           | `CodeKidsAcademy_DV_200_Theory` created 2024-10-08, first commit the same day.                                                               |
+| Real Estate Website | **2024**                           | `Enzo_De_Vittorio_231244_Term3-Final-Project` created 2024-08-26, first commit 2024-08-26.                                                   |
+| Sportify            | **2025**                           | `Sportify_Frontend` created 2025-03-09, first commit 2025-03-09 (`Sportify_Backend` same day).                                               |
+| Escape Today        | TODO — best guess **2024**         | `EnzoDV5/Escape_Today` returns 404 (private or deleted). The stack (React/Node/Bootstrap/Firebase + Figma) matches the 2024 DV 200 projects. |
+| ClimberBuddy        | TODO — best guess **2024**         | Figma file is named `UX-200` (second-year UX), and second-year DV 200 work is 2024.                                                          |
+| Catch The Bokkie    | TODO — best guess **2024 or 2023** | Figma file is `UX-Term-3-Final` with no course level in the name.                                                                            |
+| Agriflow            | TODO — no confident guess          | Figma file `UX-Farming-App-design` has no date or course code.                                                                               |
+
+Projects with a TODO year appear under a "Year to confirm" group at the end of Earlier work.
+
+Other inferences, made from course codes:
+
+- **Built to Be Felt** is set to 2026. RR 420 is a PGDip course, and the PGDip is 2026.
+- **Medihelp** is set to 2026 because it's in progress now.
+- **Makerspace**, **poofy** and **VerifyLab** have TODO years.
+
+### Collaborators
+
+The brief lists no names for the group projects. RentalFinder and Sportify are credited by **GitHub handle**, taken from each repo's contributor list (`@JoshuaDeKlerk`, `@ZanderBez`, `@Armand1711`, `@321008Jaco`). That is verifiable, but real names and roles are TODOs. `@Armand1711` may be Armand Naudé; I didn't assume it.
+
+### Imagery
+
+- The old MockUp1–9 were moved to `_originals/archive/<slug>` and resized to 2400 px JPEG masters: **49 MB → about 2 MB**. vite-imagetools then emits AVIF/WebP at 480/960/1440/1920. The transparent PNGs (SuperStore, Sportify, Code Kids) are flattened onto `ink-2`.
+- Four featured projects (Lente Book, Honeybee Heroes, MPG, ChronoVoyage) had no imagery in the repo. They now use **real screenshots of the live sites** captured with Playwright at 2400×1500. I dropped frames that caught text mid-animation. Each gallery image is captioned "Live site, captured October 2026", and `CONTENT_TODO.md` asks for designed mockups. One River and Stack Studio have no public URL, so they use the designed placeholder.
+- The camera photos in `~/Desktop/phots` weren't used. Their subjects are unknown.
+- I added the Honeybee Heroes code link (`EnzoDV08/honeybee-heroes`) because it's a public repo on Enzo's account.
+- `SITE_URL` is set to `https://myportfolio-8c863.web.app`, the real Firebase default domain, because canonical and OG URLs need a real origin at build time. A custom domain is a one-line change in `site.ts`.

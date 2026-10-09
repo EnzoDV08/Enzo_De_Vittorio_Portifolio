@@ -13,7 +13,8 @@
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "images": "node scripts/optimize-images.mjs",
-    "shots": "node scripts/shots.mjs"
+    "shots": "node scripts/shots.mjs",
+    "todo": "node scripts/content-todo.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^5.0.2",

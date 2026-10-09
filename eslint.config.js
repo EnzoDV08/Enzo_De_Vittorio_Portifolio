@@ -6,7 +6,14 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["build/**", ".react-router/**", "node_modules/**", "_originals/**", ".shots/**"],
+    ignores: [
+      "build/**",
+      ".react-router/**",
+      "node_modules/**",
+      "_originals/**",
+      ".shots/**",
+      "scripts/.*-tmp.*",
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

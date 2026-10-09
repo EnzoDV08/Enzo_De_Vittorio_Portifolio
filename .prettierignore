@@ -4,3 +4,4 @@ _originals
 .shots
 package-lock.json
 public/*.pdf
+scripts/.*-tmp.*
