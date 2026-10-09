@@ -1,0 +1,6 @@
+build
+.react-router
+_originals
+.shots
+package-lock.json
+public/*.pdf
