@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { TransitionLink } from "~/components/motion/TransitionLink";
 import { cn } from "~/lib/cn";
 
 type Variant = "accent" | "ghost" | "quiet";
@@ -21,7 +21,7 @@ type Common = {
 };
 
 type AsLink = Common & { to: string; href?: never } & Omit<
-    React.ComponentProps<typeof Link>,
+    React.ComponentProps<typeof TransitionLink>,
     "to" | "className" | "children"
   >;
 type AsAnchor = Common & { href: string; to?: never; external?: boolean } & Omit<
@@ -59,9 +59,9 @@ export function Button(props: ButtonProps) {
   if (props.to !== undefined) {
     const { variant: _v, className: _c, children: _ch, icon: _i, ...rest } = props;
     return (
-      <Link {...rest} className={classes}>
+      <TransitionLink {...rest} to={props.to} className={classes}>
         <Inner icon={icon}>{children}</Inner>
-      </Link>
+      </TransitionLink>
     );
   }
   if (props.href !== undefined) {

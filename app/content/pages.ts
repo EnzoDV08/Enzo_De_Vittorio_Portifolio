@@ -164,4 +164,5 @@ export const ui = {
   view: "View",
   footer: { built: "Designed & built by Enzo De Vittorio", top: "Back to top" },
   todo: "To come",
+  error: "Something broke.",
 };

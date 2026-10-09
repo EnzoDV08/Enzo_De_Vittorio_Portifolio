@@ -63,3 +63,12 @@ The brief lists no names for the group projects. RentalFinder and Sportify are c
 - The camera photos in `~/Desktop/phots` weren't used. Their subjects are unknown.
 - I added the Honeybee Heroes code link (`EnzoDV08/honeybee-heroes`) because it's a public repo on Enzo's account.
 - `SITE_URL` is set to `https://myportfolio-8c863.web.app`, the real Firebase default domain, because canonical and OG URLs need a real origin at build time. A custom domain is a one-line change in `site.ts`.
+
+## Phase 4 — Layout & motion infrastructure
+
+- **GSAP** plugins (ScrollTrigger, SplitText, useGSAP) are registered once, browser-only, in `app/lib/gsap.ts`. Every animation runs inside `useGSAP` with a scope, so its tweens and ScrollTriggers are reverted when its component unmounts. That's how triggers die on route change. A global "kill all" would also kill triggers the incoming page has just created, because child effects run before parent effects.
+- **Lenis** runs on GSAP's ticker (`autoRaf: false`) and is created only when motion is allowed. It uses native scroll position, so keyboard scrolling, find-in-page and anchor links still work. On each new page it syncs to whatever `<ScrollRestoration>` set: top for links, the saved spot for back/forward. That way leftover inertia can't fight React Router.
+- **Page transition**: an ink panel wipes up with the destination title in mono, navigation happens underneath, then the panel wipes off — 0.3 s + 0.34 s. It plays only for in-app link clicks through `TransitionLink`. Back/forward and modified clicks (new tab) are instant, and reduced motion skips it.
+- **Focus**: after each client navigation, focus moves to `<main tabindex=-1>` so screen readers start at the new content. There's a skip link. The mobile menu sets `inert` on `main` and the footer, locks scroll (Lenis stop + `overflow: hidden`), closes on Esc, and returns focus to the toggle — unless a link inside it navigated, in which case the new page takes focus.
+- **Cursor**: fine pointers with motion allowed only. The native cursor stays everywhere except over `[data-cursor]` media, and only after the follower has mounted (`.has-cursor`), so a JS failure can never hide the cursor.
+- **Scroll reveals** (`RevealText`, `RevealMedia`) skip elements already on screen at hydration, which avoids a visible-hidden-visible flash. The hero uses CSS keyframes rather than JS (see Phase 5).
