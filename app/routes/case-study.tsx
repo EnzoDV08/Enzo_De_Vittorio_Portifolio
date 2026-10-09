@@ -1,4 +1,5 @@
 import { ArrowRight, ArrowUpRight, Award } from "lucide-react";
+import { data } from "react-router";
 import { RevealMedia } from "~/components/motion/RevealMedia";
 import { RevealText } from "~/components/motion/RevealText";
 import { TransitionLink } from "~/components/motion/TransitionLink";
@@ -24,6 +25,19 @@ export function loader({ params }: Route.LoaderArgs) {
   return caseStudyData(params.slug);
 }
 
+// In the browser, data comes from the prerendered .data file. A slug that was never
+// prerendered (e.g. /work/typo) has no file, so turn that into a real 404 page instead of an
+// error.
+export async function clientLoader({ serverLoader }: Route.ClientLoaderArgs) {
+  try {
+    const result = await serverLoader();
+    if (result) return result;
+  } catch {
+    // fall through
+  }
+  throw data(null, { status: 404 });
+}
+
 export function meta({ params, loaderData }: Route.MetaArgs) {
   const project = loaderData?.project;
   if (!project) {
@@ -33,7 +47,7 @@ export function meta({ params, loaderData }: Route.MetaArgs) {
     title: `${project.title} — ${site.name}`,
     description: project.tagline,
     path: caseStudyPath(project),
-    image: `/og/${project.slug}.png`,
+    image: `/og/${project.slug}.jpg`,
     type: "article",
     jsonLd: creativeWorkJsonLd(project),
   });

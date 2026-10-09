@@ -47,7 +47,7 @@ export function creativeWorkJsonLd(project: Project) {
     url: absoluteUrl(`/work/${project.slug}`),
     ...(year ? { dateCreated: String(year) } : {}),
     ...(live ? { sameAs: live } : {}),
-    image: absoluteUrl(`/og/${project.slug}.png`),
+    image: absoluteUrl(`/og/${project.slug}.jpg`),
     keywords: [...project.disciplines, ...project.stack].join(", "),
     creator: { "@type": "Person", name: site.name, url: site.url },
     ...(Array.isArray(project.team)

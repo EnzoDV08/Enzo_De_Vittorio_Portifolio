@@ -1,10 +1,12 @@
 // Runs after `react-router build`:
-//  1. checks every page was prerendered
-//  2. enforces the initial-JS budget (≤ 130 KB gzip per page)
-// Phase 6 adds 404.html, sitemap, robots and OG images.
-import { existsSync, readFileSync, readdirSync, renameSync, rmSync, statSync } from "node:fs";
+//  1. moves the prerendered 404 into place and drops the unused SPA fallback
+//  2. writes sitemap.xml and robots.txt from the same path list the prerender uses
+//  3. checks every case study has an OG image (from `npm run og`)
+//  4. enforces the initial-JS budget (≤ 130 KB gzip per page)
+import { existsSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { gzipSync } from "node:zlib";
+import { runnerImport } from "vite";
 
 const OUT = "build/client";
 const BUDGET_KB = 130;
@@ -31,6 +33,29 @@ if (existsSync(`${OUT}/404/index.html`)) {
   rmSync(`${OUT}/404.data`, { force: true });
 }
 rmSync(`${OUT}/__spa-fallback.html`, { force: true });
+
+// Sitemap + robots. Paths come from react-router.config.ts (which reads app/content), so a new
+// case study is listed automatically. The dev-only styleguide is never in that list.
+const { module: config } = await runnerImport("/react-router.config.ts");
+const { module: siteModule } = await runnerImport("/app/content/site.ts");
+const origin = siteModule.site.url;
+const urls = config.staticPaths
+  .map((path) => `  <url><loc>${origin}${path === "/" ? "/" : path}</loc></url>`)
+  .join("\n");
+writeFileSync(
+  `${OUT}/sitemap.xml`,
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,
+);
+writeFileSync(`${OUT}/robots.txt`, `User-agent: *\nAllow: /\n\nSitemap: ${origin}/sitemap.xml\n`);
+
+// OG images are generated on demand (npm run og) and committed; flag any that are missing.
+const missingOg = config.staticPaths
+  .filter((p) => p.startsWith("/work/"))
+  .map((p) => `og/${p.slice(6)}.jpg`)
+  .concat("og/default.jpg")
+  .filter((f) => !existsSync(`${OUT}/${f}`));
+if (missingOg.length)
+  console.warn(`postbuild: missing OG images — run \`npm run og\`: ${missingOg.join(", ")}`);
 
 // Initial JS = every module the HTML preloads or imports before any interaction.
 const gz = new Map();
@@ -63,4 +88,4 @@ if (over) {
   console.error("postbuild: initial JS budget exceeded");
   process.exit(1);
 }
-console.log(`postbuild: ok (${statSync(OUT).isDirectory() ? "build/client" : ""})`);
+console.log(`postbuild: ok — ${config.staticPaths.length} pages, sitemap, robots, 404`);

@@ -93,3 +93,16 @@ Result: **123–128 KB** initial JS per page. `postbuild` measures this on every
 - **Section rhythm**: sections have top padding only, so neighbouring sections share one gap instead of stacking two.
 - **Case-study gallery**: the first gallery image sits between Challenge and Approach. If two or more remain, they form the pinned horizontal strip. One leftover stays inline. Honeybee and MPG have 5 images (pinned strip of 4); ChronoVoyage has 3 (strip of 2).
 - **404**: the `*` route is prerendered at `/404` and moved to `404.html`, which Firebase serves with a 404 status. A runtime 404 (e.g. client navigation to `/work/<unknown>`) renders the same page through the root error boundary.
+
+## Phase 6 — SEO, OG, sitemap, Firebase, CI
+
+- **Meta**: every route uses `pageMeta()` for title (`{Page} — Enzo De Vittorio`), description, canonical, Open Graph and Twitter card. JSON-LD `Person` (home, about) has `sameAs` socials (only real ones), `alumniOf` Open Window Institute and `worksFor` Stack Studio. Each case study gets a `CreativeWork`.
+- **OG images** come from `npm run og`, which renders an HTML card with the real fonts and tokens in headless Chromium. They're JPEG (~65 KB each) rather than PNG. They're generated on demand and committed rather than built in CI, so CI doesn't need a browser. `postbuild` warns if a case study is missing its image.
+- **Favicons** use Geist 600 outlines of "EDV" (extracted with opentype.js, so no live text), ink on accent: SVG, 32 px PNG and a 180 px apple-touch icon.
+- **sitemap.xml and robots.txt** are written by `postbuild` from `staticPaths` in `react-router.config.ts`, the same list the prerender uses. The dev-only styleguide and the 404 are never in it.
+- **Firebase** (checked against the hosting emulator):
+  - Config is at the repo root; `public` is `build/client`, with `cleanUrls` and `trailingSlash: false`.
+  - HTML and `.data` are `no-cache`, `/assets/**` is `immutable` for a year, and images/PDF are cached one day. Later header rules override earlier ones; the emulator confirmed this.
+  - Basic security headers are on. No CSP yet: React Router's inline hydration scripts would need hashes.
+  - Unknown URLs get `404.html` with a real 404 status. `/work/<unknown>` also ends on the 404 page through a small `clientLoader`. React logs one recoverable hydration warning for that case, because the 404 HTML was rendered for a different route.
+- **CI** runs on Node 20 with `setup-node` npm cache: `npm ci` → typecheck → lint → build → deploy. It keeps the existing service-account secret and project ID. EmailJS keys come from optional repo secrets; without them the form stays hidden.
