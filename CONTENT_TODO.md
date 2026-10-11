@@ -46,7 +46,6 @@ designed mockups or screen recordings when you can.
 
 ## Other
 
-- [ ] Replace `public/Enzo-De-Vittorio-CV.pdf` with the 2026 CV
 - [ ] Confirm the canonical site URL. It's set to `https://myportfolio-8c863.web.app` in `site.ts`; change it if you add a custom domain
 - [ ] Confirm earlier-work years marked TODO, evidence and best guesses are in `REDESIGN_NOTES.md`
 - [ ] Group-project collaborators are credited by GitHub handle (from each repo's contributor list). Replace with real names and roles
