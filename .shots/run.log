@@ -1,0 +1,28 @@
+
+> shots
+> node scripts/shots.mjs
+
+1440 /
+1440 /work
+1440 /work/one-river-two-memories
+1440 /work/leke-lente-lingo
+1440 /work/honeybee-heroes
+1440 /work/stack-studio
+1440 /work/mpg-foundation
+1440 /work/chronovoyage
+1440 /about
+1440 /contact
+1440 /this-page-does-not-exist
+1920 /
+1920 /work
+1920 /work/one-river-two-memories
+1920 /work/leke-lente-lingo
+1920 /work/honeybee-heroes
+1920 /work/stack-studio
+1920 /work/mpg-foundation
+1920 /work/chronovoyage
+1920 /about
+1920 /contact
+1920 /this-page-does-not-exist
+
+shots: no overflow, no errors
