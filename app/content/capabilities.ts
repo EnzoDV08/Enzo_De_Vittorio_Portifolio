@@ -56,9 +56,9 @@ export const capabilities = [
       { label: "Testing", value: "Unit testing" },
       { label: "Version control", value: "Git · GitHub" },
     ],
-    tags: ["GitHub Actions", "CI/CD", "Firebase Hosting", "Unit testing"],
+    tags: ["GitHub Actions", "CI/CD", "Netlify", "Unit testing"],
     /** The steps in this site's .github/workflows, in order. */
-    steps: ["npm ci", "Type-check", "Lint", "Build", "Deploy to Firebase Hosting"],
+    steps: ["npm ci", "Type-check", "Lint", "Build", "Deploy to Netlify"],
   },
   {
     icon: "design",

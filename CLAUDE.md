@@ -1,12 +1,12 @@
 # CLAUDE.md
 
-Enzo De Vittorio's portfolio. Static, prerendered React site deployed to Firebase Hosting.
+Enzo De Vittorio's portfolio. Static, prerendered React site deployed to Netlify (`netlify.toml`).
 
 ## Commands
 
 - `npm run dev` — dev server (Vite, port 5173)
 - `npm run build` — `react-router build` (prerenders every route into `build/client`) then `scripts/postbuild.mjs` (404 page, sitemap, robots, OG images)
-- `npm run preview` — `scripts/preview.mjs`, a tiny static server that mimics Firebase (cleanUrls, no trailing slash, 404.html)
+- `npm run preview` — `scripts/preview.mjs`, a tiny static server that mimics the live host (clean URLs, no trailing slash, 404.html)
 - `npm run typecheck && npm run lint && npm run build` — must all pass with zero errors/warnings before any commit
 - `npm run images` — `scripts/optimize-images.mjs`: `_originals/<slug>/*` → `app/assets/projects/<slug>/*` (max 2400px masters)
 - `npm run shots` — `scripts/shots.mjs`: Playwright screenshots of every route at 390/768/1440/1920 into `.shots/` (needs `npm run preview` running). Fails on horizontal overflow or console errors.

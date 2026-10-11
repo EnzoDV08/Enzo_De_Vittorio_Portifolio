@@ -1,4 +1,4 @@
-// Serves build/client the way Firebase Hosting does: cleanUrls, no trailing slash, 404.html fallback.
+// Serves build/client like a static host: clean URLs, no trailing slash, 404.html fallback.
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize } from "node:path";

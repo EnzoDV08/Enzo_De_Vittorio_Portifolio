@@ -4,7 +4,7 @@ Personal portfolio of Enzo De Vittorio, developer and UX designer and co-founder
 
 ## Stack
 
-React 19 + TypeScript · React Router v7 (framework mode, every route prerendered) · Vite · Tailwind CSS v4 · GSAP + Lenis · Firebase Hosting
+React 19 + TypeScript · React Router v7 (framework mode, every route prerendered) · Vite · Tailwind CSS v4 · GSAP + Lenis · Netlify
 
 ## Run it
 
@@ -18,7 +18,7 @@ npm run dev        # http://localhost:5173
 | ------------------- | ------------------------------------------------------------ |
 | `npm run dev`       | Dev server                                                   |
 | `npm run build`     | Prerendered static build into `build/client`                 |
-| `npm run preview`   | Serve the build like Firebase does (port 4173)               |
+| `npm run preview`   | Serve the build like the live host (port 4173)              |
 | `npm run typecheck` | Generate route types and run `tsc`                           |
 | `npm run lint`      | ESLint, zero warnings allowed                                |
 | `npm run format`    | Prettier                                                     |
@@ -31,4 +31,4 @@ Everything you read on the site lives in `app/content/`. Adding a project is one
 
 ## Deploy
 
-Pushing to `main` deploys to Firebase Hosting (`myportfolio-8c863`) through GitHub Actions. Pull requests get a preview channel. To deploy by hand: `npm run build && firebase deploy --only hosting`.
+Netlify builds and deploys the site (settings in `netlify.toml`): merging to `main` updates the live site at https://enzodv-portfolio.netlify.app, and pull requests get a deploy preview. GitHub Actions (`.github/workflows/ci.yml`) runs the type-check, lint and build on every pull request and push to `main`.

@@ -1,8 +1,8 @@
-# Netlify build settings. They override the site's UI settings, so Netlify serves the same
-# prerendered site as Firebase Hosting (see firebase.json). Netlify's default caching already
-# revalidates HTML and files like the CV on every request.
+# Netlify hosts the live site. These settings override the site's UI settings: every deploy
+# (live or pull-request preview) type-checks, lints and builds, then publishes the prerendered
+# site. Netlify's default caching already revalidates HTML and files like the CV on every request.
 [build]
-  command = "npm run build"
+  command = "npm run typecheck && npm run lint && npm run build"
   publish = "build/client"
 
 [build.environment]

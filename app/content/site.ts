@@ -28,10 +28,10 @@ export const site = {
     fileName: "Enzo-De-Vittorio-CV.pdf",
   },
   /**
-   * Canonical origin for SEO, OG and sitemap URLs. The Firebase default domain is used until
-   * a custom domain exists, see CONTENT_TODO.md.
+   * Canonical origin for SEO, OG and sitemap URLs. The Netlify domain is used until a custom
+   * domain exists, see CONTENT_TODO.md.
    */
-  url: "https://myportfolio-8c863.web.app",
+  url: "https://enzodv-portfolio.netlify.app",
   studio: {
     name: "Stack Studio",
     legalName: "StackStudio (Pty) Ltd",
