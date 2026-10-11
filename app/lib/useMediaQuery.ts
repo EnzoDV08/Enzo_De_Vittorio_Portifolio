@@ -17,5 +17,5 @@ export function useMediaQuery(query: string, serverValue = false): boolean {
   );
 }
 
-/** Desktop with a precise pointer — the only place hover-driven UI (cursor, previews) runs. */
+/** Desktop with a precise pointer, the only place hover-driven UI (cursor, previews) runs. */
 export const FINE_POINTER = "(hover: hover) and (pointer: fine)";

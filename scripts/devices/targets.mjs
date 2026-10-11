@@ -6,6 +6,7 @@
  *   screen on the laptop; the rest are extra gallery material)
  * - motion: capture with animation allowed (for sites that hide content under reduced motion)
  * - hide: CSS selector for overlays that don't belong in a still (cookie bars, badges)
+ * - hideMobile: the same, for the phone capture only (overrides `hide` there)
  * - redact: words whose elements are hidden before capture (no location on this site)
  * - finish: the iPhone's colour in this project's renders
  */
@@ -15,7 +16,7 @@ export const targets = [
   {
     slug: "one-river-two-memories",
     url: "https://one-river-two-memories-fa6f1.firebaseapp.com/",
-    stops: [0, 1.4, 3, 5],
+    stops: [0, 1.4, 3, 5, 6.5],
     motion: true,
     settle: 6000,
     finish: "#8a9a92",
@@ -23,6 +24,7 @@ export const targets = [
   {
     slug: "leke-lente-lingo",
     url: "https://lentebook-a7c82.web.app/",
+    // An app, not a scroll: its gallery shots are the onboarding steps (see REDESIGN_NOTES.md).
     stops: [0],
     finish: "#d9dde3",
   },
@@ -30,14 +32,17 @@ export const targets = [
     slug: "honeybee-heroes",
     url: "https://honey-bee-heroes.web.app/",
     stops: [0],
+    // On a phone, Mellie's speech bubble is cut off by the nav and her launcher covers the buttons.
+    hideMobile: ".speech-bubble, .interaction-container",
     finish: "#b8954a",
   },
   {
     slug: "stack-studio",
-    dir: `${DV200}/Stack-Studio/dist`,
+    // The Stack Studio build has no public URL yet; set STACK_STUDIO_DIST to capture on another machine.
+    dir: process.env.STACK_STUDIO_DIST ?? `${DV200}/Stack-Studio/dist`,
     label: "Stack Studio",
     redact: ["Centurion"],
-    stops: [0, 1.2, 4],
+    stops: [0, 1.2],
     motion: true,
     settle: 6000,
     finish: "#2b2d33",
@@ -47,11 +52,5 @@ export const targets = [
     url: "https://mpgf.org.za/",
     stops: [0],
     finish: "#9bb88a",
-  },
-  {
-    slug: "chronovoyage",
-    url: "https://crono-voyage.web.app/",
-    stops: [0],
-    finish: "#c8693a",
   },
 ];

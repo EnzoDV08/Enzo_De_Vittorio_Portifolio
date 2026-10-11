@@ -1,16 +1,17 @@
-import { todo } from "./todo";
 import type { TimelineEntry } from "./types";
 
 export const education: TimelineEntry[] = [
   {
-    title: "PGDip Creative Practice — Interactive Development",
+    title: "PGDip Creative Practice, Interactive Development",
     org: "Open Window Institute",
+    logo: "Openwindow.jpg",
     period: "2026",
   },
   {
-    title: "Software Development & UX Design (double major)",
-    note: todo("exact qualification name"),
+    title: "User Experience Design and Interactive Development",
+    note: "Class of 2025",
     org: "Open Window Institute",
-    period: todo("undergraduate years"),
+    logo: "Openwindow.jpg",
+    period: "2023-2025",
   },
 ];

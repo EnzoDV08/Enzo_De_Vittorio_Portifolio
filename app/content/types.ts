@@ -19,8 +19,6 @@ export type CaseStudy = {
   challenge: Maybe<string>;
   approach: { heading: string; body: string }[];
   highlights: string[];
-  /** Real results only. */
-  outcome: Maybe<string>;
 };
 
 export type Project = {
@@ -28,7 +26,7 @@ export type Project = {
   title: string;
   /** One line, max ~12 words. */
   tagline: string;
-  /** Required on every project. A TODO when it can't be confirmed — see REDESIGN_NOTES.md. */
+  /** Required on every project. A TODO when it can't be confirmed, see REDESIGN_NOTES.md. */
   year: Maybe<number>;
   /** Shown instead of `year` when work spans years, e.g. "2025–2026". */
   yearLabel?: string;
@@ -38,7 +36,7 @@ export type Project = {
   team?: TeamMember[] | Todo;
   /** Real organisation, or "Self-directed" / "Academic". */
   client?: Maybe<string>;
-  /** e.g. "PGDip — PP 410" */
+  /** e.g. "PGDip, PP 410" */
   context?: string;
   stack: string[];
   links: { live?: Maybe<string>; code?: Maybe<string>; prototype?: Maybe<string> };
@@ -49,8 +47,15 @@ export type Project = {
   status?: "in-progress";
   order: number;
   recognition?: string;
-  /** Used only on this project's case study and its card hover state. */
-  theme?: { accent: string };
+  /** Brand colour used for project panels and mockup frames. */
+  theme?: {
+    accent: string;
+    /** The project website's own background colour, for the panels its work sits on. */
+    surface?: string;
+  };
+  /** Optional supplied brand artwork, relative to app/assets. */
+  mark?: string;
+  wordmark?: string;
   /** Path relative to app/assets. Missing files render a designed placeholder. */
   cover: string;
   coverAlt: string;
@@ -63,4 +68,6 @@ export type TimelineEntry = {
   org: string;
   period: Maybe<string>;
   note?: string;
+  /** Organisation logo, path relative to app/assets. */
+  logo?: string;
 };

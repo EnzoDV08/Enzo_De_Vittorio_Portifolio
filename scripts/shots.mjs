@@ -22,7 +22,6 @@ const ROUTES = (
     "/work/honeybee-heroes",
     "/work/stack-studio",
     "/work/mpg-foundation",
-    "/work/chronovoyage",
     "/about",
     "/contact",
     "/this-page-does-not-exist",

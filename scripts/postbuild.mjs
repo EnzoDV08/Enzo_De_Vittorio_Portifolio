@@ -21,7 +21,7 @@ function* htmlFiles(dir) {
 }
 
 if (!existsSync(`${OUT}/index.html`)) {
-  console.error(`postbuild: expected ${OUT}/index.html — did the prerender run?`);
+  console.error(`postbuild: expected ${OUT}/index.html, did the prerender run?`);
   process.exit(1);
 }
 
@@ -67,7 +67,7 @@ const missingOg = config.staticPaths
   .concat("og/default.jpg")
   .filter((f) => !existsSync(`${OUT}/${f}`));
 if (missingOg.length)
-  console.warn(`postbuild: missing OG images — run \`npm run og\`: ${missingOg.join(", ")}`);
+  console.warn(`postbuild: missing OG images, run \`npm run og\`: ${missingOg.join(", ")}`);
 
 // Initial JS = every module the HTML preloads or imports before any interaction.
 const gz = new Map();
@@ -88,6 +88,7 @@ for (const file of htmlFiles(OUT)) {
   const route =
     "/" +
     relative(OUT, file)
+      .replaceAll("\\", "/")
       .replace(/index\.html$/, "")
       .replace(/\/$/, "");
   rows.push(`  ${kb.toFixed(1).padStart(6)} KB  ${route}`);
@@ -100,4 +101,4 @@ if (over) {
   console.error("postbuild: initial JS budget exceeded");
   process.exit(1);
 }
-console.log(`postbuild: ok — ${config.staticPaths.length} pages, sitemap, robots, 404`);
+console.log(`postbuild: ok, ${config.staticPaths.length} pages, sitemap, robots, 404`);

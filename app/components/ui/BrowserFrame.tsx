@@ -2,7 +2,7 @@ import { cn } from "~/lib/cn";
 
 /**
  * A browser window around a screenshot: traffic lights and an address pill. Decorative chrome
- * only — the image inside carries the alt text.
+ * only, the image inside carries the alt text.
  */
 export function BrowserFrame({
   label,

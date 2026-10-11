@@ -10,7 +10,7 @@ export type SequencePlayer = {
 
 /**
  * Plays a pre-rendered device sequence on a canvas (adapted from Stack Studio's ImageSequence).
- * Frames load coarse to fine — every 8th first, so a rough motion is ready almost at once —
+ * Frames load coarse to fine, every 8th first, so a rough motion is ready almost at once —
  * and each draw cross-fades the two frames either side of the position, so it glides rather
  * than steps. `onFirstDraw` fires once, when there's something on the canvas to show.
  */

@@ -1,4 +1,4 @@
-/** From Enzo's manifesto. One line each — they're meant to be read big. */
+/** From Enzo's manifesto. One line each, they're meant to be read big. */
 export const principles = [
   { line: "Function first,", emphasis: "decoration second." },
   { line: "Design for", emphasis: "the many." },

@@ -59,7 +59,7 @@ type Props = {
 };
 
 /**
- * The laptop with the phone leaning in front of its right corner — the project at rest, as
+ * The laptop with the phone leaning in front of its right corner, the project at rest, as
  * a product shot. Fills its parent's width at the laptop's aspect ratio.
  */
 export function DeviceStill({

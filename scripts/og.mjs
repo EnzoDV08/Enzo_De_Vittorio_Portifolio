@@ -15,7 +15,7 @@ const { module: siteModule } = await runnerImport("/app/content/site.ts");
 const { site } = siteModule;
 const { caseStudies, featuredProjects } = content;
 
-// Inline everything as data: URIs — a page made with setContent can't read file:// URLs.
+// Inline everything as data: URIs, a page made with setContent can't read file:// URLs.
 const dataUri = (p, type) => `data:${type};base64,${readFileSync(p).toString("base64")}`;
 const fonts = {
   sans: dataUri("app/styles/fonts/Satoshi-Variable.woff2", "font/woff2"),
@@ -54,7 +54,7 @@ function template({ eyebrow, titleHtml, sub, meta, stage, image, cobalt = false 
   * { margin: 0; box-sizing: border-box; }
   body { width: 1200px; height: 630px; background: ${bg}; color: ${fg}; font-family: Satoshi; overflow: hidden; position: relative; }
   .eyebrow { font-size: 22px; font-weight: 600; color: ${muted}; }
-  .wrap { position: absolute; inset: 56px 60px; display: flex; flex-direction: column; justify-content: space-between; width: 560px; }
+  .wrap { position: absolute; inset: 56px 60px; display: flex; flex-direction: column; justify-content: space-between; width: 512px; }
   h1 { font-weight: 760; letter-spacing: -0.045em; line-height: .92; font-size: 88px; margin-top: 22px; }
   em { font-style: italic; font-weight: 420; letter-spacing: -0.035em; color: ${spark}; }
   p.sub { margin-top: 24px; font-size: 26px; line-height: 1.3; font-weight: 500; opacity: .82; }
@@ -95,7 +95,7 @@ async function render(html, out) {
 const lead = featuredProjects.find((p) => devices(p.slug));
 await render(
   template({
-    eyebrow: `${site.name} — ${site.descriptor}`,
+    eyebrow: `${site.name}, ${site.descriptor}`,
     titleHtml: `I design &amp; build websites you can <em>feel.</em>`,
     meta: `${site.name} · ${site.studio.name}`,
     cobalt: true,
@@ -110,11 +110,11 @@ for (const p of caseStudies) {
   const year = p.yearLabel ?? (isTodo(p.year) ? "" : p.year);
   await render(
     template({
-      eyebrow: `Case study — ${p.disciplines.join(" · ")}`,
+      eyebrow: `Case study, ${p.disciplines.join(" · ")}`,
       titleHtml: esc(p.title),
       sub: p.tagline,
       meta: [site.name, year].filter(Boolean).join(" · "),
-      stage: tint(p.theme?.accent, 34),
+      stage: p.theme?.surface ?? tint(p.theme?.accent, 34),
       image:
         devices(p.slug) ??
         (existsSync(cover) ? { cover: dataUri(cover, "image/jpeg") } : undefined),
