@@ -20,7 +20,7 @@ export const site = {
   whatsapp: "073 662 4471",
   socials: {
     github: "https://github.com/EnzoDV08",
-    linkedin: todo("full LinkedIn profile URL"),
+    linkedin: "https://www.linkedin.com/in/enzo-de-vittorio-426327145/",
     instagram: "https://www.instagram.com/enzo_devittorio/",
   },
   cv: {

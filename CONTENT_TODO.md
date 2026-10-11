@@ -26,7 +26,6 @@ Every item shows as a visible "TODO(enzo)" marker on the site (or hides its link
 
 ### site.ts
 
-- [ ] full LinkedIn profile URL — `site.ts` · linkedin
 - [ ] Stack Studio website URL (once the new site is live) — `site.ts` · url
 
 ## Images
