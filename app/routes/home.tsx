@@ -4,6 +4,7 @@ import { RevealText } from "~/components/motion/RevealText";
 import { TransitionLink } from "~/components/motion/TransitionLink";
 import { ProjectShowcase } from "~/components/project/ProjectShowcase";
 import { Capabilities } from "~/components/sections/Capabilities";
+import { HeroWall } from "~/components/sections/HeroWall";
 import { Button } from "~/components/ui/Button";
 import { Container } from "~/components/ui/Container";
 import { LogoTile } from "~/components/ui/LogoTile";
@@ -19,8 +20,8 @@ import {
   capabilityPanels,
   capabilityTags,
   featuredSummaries,
-  heroArtwork,
   heroPortrait,
+  heroWall,
   picturesFor,
   workStats,
 } from "~/lib/content.server";
@@ -33,7 +34,7 @@ import type { Route } from "./+types/home";
 export function loader() {
   return {
     featured: featuredSummaries(),
-    artwork: heroArtwork(),
+    wall: heroWall(),
     portrait: heroPortrait(),
     panels: capabilityPanels(),
     tags: capabilityTags(),
@@ -49,9 +50,9 @@ export function meta() {
 /** Staggered CSS entrance, runs at first paint without waiting for JS, off with reduced motion. */
 const delay = (ms: number) => ({ animationDelay: `${ms}ms` });
 
-type HeroProps = Pick<Route.ComponentProps["loaderData"], "artwork" | "portrait">;
+type HeroProps = Pick<Route.ComponentProps["loaderData"], "wall" | "portrait">;
 
-function Hero({ artwork, portrait }: HeroProps) {
+function Hero({ wall, portrait }: HeroProps) {
   return (
     <section aria-labelledby="hero-heading" className="relative pt-24 md:pt-28">
       <Container>
@@ -95,17 +96,7 @@ function Hero({ artwork, portrait }: HeroProps) {
             <div className="relative aspect-4/3 lg:h-full lg:min-h-[34rem] lg:aspect-auto">
               <div className="absolute inset-0 overflow-hidden rounded-xl theme-cobalt">
                 <div aria-hidden="true" className="absolute inset-0 opacity-45 dot-grid" />
-                <div aria-hidden="true" className="absolute -bottom-1/3 -left-1/4 size-[80%] rounded-full bg-lime/20 blur-3xl" />
-                <div className="absolute inset-[5%] flex items-center justify-center pr-[4%] pt-[8%]">
-                  <ResponsiveImage
-                    picture={artwork}
-                    alt="Five featured projects shown together across laptop and phone mockups"
-                    priority
-                    sizes="(min-width: 1024px) 55vw, 92vw"
-                    className="max-h-full w-full object-contain drop-shadow-[0_30px_30px_rgba(5,8,30,0.35)]"
-                  />
-                </div>
-                <span className="absolute bottom-5 left-6 meta text-white/75">FIVE IDEAS. ONE PRACTICE.</span>
+                <HeroWall columns={wall} />
               </div>
               <div className="absolute top-0 right-0 aspect-square w-[30%] rounded-bl-[calc(var(--radius-lg)+0.875rem)] bg-bg pb-3 pl-3 sm:w-[32%] sm:pb-3.5 sm:pl-3.5">
                 <span aria-hidden="true" className="absolute top-0 right-full notch-curve" />
@@ -163,12 +154,12 @@ function Proof({ stats, logos }: ProofProps) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { featured, artwork, portrait, panels, tags, stats, logos } = loaderData;
+  const { featured, wall, portrait, panels, tags, stats, logos } = loaderData;
   const studio = featured.find((p) => p.slug === site.studio.caseStudy);
 
   return (
     <>
-      <Hero artwork={artwork} portrait={portrait} />
+      <Hero wall={wall} portrait={portrait} />
       <Proof stats={stats} logos={logos} />
 
       {/* 01, Selected work */}

@@ -13,7 +13,7 @@ import {
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { capabilities } from "~/content/capabilities";
-import { heroPortrait as heroPortraitEntry } from "~/content/hero-wall";
+import { heroPortrait as heroPortraitEntry, heroWall as heroWallEntries } from "~/content/hero-wall";
 import { about } from "~/content/pages";
 import type { Project } from "~/content/types";
 import { deviceSpecs, type DeviceKind, type DeviceSequence, type Devices } from "./devices";
@@ -91,8 +91,14 @@ function toDetail(p: Project): ProjectDetail {
 
 export const featuredSummaries = () => featuredProjects.map(toSummary);
 
-/** One art-directed device composition for the home hero. */
-export const heroArtwork = () => getPicture("home/featured-mockups.png");
+/** The home hero's wall of project screenshots, column by column. */
+export const heroWall = () =>
+  heroWallEntries.map((column) =>
+    column.flatMap((key) => {
+      const picture = getGalleryPicture(key);
+      return picture ? [{ key, picture }] : [];
+    }),
+  );
 
 export function workSummaries() {
   return {

@@ -162,6 +162,7 @@
   --animate-float: float 7s ease-in-out infinite;
   --animate-spin-slow: spin 28s linear infinite;
   --animate-drift: drift 80s linear infinite;
+  --animate-wall: wall 40s linear infinite;
 
   @keyframes marquee {
     to {
@@ -182,6 +183,11 @@
     from {
       opacity: 0;
       transform: translate3d(0, 0.75rem, 0);
+    }
+  }
+  @keyframes wall {
+    to {
+      transform: translate3d(0, -50%, 0);
     }
   }
   @keyframes drift {

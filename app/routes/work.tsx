@@ -100,13 +100,13 @@ export default function Work({ loaderData }: Route.ComponentProps) {
 
       {featured.length > 0 && (
         <Section index={1} label={work.featuredLabel} spacing="tight">
-          <ul className="grid gap-[var(--spacing-gutter)] sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-16 md:grid-cols-2 md:gap-y-20">
             {featured.map((project) => (
               <li key={project.slug}>
                 <ProjectCard
                   project={project}
                   index={featuredProjects.indexOf(project) + 1}
-                  variant="work"
+                  variant="feature"
                   headingLevel="h2"
                 />
               </li>
@@ -117,10 +117,10 @@ export default function Work({ loaderData }: Route.ComponentProps) {
 
       {more.length > 0 && (
         <Section index={2} label={work.moreLabel}>
-          <ul className="grid gap-[var(--spacing-gutter)] sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {more.map((project) => (
               <li key={project.slug}>
-                <ProjectCard project={project} variant="work" headingLevel="h2" />
+                <ProjectCard project={project} variant="compact" headingLevel="h2" />
               </li>
             ))}
           </ul>
@@ -153,10 +153,10 @@ export default function Work({ loaderData }: Route.ComponentProps) {
                   </h2>
                   <span className="meta text-muted">{String(group.length).padStart(2, "0")}</span>
                 </div>
-                <ul className="mt-8 grid gap-[var(--spacing-gutter)] sm:grid-cols-2 xl:grid-cols-3">
+                <ul className="mt-8 grid gap-x-[var(--spacing-gutter)] gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
                   {group.map((project) => (
                     <li key={project.slug}>
-                      <ProjectCard project={project} variant="work" />
+                      <ProjectCard project={project} variant="earlier" />
                     </li>
                   ))}
                 </ul>
