@@ -31,4 +31,4 @@ Everything you read on the site lives in `app/content/`. Adding a project is one
 
 ## Deploy
 
-Netlify builds and deploys the site (settings in `netlify.toml`): merging to `main` updates the live site at https://enzodv-portfolio.netlify.app, and pull requests get a deploy preview. GitHub Actions (`.github/workflows/ci.yml`) runs the type-check, lint and build on every pull request and push to `main`.
+Netlify builds and deploys the site (settings in `netlify.toml`): merging to `main` updates the live site at https://enzodvportfolio.netlify.app, and pull requests get a deploy preview. GitHub Actions (`.github/workflows/ci.yml`) runs the type-check, lint and build on every pull request and push to `main`.

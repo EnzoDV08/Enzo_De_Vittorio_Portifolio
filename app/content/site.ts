@@ -31,7 +31,7 @@ export const site = {
    * Canonical origin for SEO, OG and sitemap URLs. The Netlify domain is used until a custom
    * domain exists, see CONTENT_TODO.md.
    */
-  url: "https://enzodv-portfolio.netlify.app",
+  url: "https://enzodvportfolio.netlify.app",
   studio: {
     name: "Stack Studio",
     legalName: "StackStudio (Pty) Ltd",
