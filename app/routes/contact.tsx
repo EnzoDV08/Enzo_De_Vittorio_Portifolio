@@ -1,6 +1,5 @@
 import { ContactForm, emailjsConfig } from "~/components/contact/ContactForm";
 import { AvailabilityPill } from "~/components/ui/AvailabilityPill";
-import { Clock } from "~/components/ui/Clock";
 import { Container } from "~/components/ui/Container";
 import { CopyEmail } from "~/components/ui/CopyEmail";
 import { Section } from "~/components/ui/Section";
@@ -16,25 +15,19 @@ export function meta() {
 export default function Contact() {
   return (
     <>
-      <Container className="flex min-h-[80svh] flex-col justify-end pt-32 pb-10 md:pt-44">
+      <Container className="flex min-h-[80svh] flex-col justify-end pt-32 pb-10 md:pt-40">
         <h1 className="display text-display">
-          {contact.heading} <span className="serif-accent text-accent">{contact.accent}</span>
+          {contact.heading} <span className="italic-accent text-accent">{contact.accent}</span>
         </h1>
         <p className="mt-8 max-w-[40ch] text-lg text-muted">{contact.intro}</p>
         <CopyEmail large className="mt-10" />
-        <div className="mt-12 grid gap-8 border-t border-line pt-6 md:grid-cols-2 md:items-start">
+        <div className="mt-12 grid gap-8 border-t border-line pt-8 md:grid-cols-2 md:items-start">
           <div>
-            <p className="meta text-muted">{contact.socialsLabel}</p>
+            <p className="text-sm font-semibold text-muted">{contact.socialsLabel}</p>
             <Socials withLabels className="mt-4" />
           </div>
           <div className="flex flex-col items-start gap-4 md:items-end">
             <AvailabilityPill>{site.availability}</AvailabilityPill>
-            <Clock
-              place={site.clock.place}
-              timeZone={site.clock.timeZone}
-              zone={site.clock.zone}
-              className="meta text-muted"
-            />
           </div>
         </div>
       </Container>

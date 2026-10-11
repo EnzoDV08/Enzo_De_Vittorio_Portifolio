@@ -1,16 +1,20 @@
 import { TransitionLink } from "~/components/motion/TransitionLink";
 import { cn } from "~/lib/cn";
 
-type Variant = "accent" | "ghost" | "quiet";
+type Variant = "accent" | "solid" | "ghost" | "quiet";
 
 const base =
-  "group/btn meta relative inline-flex min-h-11 items-center justify-center gap-2.5 rounded-sm px-5 py-3 " +
-  "transition-[background-color,color,border-color] duration-300 ease-out-3 select-none";
+  "group/btn relative inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full px-6 py-3 " +
+  "text-[0.9375rem] font-semibold tracking-[-0.01em] select-none " +
+  "transition-[background-color,color,border-color,transform] duration-300 ease-out-3 active:scale-[0.98]";
 
 const variants: Record<Variant, string> = {
-  accent: "bg-accent text-accent-ink hover:bg-paper",
-  ghost: "border border-line-strong text-paper hover:border-paper hover:bg-paper hover:text-ink",
-  quiet: "px-0 text-paper hover:text-accent",
+  /** The theme's accent: cobalt on chalk, lime on night and cobalt. */
+  accent: "bg-accent text-accent-fg hover:bg-fg hover:text-bg",
+  /** Ink pill. */
+  solid: "bg-fg text-bg hover:bg-accent hover:text-accent-fg",
+  ghost: "border border-line-strong text-fg hover:border-fg hover:bg-fg hover:text-bg",
+  quiet: "min-h-11 px-0 text-fg hover:text-accent",
 };
 
 type Common = {
@@ -42,7 +46,7 @@ function Inner({ children, icon }: Pick<Common, "children" | "icon">) {
       {icon && (
         <span
           aria-hidden="true"
-          className="inline-flex transition-transform duration-300 ease-out-3 group-hover/btn:translate-x-0.5 [&>svg]:size-3.5"
+          className="inline-flex transition-transform duration-300 ease-out-3 group-hover/btn:translate-x-0.5 [&>svg]:size-4"
         >
           {icon}
         </span>

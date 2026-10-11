@@ -6,25 +6,47 @@ export const nav = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
+export const navCta = "Let's talk";
+
 export const home = {
   meta: {
     title: "Enzo De Vittorio — Developer & UX Designer",
     description:
-      "Enzo De Vittorio designs and engineers immersive web experiences — function first, then the feeling. Developer, UX designer and co-founder of Stack Studio in Centurion, South Africa.",
+      "Enzo De Vittorio designs and builds websites and interactive stories that are built to be felt — function first, then the feeling. Developer, UX designer and co-founder of Stack Studio.",
   },
   hero: {
-    // The display line, split so the last word can take the serif accent.
-    lead: "Built to be",
-    accent: "felt.",
-    intro: "I design and engineer immersive web experiences — function first, then the feeling.",
-    primary: "View work",
-    secondary: "Download CV",
-    scrollCue: "Scroll",
+    eyebrow: "Enzo De Vittorio — Developer & UX Designer",
+    // The headline, split so the last word takes the italic accent.
+    lead: "I design & build websites you can",
+    accent: "feel.",
+    intro:
+      "Interactive stories, campaigns and production sites — researched like a UX designer, engineered like a developer, and finished with motion.",
+    primary: "See the work",
+    secondary: "About me",
+    reelLink: "Open the case study for",
+    reelShow: "Show",
+    reelPlay: "Play the showreel",
+    reelPause: "Pause the showreel",
   },
-  work: { label: "Selected work", allWork: "All work" },
-  recognitionLabel: "Recognition",
+  proof: {
+    label: "At a glance",
+    caseStudies: "In-depth case studies",
+    projects: "Projects on this site",
+    award: "Pendoring Finalist",
+    awardDetail: "Leke Lente Lingo, 2026",
+    studio: "Co-founded",
+    studioDetail: "Stack Studio",
+  },
+  work: {
+    label: "Selected work",
+    intro: "Six projects, each with the device it lives on. Open one for the full story.",
+    allWork: "All work",
+    view: "View case study",
+  },
   whatIDo: {
     label: "What I do",
+    heading: "One person,",
+    accent: "the whole stack.",
     columns: [
       {
         title: "Build",
@@ -43,16 +65,22 @@ export const home = {
       },
     ],
   },
+  tools: {
+    label: "Toolkit",
+    heading: "The languages and tools",
+    accent: "I ship with.",
+    cta: "Full toolkit",
+  },
   howIWork: { label: "How I work" },
   studio: {
-    label: "Stack Studio",
-    line: "Co-founder of Stack Studio — a two-person studio building brand-led, cinematic websites.",
-    withPartner: "With Armand Naudé, from Centurion.",
-    cta: "Visit Stack Studio",
+    label: "Now",
+    line: "Co-founder of Stack Studio — a two-person studio building brand-led, cinematic websites with Armand Naudé.",
+    cta: "Read the studio case study",
   },
 };
 
 export const contactCta = {
+  eyebrow: "Got a project, a role or an idea?",
   heading: "Let's build",
   accent: "something.",
   copy: "Copy email",
@@ -70,13 +98,13 @@ export const work = {
   intro: "Interactive stories, campaigns, UX and production builds — newest first.",
   filterLabel: "Filter by discipline",
   all: "All",
-  featuredLabel: "Selected",
+  featuredLabel: "Case studies",
   moreLabel: "More work",
   earlierLabel: "Earlier work",
   earlierIntro: "Where it started — student builds and prototypes, grouped by year.",
   yearFilterLabel: "Filter earlier work by year",
   allYears: "All years",
-  unknownYear: "Year to confirm",
+  unknownYear: "Undated",
   yearTbc: "Year TBC",
   inProgress: "In progress",
   empty: "Nothing in this discipline yet.",
@@ -87,11 +115,16 @@ export const work = {
 export const caseStudy = {
   meta: { role: "Role", year: "Year", context: "Context", client: "Client", stack: "Stack" },
   links: { live: "Live site", code: "Code", prototype: "Prototype" },
-  challenge: "Challenge",
-  approach: "Approach",
-  gallery: "Gallery",
+  devices: "The project on desktop and mobile",
+  desktop: "Desktop",
+  mobile: "Mobile",
+  scrollHint: "Scroll to open",
+  challenge: "The challenge",
+  approach: "The approach",
+  gallery: "Screens",
   galleryHint: "Scroll",
   highlights: "Highlights",
+  stack: "Built with",
   outcome: "Outcome",
   credits: "Credits",
   next: "Next project",
@@ -101,22 +134,31 @@ export const about = {
   meta: {
     title: "About — Enzo De Vittorio",
     description:
-      "Developer who designs. Software Development and UX Design at Open Window Institute, PGDip in Creative Practice, co-founder of Stack Studio.",
+      "Developer who designs. Software Development and UX Design at Open Window Institute, PGDip in Creative Practice, co-founder of Stack Studio. Languages, tools and experience.",
   },
   heading: "A developer",
   accent: "who designs.",
   portraitAlt: "Portrait of Enzo De Vittorio",
   bio: [
-    "I'm Enzo — a developer who designs. I studied Software Development and UX Design as a double major at Open Window Institute in Pretoria, and I'm finishing a PGDip in Creative Practice focused on interactive development.",
-    "With Armand Naudé I run Stack Studio, a two-person studio in Centurion building brand-led, cinematic websites.",
+    "I'm Enzo — a developer who designs. I studied Software Development and UX Design as a double major at Open Window Institute, and I'm finishing a PGDip in Creative Practice focused on interactive development.",
+    "With Armand Naudé I run Stack Studio, a two-person studio building brand-led, cinematic websites.",
     "I build things to be felt: function first, then the feeling — accessible on every device, and never designed to trick.",
   ],
+  quick: [
+    { label: "Studying", value: "PGDip Creative Practice" },
+    { label: "Running", value: "Stack Studio" },
+    { label: "Open to", value: "Freelance & graduate roles" },
+  ],
+  languages: "Languages",
+  languagesIntro: "What I write every week.",
+  toolkit: "Tools & frameworks",
+  toolkitIntro: "Every one of these is in a project on this site or in my repos.",
   experience: "Experience",
   education: "Education",
   recognition: "Recognition",
-  toolkit: "Toolkit",
   offScreen: "Off-screen",
   cv: "Download CV",
+  work: "See the work",
 };
 
 export const contact = {

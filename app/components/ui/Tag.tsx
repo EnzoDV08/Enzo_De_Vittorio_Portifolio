@@ -1,11 +1,11 @@
 import { cn } from "~/lib/cn";
 
-/** Mono metadata tag — tech stack, discipline, year. */
+/** Small pill — tech stack, discipline, year. */
 export function Tag({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-sm border border-line px-2 py-1 meta text-muted",
+        "inline-flex items-center rounded-full border border-line-strong px-3 py-1 text-xs font-medium text-muted",
         className,
       )}
     >

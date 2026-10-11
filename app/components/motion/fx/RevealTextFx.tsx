@@ -14,6 +14,9 @@ export default function RevealTextFx({ target }: { target: React.RefObject<HTMLE
       type: "lines",
       mask: "lines",
       autoSplit: true,
+      // Lines only (words stay whole) and the split is reverted after playing, so the text
+      // reads normally; SplitText's aria-label would be invalid on <p>.
+      aria: "none",
       onSplit: (self) => {
         gsap.set(self.masks, {
           paddingBottom: "0.14em",

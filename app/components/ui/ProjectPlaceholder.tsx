@@ -9,28 +9,28 @@ type Props = {
 };
 
 /**
- * Stand-in for project imagery that doesn't exist yet: the title in display type on the
- * project's accent, with grain. Decorative — the title is always present as real text nearby.
+ * Stand-in for project imagery that doesn't exist yet: the title in display type on a tint of
+ * the project's accent, over the dot grid. Decorative — the title is always present as real
+ * text nearby.
  */
 export function ProjectPlaceholder({ title, accent, ratio = "16 / 10", fill, className }: Props) {
-  const themed = Boolean(accent);
   return (
     <div
       aria-hidden="true"
       className={cn(
-        "isolate flex items-end overflow-clip p-[6%]",
+        "isolate flex items-end overflow-clip bg-bg-2 p-[6%] dot-grid",
         fill ? "absolute inset-0" : "relative w-full",
-        themed ? "text-ink" : "bg-ink-3 text-paper",
         className,
       )}
       style={{
         aspectRatio: fill ? undefined : ratio,
-        backgroundColor: accent,
+        backgroundColor: accent
+          ? `color-mix(in oklab, ${accent} 26%, var(--color-bg-2))`
+          : undefined,
         containerType: "inline-size",
       }}
     >
-      <span className="block display text-[clamp(1.5rem,11cqi,9rem)]">{title}</span>
-      <span className="grain-local" />
+      <span className="block display text-[clamp(1.5rem,11cqi,9rem)] text-fg/90">{title}</span>
     </div>
   );
 }

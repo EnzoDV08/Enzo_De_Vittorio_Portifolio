@@ -6,24 +6,21 @@ import { SectionLabel } from "./SectionLabel";
 type Props = {
   index?: number;
   label?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   containerClassName?: string;
-  /** Hairline rule above the section. */
-  rule?: boolean;
   /** "tight" for runs of related sections (e.g. the About timelines). */
-  spacing?: "default" | "tight";
+  spacing?: "default" | "tight" | "none";
   id?: string;
 };
 
-/** A page section: hairline rule, mono label, generous vertical rhythm. */
+/** A page section: numbered label pill, generous vertical rhythm. */
 export function Section({
   index,
   label,
   children,
   className,
   containerClassName,
-  rule = true,
   spacing = "default",
   id,
 }: Props) {
@@ -33,16 +30,18 @@ export function Section({
       id={id}
       aria-labelledby={label ? labelId : undefined}
       // Top padding only: consecutive sections share one gap, and the footer CTA closes the page.
-      className={cn(spacing === "tight" ? "pt-20 md:pt-28" : "pt-section", className)}
+      className={cn(
+        spacing === "tight" && "pt-20 md:pt-28",
+        spacing === "default" && "pt-section",
+        className,
+      )}
     >
       <Container className={containerClassName}>
-        {(rule || label) && (
-          <div className={cn("mb-12 md:mb-20", rule && "border-t border-line pt-5")}>
-            {label && (
-              <SectionLabel id={labelId} index={index}>
-                {label}
-              </SectionLabel>
-            )}
+        {label && (
+          <div className="mb-10 md:mb-14">
+            <SectionLabel id={labelId} index={index}>
+              {label}
+            </SectionLabel>
           </div>
         )}
         {children}

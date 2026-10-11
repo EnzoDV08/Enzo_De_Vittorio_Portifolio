@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUp, Download } from "lucide-react";
 import { RevealText } from "~/components/motion/RevealText";
 import { useLenis } from "~/components/motion/SmoothScroll";
 import { TransitionLink } from "~/components/motion/TransitionLink";
+import { AvailabilityPill } from "~/components/ui/AvailabilityPill";
 import { Button } from "~/components/ui/Button";
 import { Container } from "~/components/ui/Container";
 import { CopyEmail } from "~/components/ui/CopyEmail";
@@ -9,28 +10,25 @@ import { Socials } from "~/components/ui/Socials";
 import { about, contactCta, nav, ui } from "~/content/pages";
 import { site } from "~/content/site";
 import { usePathname } from "~/lib/usePathname";
+import { Mark } from "./Nav";
 
 /** The closing "Let's build something." block. Shown at the foot of every page but /contact. */
 function ContactCta() {
   return (
-    <section aria-labelledby="cta-heading" className="pt-section pb-20 md:pb-28">
+    <section aria-labelledby="cta-heading" className="pt-section pb-16 md:pb-24">
       <Container>
-        <div className="border-t border-line pt-5">
-          <RevealText
-            id="cta-heading"
-            className="mt-12 display text-[clamp(3rem,12vw,12rem)] md:mt-20"
-          >
-            {contactCta.heading}{" "}
-            <span className="serif-accent text-accent">{contactCta.accent}</span>
-          </RevealText>
-          <div className="mt-12 flex flex-col gap-8 md:mt-16 lg:flex-row lg:items-end lg:justify-between">
-            <CopyEmail large />
-            <div className="flex flex-wrap items-center gap-3">
-              <Socials />
-              <Button to="/contact" variant="ghost" icon={<ArrowRight />}>
-                {contactCta.write}
-              </Button>
-            </div>
+        <AvailabilityPill>{site.availability}</AvailabilityPill>
+        <p className="mt-10 text-lg text-muted md:mt-14">{contactCta.eyebrow}</p>
+        <RevealText id="cta-heading" className="mt-4 display text-[clamp(3.25rem,13vw,13rem)]">
+          {contactCta.heading} <span className="italic-accent">{contactCta.accent}</span>
+        </RevealText>
+        <div className="mt-12 flex flex-col gap-8 border-t border-line pt-8 md:mt-16 lg:flex-row lg:items-center lg:justify-between">
+          <CopyEmail large />
+          <div className="flex flex-wrap items-center gap-3">
+            <Socials />
+            <Button to="/contact" icon={<ArrowRight />}>
+              {contactCta.write}
+            </Button>
           </div>
         </div>
       </Container>
@@ -48,22 +46,28 @@ export function Footer() {
   };
 
   return (
-    <footer id="footer">
+    <footer
+      id="footer"
+      className="mt-section overflow-clip rounded-t-xl theme-night md:rounded-t-[3.5rem]"
+    >
       {pathname !== "/contact" && <ContactCta />}
-      <Container className="pb-[max(2rem,env(safe-area-inset-bottom))]">
-        <div className="grid gap-8 border-t border-line pt-6 md:grid-cols-12 md:items-start">
-          <p className="meta text-muted md:col-span-4">
-            © {new Date().getFullYear()} {site.name}
-            <br />
-            {ui.footer.built}
-          </p>
+      <Container className="pt-6 pb-[max(2rem,env(safe-area-inset-bottom))]">
+        <div className="grid gap-8 border-t border-line pt-8 md:grid-cols-12 md:items-center">
+          <div className="flex items-center gap-3 md:col-span-4">
+            <Mark />
+            <p className="text-sm text-muted">
+              © {new Date().getFullYear()} {site.name}
+              <br />
+              {ui.footer.built}
+            </p>
+          </div>
           <nav aria-label="Footer" className="md:col-span-5">
             <ul className="flex flex-wrap gap-x-1 gap-y-1">
               {nav.map((item) => (
                 <li key={item.to}>
                   <TransitionLink
                     to={item.to}
-                    className="inline-flex min-h-11 items-center px-2 meta text-muted transition-colors hover:text-paper md:first:-ml-2"
+                    className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-semibold text-muted transition-colors hover:text-fg md:first:-ml-3"
                   >
                     {item.label}
                   </TransitionLink>
@@ -73,9 +77,9 @@ export function Footer() {
                 <a
                   href={site.cv.href}
                   download={site.cv.fileName}
-                  className="inline-flex min-h-11 items-center gap-1.5 px-2 meta text-muted transition-colors hover:text-paper"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-sm font-semibold text-muted transition-colors hover:text-fg"
                 >
-                  <Download className="size-3" aria-hidden />
+                  <Download className="size-3.5" aria-hidden />
                   {about.cv}
                 </a>
               </li>
@@ -85,13 +89,20 @@ export function Footer() {
             <button
               type="button"
               onClick={toTop}
-              className="inline-flex min-h-11 items-center gap-2 meta text-muted transition-colors hover:text-paper"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line-strong px-4 text-sm font-semibold transition-colors hover:border-fg"
             >
               {ui.footer.top}
               <ArrowUp className="size-3.5" aria-hidden />
             </button>
           </div>
         </div>
+        {/* The name, set huge and cropped by the page edge. */}
+        <p
+          aria-hidden="true"
+          className="mt-12 -mb-[0.24em] text-center display text-[clamp(3rem,17.5vw,20rem)] leading-[0.8] whitespace-nowrap text-fg/[0.07] select-none"
+        >
+          {site.name}
+        </p>
       </Container>
     </footer>
   );

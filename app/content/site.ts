@@ -1,5 +1,9 @@
 import { todo } from "./todo";
 
+/*
+ * Site-wide facts. No location anywhere on the site, by Enzo's request — not in copy, meta,
+ * JSON-LD or OG images.
+ */
 export const site = {
   name: "Enzo De Vittorio",
   shortName: "Enzo",
@@ -7,13 +11,10 @@ export const site = {
   roles: ["Developer & UX Designer", "Co-founder, Stack Studio"],
   /** Mono line above the hero. */
   descriptor: "Developer & UX Designer",
-  location: "Centurion / Pretoria, South Africa",
-  clock: { place: "Centurion, ZA", timeZone: "Africa/Johannesburg", zone: "SAST" },
   tagline: "Built to be felt.",
-  availability: "Available for freelance & graduate roles — 2027",
-  email: todo(
-    "real email address (the old site's buttons used enzo.devittorio5@gmail.com — confirm)",
-  ),
+  availability: "Open to freelance & graduate roles — 2027",
+  /** The address the previous site's buttons used. */
+  email: "enzo.devittorio5@gmail.com",
   socials: {
     github: "https://github.com/EnzoDV08",
     linkedin: todo("full LinkedIn profile URL"),
@@ -32,7 +33,9 @@ export const site = {
     name: "Stack Studio",
     legalName: "StackStudio (Pty) Ltd",
     partner: "Armand Naudé",
-    url: todo("Stack Studio website URL"),
+    /** stackstudio.co.za still serves a placeholder page, so it isn't linked yet. */
+    url: todo("Stack Studio website URL (once the new site is live)"),
+    caseStudy: "stack-studio",
   },
   education: { institution: "Open Window Institute", url: "https://www.openwindow.co.za" },
 } as const;

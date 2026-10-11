@@ -31,7 +31,7 @@ export function Socials({
               target="_blank"
               rel="noopener noreferrer me"
               className={cn(
-                "inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-sm border border-line meta text-paper transition-colors duration-300 hover:border-paper",
+                "inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-line-strong text-sm font-semibold transition-colors duration-300 hover:border-fg hover:bg-fg hover:text-bg",
                 withLabels && "px-4",
               )}
             >

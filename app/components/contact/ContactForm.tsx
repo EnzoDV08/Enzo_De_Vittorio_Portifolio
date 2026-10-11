@@ -28,8 +28,8 @@ function validate(data: FormData): Errors {
 }
 
 const inputClass =
-  "mt-2 block w-full rounded-sm border bg-ink-2 px-4 py-3 text-base text-paper placeholder:text-muted " +
-  "transition-colors duration-300 focus:border-paper";
+  "mt-2 block w-full rounded-sm border bg-bg-2 px-4 py-3 text-base text-fg placeholder:text-muted " +
+  "transition-colors duration-300 focus:border-fg";
 
 /**
  * EmailJS form. Renders nothing unless all three VITE_EMAILJS_* variables exist — never a
@@ -163,7 +163,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "sending"}
-          className="inline-flex min-h-11 items-center rounded-sm bg-accent px-6 meta text-accent-ink transition-colors duration-300 hover:bg-paper disabled:opacity-60"
+          className="inline-flex min-h-11 items-center rounded-sm bg-accent px-6 meta text-accent-fg transition-colors duration-300 hover:bg-fg disabled:opacity-60"
         >
           {status === "sending" ? copy.sending : copy.submit}
         </button>

@@ -1,29 +1,25 @@
 // Open Graph images (1200×630) for the site and every case study, drawn with the real design
 // tokens and fonts in headless Chromium. Writes public/og/default.jpg and public/og/<slug>.jpg.
+// Case studies show the project on its rendered devices (npm run devices:render) when they
+// exist, else its cover.
 //
-//   npm run og        (re-run when a project's title, tagline or cover changes; commit the output)
+//   npm run og        (re-run when a project's title, tagline, cover or devices change; commit)
 //
 // Kept out of `npm run build` so CI doesn't need a browser. postbuild warns if one is missing.
-import { existsSync, mkdirSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, mkdirSync } from "node:fs";
 import { chromium } from "playwright";
 import { runnerImport } from "vite";
 
 const { module: content } = await runnerImport("/app/content/projects.ts");
 const { module: siteModule } = await runnerImport("/app/content/site.ts");
 const { site } = siteModule;
-const { caseStudies } = content;
+const { caseStudies, featuredProjects } = content;
 
 // Inline everything as data: URIs — a page made with setContent can't read file:// URLs.
 const dataUri = (p, type) => `data:${type};base64,${readFileSync(p).toString("base64")}`;
-const file = (p) => dataUri(p, "font/woff2");
 const fonts = {
-  geist: file("node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2"),
-  mono: file(
-    "node_modules/@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2",
-  ),
-  serif: file(
-    "node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2",
-  ),
+  sans: dataUri("app/styles/fonts/Satoshi-Variable.woff2", "font/woff2"),
+  italic: dataUri("app/styles/fonts/Satoshi-VariableItalic.woff2", "font/woff2"),
 };
 const esc = (s) =>
   String(s).replace(
@@ -32,32 +28,56 @@ const esc = (s) =>
   );
 const isTodo = (v) => typeof v === "string" && v.startsWith("TODO(enzo):");
 
-function template({ eyebrow, title, titleHtml, sub, meta, accent = "#ff4f1a", image }) {
+/** The laptop and phone stills for a project, if rendered. */
+function devices(slug) {
+  const laptop = `public/devices/${slug}/laptop/still-1280.webp`;
+  const phone = `public/devices/${slug}/phone/frame-47-760.webp`;
+  if (!existsSync(laptop)) return null;
+  return {
+    laptop: dataUri(laptop, "image/webp"),
+    phone: existsSync(phone) ? dataUri(phone, "image/webp") : null,
+  };
+}
+
+function tint(accent, amount) {
+  return accent ? `color-mix(in oklab, ${accent} ${amount}%, #e1e5eb)` : "#e1e5eb";
+}
+
+function template({ eyebrow, titleHtml, sub, meta, accent, stage, image, cobalt = false }) {
+  const bg = cobalt ? "#2b36f5" : "#eceef2";
+  const fg = cobalt ? "#ffffff" : "#0c0e16";
+  const spark = cobalt ? "#d4ff3c" : "#2b36f5";
+  const muted = cobalt ? "#c9ccff" : "#555b6b";
   return `<!doctype html><html><head><meta charset="utf-8"><style>
-  @font-face { font-family: Geist; src: url(${fonts.geist}) format("woff2"); font-weight: 100 900; }
-  @font-face { font-family: "Geist Mono"; src: url(${fonts.mono}) format("woff2"); font-weight: 100 900; }
-  @font-face { font-family: "Instrument Serif"; src: url(${fonts.serif}) format("woff2"); font-style: italic; }
+  @font-face { font-family: Satoshi; src: url(${fonts.sans}) format("woff2"); font-weight: 300 900; }
+  @font-face { font-family: Satoshi; src: url(${fonts.italic}) format("woff2"); font-weight: 300 900; font-style: italic; }
   * { margin: 0; box-sizing: border-box; }
-  body { width: 1200px; height: 630px; background: #0b0b0d; color: #eeebe4; font-family: Geist; overflow: hidden; position: relative; }
-  .meta { font-family: "Geist Mono"; font-size: 17px; letter-spacing: .08em; text-transform: uppercase; color: #8c8a86; }
-  .wrap { position: absolute; inset: 56px 64px; display: flex; flex-direction: column; justify-content: space-between; }
-  .text { width: ${image ? 600 : 1000}px; }
-  h1 { font-weight: 560; letter-spacing: -0.04em; line-height: .92; font-size: ${image ? 84 : 132}px; margin-top: 28px; }
-  em { font-family: "Instrument Serif"; font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: ${accent}; }
-  p.sub { margin-top: 26px; font-size: 26px; line-height: 1.35; color: rgb(238 235 228 / .82); max-width: 560px; }
-  .row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgb(255 255 255 / .12); padding-top: 18px; }
-  .dot { display: inline-block; width: 10px; height: 10px; background: ${accent}; margin-right: 14px; vertical-align: 1px; }
-  .img { position: absolute; top: 0; right: 0; width: 470px; height: 630px; overflow: hidden; background: #131316; }
-  .img img { width: 100%; height: 100%; object-fit: cover; object-position: left center; }
-  .img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #0b0b0d 0%, rgb(11 11 13 / 0) 28%); }
-  .grain { position: absolute; inset: 0; opacity: .05; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  body { width: 1200px; height: 630px; background: ${bg}; color: ${fg}; font-family: Satoshi; overflow: hidden; position: relative; }
+  .eyebrow { font-size: 22px; font-weight: 600; color: ${muted}; }
+  .wrap { position: absolute; inset: 56px 60px; display: flex; flex-direction: column; justify-content: space-between; width: 560px; }
+  h1 { font-weight: 760; letter-spacing: -0.045em; line-height: .92; font-size: 88px; margin-top: 22px; }
+  em { font-style: italic; font-weight: 420; letter-spacing: -0.035em; color: ${spark}; }
+  p.sub { margin-top: 24px; font-size: 26px; line-height: 1.3; font-weight: 500; opacity: .82; }
+  .row { display: flex; align-items: center; gap: 14px; font-size: 20px; font-weight: 700; }
+  .mark { width: 44px; height: 44px; border-radius: 50%; background: ${cobalt ? "#d4ff3c" : "#2b36f5"}; color: ${cobalt ? "#0c0e16" : "#fff"}; display: grid; place-items: center; font-size: 15px; font-weight: 900; letter-spacing: -0.06em; }
+  .stage { position: absolute; top: 40px; right: 40px; bottom: 40px; width: 560px; border-radius: 32px; background: ${stage ?? "transparent"}; overflow: hidden; }
+  .stage .laptop { position: absolute; left: 28px; right: 64px; top: 120px; }
+  .stage .laptop img { width: 100%; filter: drop-shadow(0 30px 30px rgb(12 14 22 / .2)); }
+  .stage .phone { position: absolute; right: 18px; bottom: 26px; width: 170px; }
+  .stage .phone img { width: 100%; filter: drop-shadow(0 20px 20px rgb(12 14 22 / .2)); }
+  .stage .cover { width: 100%; height: 100%; object-fit: cover; }
   </style></head><body>
-  ${image ? `<div class="img"><img src="${image}"></div>` : ""}
   <div class="wrap">
-    <div class="text"><p class="meta">${esc(eyebrow)}</p><h1>${titleHtml ?? esc(title)}</h1>${sub ? `<p class="sub">${esc(sub)}</p>` : ""}</div>
-    <div class="row meta" style="width:${image ? 600 : 1072}px"><span><span class="dot"></span>${esc(meta)}</span><span>EDV</span></div>
+    <div><p class="eyebrow">${esc(eyebrow)}</p><h1>${titleHtml}</h1>${sub ? `<p class="sub">${esc(sub)}</p>` : ""}</div>
+    <div class="row"><span class="mark">EDV</span><span>${esc(meta)}</span></div>
   </div>
-  <div class="grain"></div>
+  ${
+    image?.laptop
+      ? `<div class="stage"><div class="laptop"><img src="${image.laptop}"></div>${image.phone ? `<div class="phone"><img src="${image.phone}"></div>` : ""}</div>`
+      : image?.cover
+        ? `<div class="stage"><img class="cover" src="${image.cover}"></div>`
+        : ""
+  }
   </body></html>`;
 }
 
@@ -72,11 +92,15 @@ async function render(html, out) {
   console.log(`og: ${out}`);
 }
 
+const lead = featuredProjects.find((p) => devices(p.slug));
 await render(
   template({
     eyebrow: `${site.name} — ${site.descriptor}`,
-    titleHtml: `Built to be <em>felt.</em>`,
-    meta: `${site.clock.place} · ${site.studio.name}`,
+    titleHtml: `I design &amp; build websites you can <em>feel.</em>`,
+    meta: `${site.name} · ${site.studio.name}`,
+    cobalt: true,
+    stage: "rgb(255 255 255 / .08)",
+    image: lead ? devices(lead.slug) : undefined,
   }),
   "public/og/default.jpg",
 );
@@ -87,11 +111,13 @@ for (const p of caseStudies) {
   await render(
     template({
       eyebrow: `Case study — ${p.disciplines.join(" · ")}`,
-      title: p.title,
+      titleHtml: esc(p.title),
       sub: p.tagline,
       meta: [site.name, year].filter(Boolean).join(" · "),
-      accent: p.theme?.accent ?? "#ff4f1a",
-      image: existsSync(cover) ? dataUri(cover, "image/jpeg") : undefined,
+      stage: tint(p.theme?.accent, 34),
+      image:
+        devices(p.slug) ??
+        (existsSync(cover) ? { cover: dataUri(cover, "image/jpeg") } : undefined),
     }),
     `public/og/${p.slug}.jpg`,
   );

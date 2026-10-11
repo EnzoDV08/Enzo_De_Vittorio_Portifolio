@@ -1,17 +1,32 @@
+import { ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { TransitionLink } from "~/components/motion/TransitionLink";
 import { useLenis } from "~/components/motion/SmoothScroll";
 import { AvailabilityPill } from "~/components/ui/AvailabilityPill";
-import { Clock } from "~/components/ui/Clock";
 import { CopyEmail } from "~/components/ui/CopyEmail";
 import { Socials } from "~/components/ui/Socials";
-import { nav, ui } from "~/content/pages";
+import { nav, navCta, ui } from "~/content/pages";
 import { site } from "~/content/site";
 import { cn } from "~/lib/cn";
 import { usePathname } from "~/lib/usePathname";
 
 function isActive(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`);
+}
+
+/** The EDV mark: monogram in a cobalt disc. */
+export function Mark({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "grid size-9 place-items-center rounded-full bg-cobalt text-[0.8rem] font-black tracking-[-0.06em] text-white",
+        className,
+      )}
+    >
+      {site.monogram}
+    </span>
+  );
 }
 
 export function Nav() {
@@ -23,9 +38,9 @@ export function Nav() {
   const navigatedAway = useRef(false);
   const lenis = useLenis();
 
-  // Solid bar once the page has moved; transparent over the top of the hero.
+  // A floating pill: clear over the top of the page, frosted once it has moved.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -63,79 +78,83 @@ export function Nav() {
   }, [open, lenis]);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color] duration-500",
-        "border-b",
-        scrolled || open ? "border-line bg-ink" : "border-transparent bg-transparent",
-      )}
-    >
-      <div className="container-site flex h-16 items-center justify-between gap-6 md:h-[4.5rem]">
-        <TransitionLink
-          to="/"
-          className="group flex min-h-11 items-center gap-3"
-          aria-label={`${site.name} — ${ui.home}`}
+    <header className="fixed inset-x-0 top-0 z-50 pt-3 md:pt-4">
+      <div className="container-site">
+        <div
+          className={cn(
+            "relative z-10 flex h-14 items-center justify-between gap-4 rounded-full border pr-2 pl-2.5 transition-[background-color,border-color,box-shadow] duration-500 md:h-16",
+            scrolled || open
+              ? "border-line bg-surface/80 shadow-[0_12px_40px_-20px_rgb(12_14_22/0.35)] backdrop-blur-xl"
+              : "border-transparent bg-transparent",
+          )}
         >
-          <span className="display text-xl tracking-[-0.03em] text-paper transition-colors group-hover:text-accent">
-            {site.monogram}
-          </span>
-          <span className="hidden meta text-muted sm:inline">{site.name}</span>
-        </TransitionLink>
+          <TransitionLink
+            to="/"
+            className="group flex min-h-11 items-center gap-3 rounded-full pr-2"
+            aria-label={`${site.name} — ${ui.home}`}
+          >
+            <Mark className="transition-transform duration-500 ease-out-expo group-hover:rotate-[-12deg]" />
+            <span className="hidden text-[0.9375rem] font-bold tracking-[-0.02em] sm:inline">
+              {site.name}
+            </span>
+          </TransitionLink>
 
-        <Clock
-          place={site.clock.place}
-          timeZone={site.clock.timeZone}
-          zone={site.clock.zone}
-          className="hidden meta text-muted md:block"
-        />
+          <nav aria-label="Primary" className="hidden lg:block">
+            <ul className="flex items-center gap-1">
+              {nav.map((item) => {
+                const active = isActive(pathname, item.to);
+                return (
+                  <li key={item.to}>
+                    <TransitionLink
+                      to={item.to}
+                      aria-current={pathname === item.to ? "page" : undefined}
+                      className={cn(
+                        "relative inline-flex min-h-11 items-center rounded-full px-4 text-[0.9375rem] font-semibold transition-colors duration-300",
+                        active ? "bg-fg text-bg" : "text-fg hover:bg-bg-2",
+                      )}
+                    >
+                      {item.label}
+                    </TransitionLink>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-        <nav aria-label="Primary" className="hidden lg:block">
-          <ul className="flex items-center gap-1">
-            {nav.map((item) => {
-              const active = isActive(pathname, item.to);
-              return (
-                <li key={item.to}>
-                  <TransitionLink
-                    to={item.to}
-                    aria-current={pathname === item.to ? "page" : undefined}
-                    className={cn(
-                      "relative inline-flex min-h-11 items-center px-3 meta transition-colors duration-300",
-                      active ? "text-paper" : "text-muted hover:text-paper",
-                    )}
-                  >
-                    {active && <span aria-hidden="true" className="mr-2 size-1.5 bg-accent" />}
-                    {item.label}
-                  </TransitionLink>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        <button
-          ref={toggle}
-          type="button"
-          aria-expanded={open}
-          aria-controls="menu"
-          onClick={() => setOpen((v) => !v)}
-          className="-mr-3 inline-flex min-h-11 min-w-11 items-center gap-2 px-3 meta text-paper lg:hidden"
-        >
-          <span>{open ? ui.close : ui.menu}</span>
-          <span aria-hidden="true" className="relative block h-2 w-5">
-            <span
-              className={cn(
-                "absolute inset-x-0 top-0 h-px bg-current transition-transform duration-300",
-                open && "translate-y-1 rotate-45",
-              )}
-            />
-            <span
-              className={cn(
-                "absolute inset-x-0 bottom-0 h-px bg-current transition-transform duration-300",
-                open && "-translate-y-[3px] -rotate-45",
-              )}
-            />
-          </span>
-        </button>
+          <div className="flex items-center gap-2">
+            <TransitionLink
+              to="/contact"
+              className="hidden min-h-11 items-center gap-2 rounded-full bg-accent px-5 text-[0.9375rem] font-semibold text-accent-fg transition-colors duration-300 hover:bg-fg hover:text-bg sm:inline-flex"
+            >
+              {navCta}
+              <ArrowUpRight className="size-4" aria-hidden />
+            </TransitionLink>
+            <button
+              ref={toggle}
+              type="button"
+              aria-expanded={open}
+              aria-controls="menu"
+              onClick={() => setOpen((v) => !v)}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2.5 rounded-full bg-fg px-4 text-[0.9375rem] font-semibold text-bg lg:hidden"
+            >
+              <span>{open ? ui.close : ui.menu}</span>
+              <span aria-hidden="true" className="relative block h-2 w-4">
+                <span
+                  className={cn(
+                    "absolute inset-x-0 top-0 h-[1.5px] bg-current transition-transform duration-300",
+                    open && "translate-y-[3.5px] rotate-45",
+                  )}
+                />
+                <span
+                  className={cn(
+                    "absolute inset-x-0 bottom-0 h-[1.5px] bg-current transition-transform duration-300",
+                    open && "-translate-y-[3px] -rotate-45",
+                  )}
+                />
+              </span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Full-screen menu below 1024px */}
@@ -143,11 +162,11 @@ export function Nav() {
         id="menu"
         ref={menu}
         hidden={!open}
-        className="fixed inset-x-0 top-16 bottom-0 overflow-y-auto overscroll-contain bg-ink md:top-[4.5rem] lg:hidden"
+        className="fixed inset-0 overflow-y-auto overscroll-contain theme-night lg:hidden"
         data-lenis-prevent
       >
-        <nav aria-label="Menu" className="container-site flex min-h-full flex-col pt-8 pb-10">
-          <ul className="border-t border-line">
+        <nav aria-label="Menu" className="container-site flex min-h-full flex-col pt-28 pb-10">
+          <ul>
             {nav.map((item, i) => (
               <li key={item.to} className="border-b border-line">
                 <TransitionLink
@@ -159,8 +178,8 @@ export function Nav() {
                   <span className="line-mask">
                     <span
                       className={cn(
-                        "block display text-4xl motion-safe:animate-rise",
-                        isActive(pathname, item.to) ? "text-accent" : "text-paper",
+                        "block display text-[clamp(3rem,15vw,5rem)] motion-safe:animate-rise",
+                        isActive(pathname, item.to) && "italic-accent",
                       )}
                       style={{ animationDelay: `${80 + i * 60}ms` }}
                     >
@@ -175,12 +194,6 @@ export function Nav() {
             <AvailabilityPill>{site.availability}</AvailabilityPill>
             <CopyEmail />
             <Socials withLabels />
-            <Clock
-              place={site.clock.place}
-              timeZone={site.clock.timeZone}
-              zone={site.clock.zone}
-              className="meta text-muted"
-            />
           </div>
         </nav>
       </div>

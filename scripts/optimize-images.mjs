@@ -5,7 +5,7 @@
 //   _originals/about/<name>.<ext>     → app/assets/about/<name>.jpg
 //   _originals/<slug>/<name>.<ext>    → app/assets/projects/<slug>/<name>.jpg
 //
-// Transparent images are flattened onto ink-2, the surface they sit on. Up-to-date outputs are skipped; pass --force to redo all.
+// Transparent images are flattened onto the raised surface colour they sit on. Up-to-date outputs are skipped; pass --force to redo all.
 import { mkdirSync, readdirSync, statSync, existsSync } from "node:fs";
 import { basename, dirname, extname, join, relative } from "node:path";
 import sharp from "sharp";
@@ -16,9 +16,13 @@ const MAX_WIDTH = 2400;
 const force = process.argv.includes("--force");
 const exts = new Set([".jpg", ".jpeg", ".png", ".webp", ".tif", ".tiff", ".heic", ".avif"]);
 
+// Raw device captures and 3D models feed scripts/devices, not the site's images.
+const SKIP = new Set([join(SRC, "devices"), join(SRC, "models")]);
+
 function* walk(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name);
+    if (SKIP.has(path)) continue;
     if (entry.isDirectory()) yield* walk(path);
     else if (exts.has(extname(entry.name).toLowerCase())) yield path;
   }
@@ -49,7 +53,7 @@ for (const file of walk(SRC)) {
   await sharp(file)
     .rotate()
     .resize({ width: MAX_WIDTH, withoutEnlargement: true })
-    .flatten({ background: "#131316" })
+    .flatten({ background: "#e1e5eb" })
     .jpeg({ quality: 84, mozjpeg: true })
     .toFile(out);
   const { width, height } = await sharp(out).metadata();

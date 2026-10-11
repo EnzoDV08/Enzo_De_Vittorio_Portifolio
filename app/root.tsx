@@ -1,5 +1,5 @@
-import geistFont from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
-import serifItalicFont from "@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2?url";
+import satoshiFont from "./styles/fonts/Satoshi-Variable.woff2?url";
+import satoshiItalicFont from "./styles/fonts/Satoshi-VariableItalic.woff2?url";
 import { useEffect, useRef } from "react";
 import { lazy } from "react";
 import {
@@ -22,14 +22,16 @@ import { usePathname } from "./lib/usePathname";
 
 // Only needed when something throws a 404 at runtime (e.g. /work/<unknown> on client nav).
 const NotFound = lazy(() => import("./routes/not-found").then((m) => ({ default: m.NotFound })));
-import "./styles/app.css";
+// Rendered with `precedence` so React 19 hoists it above the module preloads — the one
+// render-blocking request should start first, not last.
+import appCss from "./styles/app.css?url";
 
 export const links: Route.LinksFunction = () => [
   // The two files the hero paints with. Everything else loads on demand.
-  { rel: "preload", href: geistFont, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
+  { rel: "preload", href: satoshiFont, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
   {
     rel: "preload",
-    href: serifItalicFont,
+    href: satoshiItalicFont,
     as: "font",
     type: "font/woff2",
     crossOrigin: "anonymous",
@@ -45,13 +47,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-        <meta name="theme-color" content="#0b0b0d" />
+        <meta name="theme-color" content="#eceef2" />
+        <link rel="stylesheet" href={appCss} precedence="default" />
         <Meta />
         <Links />
       </head>
       <body>
         {children}
-        <div className="grain" aria-hidden="true" />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -79,7 +81,7 @@ function Shell({ children }: { children: React.ReactNode }) {
       <PageTransition>
         <a
           href="#main"
-          className="fixed top-3 left-3 z-[90] -translate-y-24 rounded-sm bg-accent px-4 py-3 meta text-accent-ink focus:translate-y-0"
+          className="fixed top-3 left-3 z-[90] -translate-y-24 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-accent-fg focus:translate-y-0"
         >
           {ui.skip}
         </a>

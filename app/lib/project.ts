@@ -1,6 +1,7 @@
 import { caseStudy as copy } from "~/content/pages";
 import { isTodo, real } from "~/content/todo";
 import type { GalleryImage, Project } from "~/content/types";
+import type { Devices } from "./devices";
 import type { Picture } from "./images";
 
 export const indexLabel = (n: number) => String(n).padStart(2, "0");
@@ -28,6 +29,12 @@ export function projectLinks(p: Pick<Project, "links">): ProjectLink[] {
 
 export const caseStudyPath = (p: Pick<Project, "slug">) => `/work/${p.slug}`;
 
+/** A light tint of the project's own colour, for the panels its devices sit on. */
+export const projectTint = (p: Pick<Project, "theme">, amount = 24) =>
+  p.theme?.accent
+    ? `color-mix(in oklab, ${p.theme.accent} ${amount}%, var(--color-bg-2))`
+    : "var(--color-bg-2)";
+
 // ───────────── Shapes sent from route loaders (prerendered into the HTML) ─────────────
 
 /** What a card or list row needs — no case-study text, so pages stay light. */
@@ -37,10 +44,12 @@ export type ProjectSummary = Omit<
 > & {
   hasCaseStudy: boolean;
   picture?: Picture;
+  devices: Devices;
 };
 
 /** Everything a case-study page needs, with images already resolved. */
 export type ProjectDetail = Omit<Project, "gallery"> & {
   picture?: Picture;
+  devices: Devices;
   gallery?: (GalleryImage & { picture?: Picture })[];
 };

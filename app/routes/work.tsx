@@ -68,9 +68,14 @@ export default function Work({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      <Container className="pt-32 md:pt-44">
-        <h1 className="display text-display">{work.heading}</h1>
-        <div className="mt-10 flex flex-col gap-8 border-t border-line pt-6 md:flex-row md:items-start md:justify-between">
+      <Container className="pt-32 md:pt-40">
+        <h1 className="display text-display">
+          {work.heading}
+          <sup className="ml-2 align-top text-[0.28em] font-bold tracking-normal text-accent tabular-nums">
+            {String(featuredProjects.length + moreProjects.length + earlierProjects.length).padStart(2, "0")}
+          </sup>
+        </h1>
+        <div className="mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-start md:justify-between">
           <p className="max-w-[40ch] text-lg text-muted">{work.intro}</p>
           <FilterChips
             label={work.filterLabel}
@@ -94,8 +99,8 @@ export default function Work({ loaderData }: Route.ComponentProps) {
       )}
 
       {featured.length > 0 && (
-        <Section index={1} label={work.featuredLabel} rule={false}>
-          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-20 md:grid-cols-2">
+        <Section index={1} label={work.featuredLabel} spacing="tight">
+          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-16 md:grid-cols-2 md:gap-y-20">
             {featured.map((project) => (
               <li key={project.slug}>
                 <ProjectCard
@@ -134,7 +139,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
                 { value: null, label: work.allYears },
                 ...earlierYears.map((key) => ({
                   value: key,
-                  label: key === TBC ? work.yearTbc : key,
+                  label: key === TBC ? work.unknownYear : key,
                 })),
               ]}
             />
@@ -142,8 +147,8 @@ export default function Work({ loaderData }: Route.ComponentProps) {
           <div className="mt-14 space-y-20">
             {earlier.map(([key, group]) => (
               <section key={key} aria-labelledby={`year-${key}`}>
-                <div className="flex items-baseline justify-between border-t border-line pt-4">
-                  <h2 id={`year-${key}`} className="display text-2xl tabular-nums">
+                <div className="flex items-baseline justify-between border-t border-line pt-5">
+                  <h2 id={`year-${key}`} className="display text-3xl tabular-nums">
                     {key === TBC ? work.unknownYear : key}
                   </h2>
                   <span className="meta text-muted">{String(group.length).padStart(2, "0")}</span>

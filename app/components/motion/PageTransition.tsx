@@ -10,7 +10,7 @@ type Go = (to: string, label?: string) => void;
 type GsapModule = Awaited<ReturnType<typeof loadGsap>>;
 const TransitionContext = createContext<Go | null>(null);
 
-/** Navigate with the ink-panel wipe (falls back to plain navigation). */
+/** Navigate with the cobalt-panel wipe (falls back to plain navigation). */
 export function useTransitionNavigate(): Go {
   const go = useContext(TransitionContext);
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const COVER = 0.3;
 const REVEAL = 0.34;
 
 /**
- * Full-screen ink panel that wipes up over the old page, shows the destination title in mono,
+ * Full-screen cobalt panel that wipes up over the old page, shows the destination title in lime,
  * then wipes off the new one. ~650ms end to end. Skipped with reduced motion, on back/forward,
  * and before GSAP has loaded (it's fetched in the background right after hydration).
  */
@@ -86,10 +86,10 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
       <div
         ref={panel}
         aria-hidden="true"
-        className="invisible fixed inset-0 z-[80] flex items-end bg-ink-2 will-change-transform"
+        className="invisible fixed inset-0 z-[80] flex items-end theme-cobalt will-change-transform"
       >
-        <div className="container-site border-t border-line pt-5 pb-[max(2rem,env(safe-area-inset-bottom))]">
-          <p ref={label} className="meta text-paper" />
+        <div className="container-site pt-5 pb-[max(2.5rem,env(safe-area-inset-bottom))]">
+          <p ref={label} className="display text-[clamp(2.5rem,8vw,7rem)] text-lime" />
         </div>
       </div>
     </TransitionContext.Provider>

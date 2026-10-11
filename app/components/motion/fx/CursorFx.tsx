@@ -56,20 +56,20 @@ export default function Follower() {
     >
       <div
         className={
-          "flex items-center justify-center gap-1.5 overflow-clip rounded-full meta whitespace-nowrap " +
+          "flex items-center justify-center gap-1.5 overflow-clip rounded-full text-sm font-semibold whitespace-nowrap " +
           "transition-[width,height,opacity,background-color] duration-300 ease-out-3 " +
-          "size-2 bg-paper opacity-100 mix-blend-difference " +
+          "size-2.5 bg-white opacity-100 mix-blend-difference " +
           "group-data-[state=hidden]/cursor:opacity-0 " +
-          "group-data-[state=label]/cursor:h-11 group-data-[state=label]/cursor:w-28 " +
-          "group-data-[state=label]/cursor:bg-accent group-data-[state=label]/cursor:mix-blend-normal"
+          "group-data-[state=label]/cursor:size-24 " +
+          "group-data-[state=label]/cursor:bg-lime group-data-[state=label]/cursor:mix-blend-normal"
         }
       >
         <span
           ref={text}
-          className="text-accent-ink opacity-0 transition-opacity duration-200 group-data-[state=label]/cursor:opacity-100"
+          className="text-night opacity-0 transition-opacity duration-200 group-data-[state=label]/cursor:opacity-100"
         />
         <ArrowRight
-          className="size-3.5 text-accent-ink opacity-0 transition-opacity duration-200 group-data-[state=label]/cursor:opacity-100"
+          className="size-4 text-night opacity-0 transition-opacity duration-200 group-data-[state=label]/cursor:opacity-100"
           strokeWidth={1.75}
         />
       </div>

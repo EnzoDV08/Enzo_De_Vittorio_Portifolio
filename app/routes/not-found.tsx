@@ -25,9 +25,9 @@ export function NotFound({ featured = [] }: { featured?: ProjectSummary[] }) {
   return (
     <>
       <Container className="flex min-h-[80svh] flex-col justify-end pt-32 pb-16">
-        <p className="meta text-muted">404</p>
-        <h1 className="mt-6 display text-display">
-          {notFound.heading} <span className="serif-accent text-accent">{notFound.accent}</span>
+        <p className="display text-[clamp(5rem,20vw,16rem)] text-accent">404</p>
+        <h1 className="mt-2 display text-4xl">
+          {notFound.heading} <span className="italic-accent text-accent">{notFound.accent}</span>
         </h1>
         <p className="mt-8 max-w-prose text-lg text-muted">{notFound.copy}</p>
         <div className="mt-10">
@@ -41,7 +41,7 @@ export function NotFound({ featured = [] }: { featured?: ProjectSummary[] }) {
           <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-16 border-t border-line pt-10 sm:grid-cols-2 lg:grid-cols-3">
             {featured.map((project, i) => (
               <li key={project.slug}>
-                <ProjectCard project={project} index={i + 1} variant="compact" headingLevel="h2" />
+                <ProjectCard project={project} index={i + 1} variant="feature" headingLevel="h2" />
               </li>
             ))}
           </ul>

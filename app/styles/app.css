@@ -5,15 +5,23 @@
 @custom-variant fine (@media (hover: hover) and (pointer: fine));
 
 /* ---------------------------------------------------------------------------
-   Fonts — self-hosted, Latin subset only, woff2 only.
-   The Geist and Instrument Serif italic files are preloaded in root.tsx.
+   Fonts — self-hosted woff2.
+   Satoshi (Indian Type Foundry, Fontshare Free Font licence — web use allowed, see
+   fonts/Satoshi-LICENSE.txt) carries everything: display, body and the italic accent.
+   Geist Mono is only for small labels and numbers. Satoshi is preloaded in root.tsx.
 --------------------------------------------------------------------------- */
 @font-face {
-  font-family: "Geist";
-  src: url("../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2")
-    format("woff2-variations");
-  font-weight: 100 900;
+  font-family: "Satoshi";
+  src: url("./fonts/Satoshi-Variable.woff2") format("woff2-variations");
+  font-weight: 300 900;
   font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("./fonts/Satoshi-VariableItalic.woff2") format("woff2-variations");
+  font-weight: 300 900;
+  font-style: italic;
   font-display: swap;
 }
 @font-face {
@@ -24,48 +32,86 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Metric-matched fallbacks: while the web fonts load, system fonts are scaled to take up the
+   same space, so the swap doesn't shift the layout (CLS). Measured from the Satoshi files with
+   opentype.js against Arial. */
 @font-face {
-  font-family: "Instrument Serif";
-  src: url("../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2")
-    format("woff2");
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
+  font-family: "Satoshi Fallback";
+  src: local("Arial");
+  font-weight: 100 599;
+  size-adjust: 98.51%;
+  ascent-override: 102.52%;
+  descent-override: 24.36%;
+  line-gap-override: 10.15%;
 }
 @font-face {
-  font-family: "Instrument Serif";
-  src: url("../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2")
-    format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+  font-family: "Satoshi Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT");
+  font-weight: 600 900;
+  size-adjust: 97.97%;
+  ascent-override: 103.09%;
+  descent-override: 24.5%;
+  line-gap-override: 10.21%;
+}
+@font-face {
+  font-family: "Satoshi Fallback";
+  src: local("Arial Italic"), local("Arial-ItalicMT");
+  font-style: italic;
+  size-adjust: 98.51%;
+  ascent-override: 102.52%;
+  descent-override: 24.36%;
+  line-gap-override: 10.15%;
+}
+@font-face {
+  font-family: "Geist Mono Fallback";
+  src: local("Courier New"), local("CourierNewPSMT");
+  size-adjust: 100%;
+  ascent-override: 100%;
+  descent-override: 30%;
+  line-gap-override: 0%;
 }
 
 /* ---------------------------------------------------------------------------
    Design tokens
+   A cool, light identity: chalk paper, blue-black ink, an electric cobalt signature and an
+   acid-lime spark. Semantic names (bg / fg / muted / line) so a section can switch theme by
+   redefining them — see .theme-night and .theme-cobalt below.
 --------------------------------------------------------------------------- */
 @theme {
   /* Only our palette — Tailwind's default colours are switched off on purpose. */
   --color-*: initial;
   --color-transparent: transparent;
   --color-current: currentColor;
-  --color-ink: #0b0b0d;
-  --color-ink-2: #131316;
-  --color-ink-3: #1c1c21;
-  --color-line: rgb(255 255 255 / 0.08);
-  --color-line-strong: rgb(255 255 255 / 0.16);
-  --color-paper: #eeebe4;
-  --color-muted: #8c8a86;
-  --color-accent: #ff4f1a;
-  --color-accent-ink: #0b0b0d;
-  --color-signal: #3ddc84; /* availability dot only */
+  --color-white: #ffffff;
 
-  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  /* Fixed brand colours */
+  --color-chalk: #eceef2;
+  --color-night: #0c0e16;
+  --color-cobalt: #2b36f5;
+  --color-cobalt-deep: #1b23b8;
+  --color-lime: #d4ff3c;
+
+  /* Semantic (redefined per theme scope) */
+  --color-bg: #eceef2;
+  --color-bg-2: #e1e5eb;
+  --color-bg-3: #d5dae2;
+  --color-surface: #f8f9fb;
+  --color-fg: #0c0e16;
+  --color-muted: #555b6b;
+  --color-line: rgb(12 14 22 / 0.1);
+  --color-line-strong: rgb(12 14 22 / 0.24);
+  --color-accent: #2b36f5;
+  --color-accent-fg: #ffffff;
+  /* Emphasis inside headlines (cobalt on chalk, lime on night/cobalt). */
+  --color-spark: #2b36f5;
+  --color-signal: #14a85a; /* availability dot only */
+
+  --font-sans: "Satoshi", "Satoshi Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Fluid type scale */
-  --text-xs: clamp(0.6875rem, 0.66rem + 0.12vw, 0.8125rem);
+  --text-xs: clamp(0.75rem, 0.72rem + 0.1vw, 0.8125rem);
   --text-xs--line-height: 1.4;
   --text-sm: clamp(0.8125rem, 0.79rem + 0.12vw, 0.9375rem);
   --text-sm--line-height: 1.5;
@@ -74,23 +120,26 @@
   --text-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
   --text-lg--line-height: 1.45;
   --text-xl: clamp(1.375rem, 1.2rem + 0.9vw, 2rem);
-  --text-xl--line-height: 1.2;
+  --text-xl--line-height: 1.15;
   --text-2xl: clamp(1.75rem, 1.4rem + 1.8vw, 3rem);
-  --text-2xl--line-height: 1.05;
+  --text-2xl--line-height: 1.04;
   --text-3xl: clamp(2.25rem, 1.6rem + 3.4vw, 4.75rem);
-  --text-3xl--line-height: 0.95;
+  --text-3xl--line-height: 0.96;
   --text-4xl: clamp(2.75rem, 1.7rem + 5.6vw, 7.5rem);
   --text-4xl--line-height: 0.92;
   --text-display: clamp(3rem, 11vw, 11rem);
   --text-display--line-height: 0.9;
 
-  --tracking-display: -0.04em;
+  --tracking-display: -0.045em;
   --tracking-tight: -0.02em;
-  --tracking-meta: 0.08em;
+  --tracking-meta: 0.06em;
 
   --leading-display: 0.9;
 
-  --radius-sm: 2px;
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --radius-xl: 40px;
 
   --breakpoint-3xl: 120rem;
 
@@ -98,15 +147,19 @@
   --container-prose: 65ch;
 
   --spacing-gutter: clamp(1rem, 3vw, 2.5rem);
-  --spacing-section: clamp(6rem, 14vw, 12rem);
+  --spacing-section: clamp(6rem, 12vw, 11rem);
 
   /* GSAP-equivalent curves for CSS transitions */
   --ease-out-3: cubic-bezier(0.215, 0.61, 0.355, 1); /* power3.out */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-expo-in-out: cubic-bezier(0.87, 0, 0.13, 1); /* expo.inOut */
 
   --animate-marquee: marquee var(--marquee-duration, 60s) linear infinite;
+  --animate-marquee-reverse: marquee var(--marquee-duration, 60s) linear infinite reverse;
   --animate-rise: rise 1s var(--ease-out-3) both;
+  --animate-rise-short: rise-short 1s var(--ease-out-3) both;
   --animate-fade-up: fade-up 0.9s var(--ease-out-3) both;
+  --animate-float: float 7s ease-in-out infinite;
 
   @keyframes marquee {
     to {
@@ -118,12 +171,58 @@
       transform: translate3d(0, 105%, 0);
     }
   }
+  @keyframes rise-short {
+    from {
+      transform: translate3d(0, 35%, 0);
+    }
+  }
   @keyframes fade-up {
     from {
       opacity: 0;
       transform: translate3d(0, 0.75rem, 0);
     }
   }
+  @keyframes float {
+    50% {
+      transform: translate3d(0, -1.5%, 0) rotate(-0.6deg);
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Theme scopes. Anything inside picks up the new semantic colours automatically.
+--------------------------------------------------------------------------- */
+@utility theme-night {
+  --color-bg: #0c0e16;
+  --color-bg-2: #151826;
+  --color-bg-3: #1e2233;
+  --color-surface: #151826;
+  --color-fg: #eceef2;
+  --color-muted: #9aa1b4;
+  --color-line: rgb(236 238 242 / 0.1);
+  --color-line-strong: rgb(236 238 242 / 0.22);
+  --color-accent: #d4ff3c;
+  --color-accent-fg: #0c0e16;
+  --color-spark: #d4ff3c;
+  --color-signal: #3ddc84;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+}
+
+@utility theme-cobalt {
+  --color-bg: #2b36f5;
+  --color-bg-2: #3540ff;
+  --color-bg-3: #4a54ff;
+  --color-surface: #3540ff;
+  --color-fg: #ffffff;
+  --color-muted: #c9ccff;
+  --color-line: rgb(255 255 255 / 0.18);
+  --color-line-strong: rgb(255 255 255 / 0.36);
+  --color-accent: #d4ff3c;
+  --color-accent-fg: #0c0e16;
+  --color-spark: #d4ff3c;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
 }
 
 /* ---------------------------------------------------------------------------
@@ -131,19 +230,20 @@
 --------------------------------------------------------------------------- */
 @layer base {
   html {
-    color-scheme: dark;
-    background: var(--color-ink);
+    color-scheme: light;
+    background: var(--color-bg);
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
-    scrollbar-color: var(--color-ink-3) var(--color-ink);
+    scrollbar-color: var(--color-bg-3) var(--color-bg);
   }
 
   body {
     min-height: 100svh;
-    background: var(--color-ink);
-    color: var(--color-paper);
+    background: var(--color-bg);
+    color: var(--color-fg);
     font-family: var(--font-sans);
     font-size: var(--text-base);
+    font-weight: 450;
     line-height: 1.6;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -153,8 +253,8 @@
   }
 
   ::selection {
-    background: var(--color-accent);
-    color: var(--color-accent-ink);
+    background: var(--color-lime);
+    color: var(--color-night);
   }
 
   :focus-visible {
@@ -193,6 +293,7 @@
 @utility meta {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
+  font-weight: 450;
   line-height: 1.4;
   letter-spacing: var(--tracking-meta);
   text-transform: uppercase;
@@ -201,16 +302,17 @@
 
 @utility display {
   font-family: var(--font-sans);
-  font-weight: 560;
+  font-weight: 760;
   letter-spacing: var(--tracking-display);
   line-height: var(--leading-display);
 }
 
-@utility serif-accent {
-  font-family: var(--font-serif);
+/* The emphasised word in a headline: a lighter italic in the section's spark colour. */
+@utility italic-accent {
   font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.01em;
+  font-weight: 420;
+  letter-spacing: -0.035em;
+  color: var(--color-spark);
 }
 
 @utility container-site {
@@ -237,38 +339,15 @@
   margin-inline: -0.08em;
 }
 
-/* ---------------------------------------------------------------------------
-   Film grain — static SVG noise, shifted in steps. Static on reduced motion.
---------------------------------------------------------------------------- */
-.grain {
-  position: fixed;
-  inset: -10%;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  animation: grain 0.9s steps(6) infinite;
+/* Fine dot grid, used behind device stages. */
+@utility dot-grid {
+  background-image: radial-gradient(circle at 1px 1px, var(--color-line-strong) 1px, transparent 0);
+  background-size: 22px 22px;
 }
 
-@keyframes grain {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  20% {
-    transform: translate3d(-4%, 3%, 0);
-  }
-  40% {
-    transform: translate3d(3%, -5%, 0);
-  }
-  60% {
-    transform: translate3d(-6%, -2%, 0);
-  }
-  80% {
-    transform: translate3d(5%, 4%, 0);
-  }
-  100% {
-    transform: translate3d(-2%, 6%, 0);
-  }
+/* Soft floor shadow under a device still. */
+@utility device-shadow {
+  filter: drop-shadow(0 40px 40px rgb(12 14 22 / 0.18)) drop-shadow(0 8px 12px rgb(12 14 22 / 0.12));
 }
 
 /* ---------------------------------------------------------------------------
@@ -284,20 +363,6 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .grain {
-    animation: none;
-  }
-}
-
-/* Static grain for placeholders and media frames. */
-.grain-local {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.18;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 }
 
 /* Native cursor gives way to the "View →" follower over project media — only once the

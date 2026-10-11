@@ -1,5 +1,6 @@
 // Runs after `react-router build`:
-//  1. moves the prerendered 404 into place and drops the unused SPA fallback
+//  1. moves the prerendered 404 into place, drops the unused SPA fallback, and lowers the
+//     priority of module preloads
 //  2. writes sitemap.xml and robots.txt from the same path list the prerender uses
 //  3. checks every case study has an OG image (from `npm run og`)
 //  4. enforces the initial-JS budget (≤ 130 KB gzip per page)
@@ -33,6 +34,17 @@ if (existsSync(`${OUT}/404/index.html`)) {
   rmSync(`${OUT}/404.data`, { force: true });
 }
 rmSync(`${OUT}/__spa-fallback.html`, { force: true });
+
+// Module preloads at low priority: the page is fully rendered HTML, so the stylesheet, fonts
+// and LCP image should win the first round trips; hydration can arrive a moment later.
+for (const file of [...htmlFiles(OUT), `${OUT}/404.html`]) {
+  if (!existsSync(file)) continue;
+  const html = readFileSync(file, "utf8");
+  writeFileSync(
+    file,
+    html.replaceAll('<link rel="modulepreload" href=', '<link rel="modulepreload" fetchpriority="low" href='),
+  );
+}
 
 // Sitemap + robots. Paths come from react-router.config.ts (which reads app/content), so a new
 // case study is listed automatically. The dev-only styleguide is never in that list.

@@ -3,7 +3,7 @@
 //   npm run build && npm run preview   (in another terminal)
 //   npm run shots                      → .shots/<width>/<route>.png
 //
-// Options: BASE=http://localhost:4173  WIDTHS=390,768  ROUTES=/,/work  REDUCED=1
+// Options: BASE=http://localhost:4173  WIDTHS=390,768  HEIGHT=390  ROUTES=/,/work  REDUCED=1
 // Each page is scrolled top to bottom first so scroll-triggered reveals have fired.
 // Exits non-zero if any page overflows horizontally or logs an error.
 import { mkdirSync } from "node:fs";
@@ -45,11 +45,11 @@ const browser = await chromium.launch();
 const problems = [];
 
 for (const width of WIDTHS) {
-  const dir = `.shots/${REDUCED ? "reduced-" : ""}${width}`;
+  const dir = `.shots/${REDUCED ? "reduced-" : ""}${width}${process.env.HEIGHT ? `x${process.env.HEIGHT}` : ""}`;
   mkdirSync(dir, { recursive: true });
   const mobile = width < 1024;
   const context = await browser.newContext({
-    viewport: { width, height: heights[width] ?? 900 },
+    viewport: { width, height: Number(process.env.HEIGHT) || heights[width] || 900 },
     deviceScaleFactor: 1,
     isMobile: mobile,
     hasTouch: mobile,
@@ -82,8 +82,20 @@ for (const width of WIDTHS) {
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
-    await page.screenshot({ path: `${dir}/${name(route)}.png`, fullPage: true });
     const issues = [];
+    // Very tall pages occasionally exceed the capture timeout; retry once before reporting.
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        await page.screenshot({
+          path: `${dir}/${name(route)}.png`,
+          fullPage: true,
+          timeout: 60_000,
+        });
+        break;
+      } catch (e) {
+        if (attempt === 2) issues.push(`screenshot failed: ${String(e).split("\n")[0]}`);
+      }
+    }
     if (overflow > 0) issues.push(`overflows by ${overflow}px`);
     if (errors.length) issues.push(...errors.map((e) => `error: ${e}`));
     if (issues.length) problems.push(`${width} ${route}: ${issues.join("; ")}`);

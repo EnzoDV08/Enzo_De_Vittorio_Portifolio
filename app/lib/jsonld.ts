@@ -14,12 +14,6 @@ export function personJsonLd() {
     url: site.url,
     jobTitle: site.descriptor,
     ...(isTodo(site.email) ? {} : { email: `mailto:${site.email}` }),
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Centurion",
-      addressRegion: "Gauteng",
-      addressCountry: "ZA",
-    },
     sameAs: realValues(Object.values(site.socials)),
     alumniOf: {
       "@type": "EducationalOrganization",

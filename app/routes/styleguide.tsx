@@ -1,7 +1,6 @@
 import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
 import { AvailabilityPill } from "~/components/ui/AvailabilityPill";
 import { Button } from "~/components/ui/Button";
-import { Clock } from "~/components/ui/Clock";
 import { Container } from "~/components/ui/Container";
 import { GitHubIcon, InstagramIcon, LinkedInIcon, FigmaIcon } from "~/components/ui/icons";
 import { Marquee } from "~/components/ui/Marquee";
@@ -16,12 +15,16 @@ export function meta() {
 }
 
 const colors = [
-  ["ink", "bg-ink"],
-  ["ink-2", "bg-ink-2"],
-  ["ink-3", "bg-ink-3"],
+  ["bg", "bg-bg"],
+  ["bg-2", "bg-bg-2"],
+  ["bg-3", "bg-bg-3"],
+  ["surface", "bg-surface"],
   ["line", "bg-line"],
   ["line-strong", "bg-line-strong"],
-  ["paper", "bg-paper"],
+  ["fg", "bg-fg"],
+  ["cobalt", "bg-cobalt"],
+  ["lime", "bg-lime"],
+  ["night", "bg-night"],
   ["muted", "bg-muted"],
   ["accent", "bg-accent"],
   ["signal", "bg-signal"],
@@ -44,7 +47,7 @@ export default function Styleguide() {
       <Container className="pt-16">
         <SectionLabel>Design system — dev only</SectionLabel>
         <h1 className="mt-6 display text-display">
-          Styleguide <span className="serif-accent text-accent">tokens</span>.
+          Styleguide <span className="italic-accent text-accent">tokens</span>.
         </h1>
       </Container>
 
@@ -64,14 +67,14 @@ export default function Styleguide() {
           <p className="display text-display">Display</p>
           {sizes.toReversed().map(([name, cls]) => (
             <p key={name} className={`${cls} display`}>
-              {name} — Geist
+              {name} — Satoshi
             </p>
           ))}
-          <p className="serif-accent text-3xl">Instrument Serif italic accent</p>
-          <p className="meta text-muted">Geist Mono meta — 0.08em tracking, uppercase</p>
+          <p className="italic-accent text-3xl">Satoshi italic accent</p>
+          <p className="meta text-muted">Geist Mono meta — 0.06em tracking, uppercase</p>
           <p className="max-w-prose text-base text-muted">
-            Body copy is Geist 400 at 16–18px with 1.6 line height and a 65ch measure. Muted text
-            uses --color-muted, which clears WCAG AA on every ink surface.
+            Body copy is Satoshi 450 at 16–18px with 1.6 line height and a 65ch measure. Muted text
+            uses --color-muted, which clears WCAG AA on chalk, night and cobalt.
           </p>
         </div>
       </Section>
@@ -95,7 +98,7 @@ export default function Styleguide() {
           <Tag>2026</Tag>
           <TagList items={["React", "TypeScript", "GSAP"]} />
         </div>
-        <div className="mt-8 flex gap-4 text-paper">
+        <div className="mt-8 flex gap-4 text-fg">
           <GitHubIcon />
           <LinkedInIcon />
           <InstagramIcon />
@@ -105,12 +108,6 @@ export default function Styleguide() {
 
       <Section index={4} label="Signature details">
         <div className="flex flex-wrap items-center gap-6">
-          <Clock
-            place="CENTURION, ZA"
-            timeZone="Africa/Johannesburg"
-            zone="SAST"
-            className="meta text-muted"
-          />
           <AvailabilityPill>Availability pill</AvailabilityPill>
         </div>
       </Section>

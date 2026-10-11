@@ -8,6 +8,7 @@ import type { Project } from "./types";
  */
 
 const CAPTURED = "Live site, captured October 2026.";
+const CAPTURED_LOCAL = "Production build, captured October 2026.";
 
 export const projects: Project[] = [
   // ───────────────────────────── Featured ─────────────────────────────
@@ -17,12 +18,13 @@ export const projects: Project[] = [
     tagline: "The 1838 Battle of Blood River / Ncome, told from two perspectives.",
     year: 2026,
     disciplines: ["Interactive", "Development"],
-    role: todo("your role on One River (solo? design + development + sound?)"),
+    // Every commit in the repo is Enzo's.
+    role: "Design and development",
     client: "Academic",
     context: "PGDip — PP 410",
     stack: ["Astro", "Vanilla JS", "GSAP ScrollTrigger", "Lenis", "Canvas API", "Firebase Hosting"],
     links: {
-      live: todo("One River live URL"),
+      live: "https://one-river-two-memories-fa6f1.web.app",
       code: "https://github.com/EnzoDV08/ONE-RIVER-TWO-MEMORIES_FINAL",
     },
     featured: true,
@@ -30,6 +32,23 @@ export const projects: Project[] = [
     theme: { accent: "#8FB3A6" },
     cover: "projects/one-river-two-memories/cover.jpg",
     coverAlt: "One River, Two Memories — opening scene of the scroll-driven heritage site",
+    gallery: [
+      {
+        src: "projects/one-river-two-memories/gallery-1.jpg",
+        alt: "“Same water. Same banks.” in serif type over dark, rippling water",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/one-river-two-memories/gallery-2.jpg",
+        alt: "The river's two names side by side: iNcome, the Zulu name, and Blood River, the Voortrekker name",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/one-river-two-memories/gallery-3.jpg",
+        alt: "An aerial view of the river through dry land, with narration about the two memories connected to it",
+        caption: CAPTURED,
+      },
+    ],
     caseStudy: {
       challenge:
         "Tell one of South Africa's most contested days — the 1838 Battle of Blood River / Ncome — from two perspectives, without collapsing them into a single story. And make it something you move through, not a page you read.",
@@ -111,7 +130,8 @@ export const projects: Project[] = [
     tagline: "Adopt a hive, then talk to Mellie — a 3D bee who answers.",
     year: 2026,
     disciplines: ["Interactive", "Development"],
-    role: todo("your role on Honeybee Heroes"),
+    // Every commit in the repo is Enzo's.
+    role: "Design and development",
     client: todo("NPO name for Honeybee Heroes"),
     context: "PGDip — PP 410, Theme 2",
     stack: ["React", "Vite", "Three.js", "OpenAI gpt-4o-mini", "ElevenLabs TTS", "Firebase"],
@@ -180,37 +200,50 @@ export const projects: Project[] = [
     tagline: "Our studio's own cinematic site — case studies, services and a guided brief.",
     year: 2026,
     disciplines: ["Development", "Brand"],
-    role: todo("your role on the studio site — design, development, or both?"),
+    // Every commit in the repo is Enzo's.
+    role: "Co-founder · design and development",
     team: [
       { name: "Enzo De Vittorio", role: "Co-founder" },
       { name: "Armand Naudé", role: "Co-founder" },
     ],
     client: "Stack Studio",
     context: "Own studio — PP 410, Theme 4",
-    stack: ["React", "Vite", "GSAP", "Lenis"],
+    stack: ["React", "TypeScript", "Vite", "Tailwind CSS", "GSAP", "Lenis", "Three.js", "Zod"],
     links: { live: todo("Stack Studio live URL") },
     featured: true,
     order: 4,
+    theme: { accent: "#FF5A14" },
     cover: "projects/stack-studio/cover.jpg",
     coverAlt: "Stack Studio website — the STΛCK wordmark",
+    gallery: [
+      {
+        src: "projects/stack-studio/gallery-1.jpg",
+        alt: "“What do you need?” — five service panels: Build, Take over, Run, Improve and Partner, with starting prices",
+        caption: CAPTURED_LOCAL,
+      },
+    ],
     caseStudy: {
       challenge:
         "A two-person studio that sells brand-led, cinematic websites needs a site that proves it by being one.",
       approach: [
         {
           heading: "A visual language",
-          body: "Instrument Serif, Syne and DM Mono, film grain, and the chevron-Λ “STΛCK” motif.",
+          body: "Inter Tight and JetBrains Mono on near-black, a square grid, film grain and the orange Λ of the STΛCK mark.",
         },
         {
-          heading: "Case studies, services, a brief",
-          body: "Work and services lead, and a guided brief flow helps prospective clients say what they need.",
+          heading: "Proof on every page",
+          body: "Every project card and case study is a device mockup rendered from the client's real site, and the services page turns 3D devices as you scroll.",
+        },
+        {
+          heading: "A brief, not a form",
+          body: "A guided, step-by-step brief helps prospective clients say what they need and see an estimate before they ever book a call.",
         },
       ],
       highlights: [
-        "Chevron-Λ “STΛCK” motif",
-        "Guided brief flow",
-        "GSAP + Lenis motion",
-        "React + Vite",
+        "Device mockups rendered from real client sites",
+        "Scroll-scrubbed 3D phone and laptop (Three.js, rendered at build time)",
+        "Guided project brief with an estimate",
+        "GSAP + Lenis motion on React and TypeScript",
       ],
       outcome: todo("Stack Studio site outcome — anything you can state"),
     },
@@ -218,7 +251,7 @@ export const projects: Project[] = [
   {
     slug: "mpg-foundation",
     title: "MPG Foundation",
-    tagline: "Production site for a Pretoria non-profit, built to last and be found.",
+    tagline: "Production site for a community non-profit, built to last and be found.",
     year: 2026,
     yearLabel: "2025–2026",
     disciplines: ["Development", "UX"],
@@ -358,7 +391,8 @@ export const projects: Project[] = [
     tagline: "My manifesto as a scroll-driven site, with a Firebase “feeling wall”.",
     year: 2026,
     disciplines: ["Interactive", "Development"],
-    role: todo("your role on Built to Be Felt"),
+    // Every commit in the repo is Enzo's.
+    role: "Design and development",
     client: "Academic",
     context: "PGDip — RR 420",
     stack: ["React", "GSAP", "Firebase"],

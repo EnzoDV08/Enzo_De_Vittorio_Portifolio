@@ -27,10 +27,10 @@ export function FilterChips({
             aria-pressed={pressed}
             onClick={() => onChange(option.value)}
             className={cn(
-              "inline-flex min-h-11 items-center rounded-sm border px-4 meta transition-colors duration-300",
+              "inline-flex min-h-11 items-center rounded-full border px-5 text-sm font-semibold transition-colors duration-300",
               pressed
-                ? "border-accent bg-accent text-accent-ink"
-                : "border-line-strong text-paper hover:border-paper",
+                ? "border-fg bg-fg text-bg"
+                : "border-line-strong text-fg hover:border-fg",
             )}
           >
             {option.label}

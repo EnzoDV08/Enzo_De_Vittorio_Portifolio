@@ -61,7 +61,6 @@ export type Project = {
 export type TimelineEntry = {
   title: string;
   org: string;
-  place?: string;
   period: Maybe<string>;
   note?: string;
 };
