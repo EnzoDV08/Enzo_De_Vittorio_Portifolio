@@ -2,33 +2,45 @@ import { ArrowRight, ArrowUp, Download } from "lucide-react";
 import { RevealText } from "~/components/motion/RevealText";
 import { useLenis } from "~/components/motion/SmoothScroll";
 import { TransitionLink } from "~/components/motion/TransitionLink";
-import { AvailabilityPill } from "~/components/ui/AvailabilityPill";
 import { Button } from "~/components/ui/Button";
 import { Container } from "~/components/ui/Container";
 import { CopyEmail } from "~/components/ui/CopyEmail";
+import { WhatsAppIcon } from "~/components/ui/icons";
 import { Socials } from "~/components/ui/Socials";
-import { about, contactCta, nav, ui } from "~/content/pages";
+import { about, contact, contactCta, nav, ui } from "~/content/pages";
 import { site } from "~/content/site";
 import { usePathname } from "~/lib/usePathname";
+import { whatsappHref } from "~/lib/whatsapp";
 import { Mark } from "./Nav";
 
 /** The closing "Let's build something." block. Shown at the foot of every page but /contact. */
 function ContactCta() {
+  const whatsapp = whatsappHref(site.whatsapp, contact.whatsapp.message);
   return (
-    <section aria-labelledby="cta-heading" className="pt-section pb-16 md:pb-24">
+    <section aria-labelledby="cta-heading" className="pt-8 pb-7 md:pt-10 md:pb-8">
       <Container>
-        <AvailabilityPill>{site.availability}</AvailabilityPill>
-        <p className="mt-10 text-lg text-muted md:mt-14">{contactCta.eyebrow}</p>
-        <RevealText id="cta-heading" className="mt-4 display text-[clamp(3.25rem,13vw,13rem)]">
-          {contactCta.heading} <span className="italic-accent">{contactCta.accent}</span>
-        </RevealText>
-        <div className="mt-12 flex flex-col gap-8 border-t border-line pt-8 md:mt-16 lg:flex-row lg:items-center lg:justify-between">
-          <CopyEmail large />
-          <div className="flex flex-wrap items-center gap-3">
-            <Socials />
-            <Button to="/contact" icon={<ArrowRight />}>
-              {contactCta.write}
-            </Button>
+        <div className="grid gap-5 lg:grid-cols-12 lg:items-center">
+          <div className="lg:col-span-7">
+            <p className="text-muted">{contactCta.eyebrow}</p>
+            <RevealText id="cta-heading" className="mt-1 display text-[clamp(2rem,1.45rem+2vw,3.5rem)]">
+              {contactCta.heading} <span className="italic-accent">{contactCta.accent}</span>
+            </RevealText>
+          </div>
+          <div className="flex flex-col gap-3 lg:col-span-5 lg:items-end">
+            <div className="hidden sm:block"><CopyEmail /></div>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="hidden items-center gap-3 sm:flex">
+                <Socials />
+                {whatsapp && (
+                  <Button href={whatsapp} variant="ghost" icon={<WhatsAppIcon size={16} />}>
+                    {contact.whatsapp.label}
+                  </Button>
+                )}
+              </div>
+              <Button to="/contact" icon={<ArrowRight />}>
+                {contactCta.write}
+              </Button>
+            </div>
           </div>
         </div>
       </Container>
@@ -48,11 +60,11 @@ export function Footer() {
   return (
     <footer
       id="footer"
-      className="mt-section overflow-clip rounded-t-xl theme-night md:rounded-t-[3.5rem]"
+      className="mt-20 overflow-clip rounded-t-xl theme-night md:mt-24"
     >
       {pathname !== "/contact" && <ContactCta />}
-      <Container className="pt-6 pb-[max(2rem,env(safe-area-inset-bottom))]">
-        <div className="grid gap-8 border-t border-line pt-8 md:grid-cols-12 md:items-center">
+      <Container className="pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="grid gap-3 border-t border-line pt-3 md:grid-cols-12 md:items-center">
           <div className="flex items-center gap-3 md:col-span-4">
             <Mark />
             <p className="text-sm text-muted">
@@ -96,13 +108,6 @@ export function Footer() {
             </button>
           </div>
         </div>
-        {/* The name, set huge and cropped by the page edge. */}
-        <p
-          aria-hidden="true"
-          className="mt-12 -mb-[0.24em] text-center display text-[clamp(3rem,17.5vw,20rem)] leading-[0.8] whitespace-nowrap text-fg/[0.07] select-none"
-        >
-          {site.name}
-        </p>
       </Container>
     </footer>
   );

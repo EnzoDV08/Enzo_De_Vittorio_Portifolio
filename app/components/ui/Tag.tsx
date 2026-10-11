@@ -1,6 +1,6 @@
 import { cn } from "~/lib/cn";
 
-/** Small pill — tech stack, discipline, year. */
+/** Small pill, tech stack, discipline, year. */
 export function Tag({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <span

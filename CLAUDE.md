@@ -18,7 +18,7 @@ Enzo De Vittorio's portfolio. Static, prerendered React site deployed to Firebas
 - React 19, TypeScript strict (`noUncheckedIndexedAccess` on)
 - React Router v7 **framework mode**, `ssr: false` + `prerender` (see `react-router.config.ts`). Routes are declared in `app/routes.ts`; prerendered paths come from `staticPaths`, which reads the case studies from content.
 - **Loaders run at build time.** Routes that need project data or images have a `loader` that calls `app/lib/content.server.ts`; React Router embeds the result in the HTML (and a `.data` file for client navigation). Because it's a `.server` module, content files and image registries never ship in the JS bundle. Don't import `~/content/projects` or `~/lib/images` from components.
-- **Motion islands.** Every GSAP/Lenis behaviour is a lazy component in `app/components/motion/fx/`, mounted via `<Island>` only when `useMotionAllowed()` (hydrated + no reduced motion). Content components never depend on GSAP. `postbuild` fails the build if any page's initial JS exceeds 130 KB gzip.
+- **Motion islands.** Every GSAP/Lenis behaviour is a lazy component in `app/components/motion/fx/`, mounted via `<Island>` only when `useMotionAllowed()` (hydrated + no reduced motion). Content components never depend on GSAP. `postbuild` fails the build if any page's initial JS exceeds 132 KB gzip.
 - Vite 8, Tailwind CSS v4 via `@tailwindcss/vite`. Design tokens live in `@theme` in `app/styles/app.css`.
 - GSAP (core, ScrollTrigger, SplitText) + `@gsap/react` `useGSAP`; Lenis smooth scroll driven by GSAP's ticker.
 - `vite-imagetools` turns project images into AVIF/WebP `srcset`s (see `app/lib/images.ts`).

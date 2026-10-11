@@ -12,7 +12,12 @@ export type Picture = {
 };
 
 const pictures = import.meta.glob<Picture>(
-  ["../assets/projects/*/cover.{jpg,jpeg,png}", "../assets/about/*.{jpg,jpeg,png}"],
+  [
+    "../assets/projects/*/cover.{jpg,jpeg,png}",
+    "../assets/projects/*/{mark,wordmark}.{jpg,jpeg,png}",
+    "../assets/about/*.{jpg,jpeg,png}",
+    "../assets/home/*.{jpg,jpeg,png}",
+  ],
   {
     eager: true,
     import: "default",

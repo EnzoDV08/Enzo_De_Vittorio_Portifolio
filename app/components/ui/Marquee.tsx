@@ -2,21 +2,34 @@ import type { Tool } from "~/content/toolkit";
 import { cn } from "~/lib/cn";
 import { ToolLogo } from "./ToolLogo";
 
+/**
+ * Speed is set per item, not per loop, so a longer list drifts at the same pace instead of
+ * racing to cover more distance in the same time. Set as animation-duration directly: the
+ * --marquee-duration variable is resolved at :root inside --animate-marquee, so it never applies.
+ */
+const WORD_SECONDS = 7;
+const LOGO_SECONDS = 3.6;
+/** Items per copy so one copy is always wider than a 1920px viewport. */
+const MIN_WORDS = 8;
+const MIN_LOGOS = 24;
+
+const repeat = <T,>(items: readonly T[], min: number) =>
+  Array.from({ length: Math.max(1, Math.ceil(min / items.length)) }, () => items).flat();
+
 type Props = {
   items: readonly string[];
-  /** Seconds for one full loop. Slow by default. */
-  duration?: number;
+  /** Seconds each item takes to drift past. Slow by default. */
+  secondsPerItem?: number;
   className?: string;
   label: string;
 };
 
 /**
  * Slow, looping strip of big words. Pauses on hover. With reduced motion it becomes a static
- * wrapped list — the same list screen readers always get.
+ * wrapped list, the same list screen readers always get.
  */
-export function Marquee({ items, duration = 50, className, label }: Props) {
-  // Enough repeats that one copy is wider than a 1920px viewport.
-  const run = Array.from({ length: 4 }, () => items).flat();
+export function Marquee({ items, secondsPerItem = WORD_SECONDS, className, label }: Props) {
+  const run = repeat(items, MIN_WORDS);
   return (
     <div className={cn("group relative overflow-clip py-6 md:py-8", className)}>
       <ul
@@ -32,7 +45,7 @@ export function Marquee({ items, duration = 50, className, label }: Props) {
       <div
         aria-hidden="true"
         className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:hidden"
-        style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}
+        style={{ animationDuration: `${run.length * secondsPerItem}s` }}
       >
         {[0, 1].map((copy) => (
           <div key={copy} className="flex shrink-0 items-center">
@@ -67,7 +80,7 @@ export function LogoMarquee({ tools, label }: { tools: readonly Tool[]; label: s
         {label}: {tools.map((t) => t.name).join(", ")}
       </p>
       {rows.map((row, r) => {
-        const run = Array.from({ length: 3 }, () => row).flat();
+        const run = repeat(row, MIN_LOGOS);
         return (
           <div
             key={r}
@@ -76,7 +89,7 @@ export function LogoMarquee({ tools, label }: { tools: readonly Tool[]; label: s
               "flex w-max motion-reduce:flex-wrap",
               r === 0 ? "animate-marquee" : "animate-marquee-reverse",
             )}
-            style={{ "--marquee-duration": "70s" } as React.CSSProperties}
+            style={{ animationDuration: `${run.length * LOGO_SECONDS}s` }}
           >
             {[0, 1].map((copy) => (
               <div key={copy} className="flex shrink-0 gap-3 pr-3">

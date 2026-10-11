@@ -22,7 +22,7 @@ import { usePathname } from "./lib/usePathname";
 
 // Only needed when something throws a 404 at runtime (e.g. /work/<unknown> on client nav).
 const NotFound = lazy(() => import("./routes/not-found").then((m) => ({ default: m.NotFound })));
-// Rendered with `precedence` so React 19 hoists it above the module preloads — the one
+// Rendered with `precedence` so React 19 hoists it above the module preloads, the one
 // render-blocking request should start first, not last.
 import appCss from "./styles/app.css?url";
 
@@ -106,8 +106,8 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  // Unknown URLs normally render the "*" route. A 404 can still be thrown at runtime — e.g. a
-  // client navigation to /work/<unknown> finds no prerendered data — so show the same page.
+  // Unknown URLs normally render the "*" route. A 404 can still be thrown at runtime, e.g. a
+  // client navigation to /work/<unknown> finds no prerendered data, so show the same page.
   if (isRouteErrorResponse(error) && error.status === 404) {
     return (
       <Shell>

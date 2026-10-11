@@ -29,7 +29,10 @@ for (const route of ROUTES) {
       if (!el || el === document.body) return null;
       const cs = getComputedStyle(el);
       const ringed = cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) >= 2;
-      return { ringed, label: `${el.tagName.toLowerCase()} "${(el.textContent ?? "").trim().slice(0, 30)}"` };
+      return {
+        ringed,
+        label: `${el.tagName.toLowerCase()} "${(el.textContent ?? "").trim().slice(0, 30)}"`,
+      };
     });
     if (!info) break;
     stops++;
@@ -37,7 +40,10 @@ for (const route of ROUTES) {
     await page.keyboard.press("Tab");
   }
   check(stops > 5, `${stops} keyboard stops reachable`);
-  check(unringed.length === 0, `every stop shows the focus ring${unringed.length ? `: ${unringed.slice(0, 4).join(", ")}` : ""}`);
+  check(
+    unringed.length === 0,
+    `every stop shows the focus ring${unringed.length ? `: ${unringed.slice(0, 4).join(", ")}` : ""}`,
+  );
   await page.close();
 }
 
@@ -53,13 +59,25 @@ for (const route of ROUTES) {
   check((await toggle.getAttribute("aria-expanded")) === "true", "Enter opens the menu");
   const inMenu = await page.evaluate(() => !!document.activeElement?.closest("#menu"));
   check(inMenu, "focus moves into the menu");
-  check(await page.evaluate(() => document.getElementById("main")?.hasAttribute("inert")), "main is inert while open");
-  check(await page.evaluate(() => document.documentElement.style.overflow === "hidden"), "page scroll is locked");
+  check(
+    await page.evaluate(() => document.getElementById("main")?.hasAttribute("inert")),
+    "main is inert while open",
+  );
+  check(
+    await page.evaluate(() => document.documentElement.style.overflow === "hidden"),
+    "page scroll is locked",
+  );
   await page.keyboard.press("Escape");
   await page.waitForTimeout(300);
   check((await toggle.getAttribute("aria-expanded")) === "false", "Esc closes the menu");
-  check(await page.evaluate(() => document.activeElement?.getAttribute("aria-controls") === "menu"), "focus returns to the toggle");
-  check(!(await page.evaluate(() => document.getElementById("main")?.hasAttribute("inert"))), "main is interactive again");
+  check(
+    await page.evaluate(() => document.activeElement?.getAttribute("aria-controls") === "menu"),
+    "focus returns to the toggle",
+  );
+  check(
+    !(await page.evaluate(() => document.getElementById("main")?.hasAttribute("inert"))),
+    "main is interactive again",
+  );
   await page.close();
 }
 
@@ -75,17 +93,24 @@ for (const route of ROUTES) {
   check((await ux.getAttribute("aria-pressed")) === "true", "UX chip is pressed");
   check(page.url().includes("d=ux"), `URL carries the filter (${new URL(page.url()).search})`);
   const titles = await page.locator("article h2, article h3").allTextContents();
-  check(!titles.some((t) => t.includes("ChronoVoyage")), "non-UX projects are filtered out");
+  check(!titles.some((t) => t.includes("Honeybee Heroes")), "non-UX projects are filtered out");
   await page.goto(BASE + "/work?d=ux", { waitUntil: "networkidle" });
   await page.waitForTimeout(200);
-  check((await page.getByRole("button", { name: "UX", exact: true }).getAttribute("aria-pressed")) === "true", "direct link ?d=ux restores the filter");
+  check(
+    (await page.getByRole("button", { name: "UX", exact: true }).getAttribute("aria-pressed")) ===
+      "true",
+    "direct link ?d=ux restores the filter",
+  );
   await page.close();
 }
 
 // 4. Reduced motion: no GSAP/Lenis downloaded, nothing left hidden or transformed.
 for (const route of ROUTES) {
   console.log(`reduced motion ${route}`);
-  const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
+  const page = await browser.newPage({
+    viewport: { width: 1440, height: 900 },
+    reducedMotion: "reduce",
+  });
   const scripts = [];
   page.on("request", (r) => r.resourceType() === "script" && scripts.push(r.url()));
   await page.goto(BASE + route, { waitUntil: "networkidle" });
@@ -97,7 +122,10 @@ for (const route of ROUTES) {
   });
   await page.waitForTimeout(500);
   check(!scripts.some((s) => /gsap|Lenis|Fx-/i.test(s)), "no animation code is downloaded");
-  check(!(await page.evaluate(() => document.documentElement.classList.contains("lenis"))), "Lenis is off");
+  check(
+    !(await page.evaluate(() => document.documentElement.classList.contains("lenis"))),
+    "Lenis is off",
+  );
   const hidden = await page.evaluate(() =>
     [...document.querySelectorAll("main h1, main h2, main h3, main p, main img, main a")]
       .filter((el) => {
@@ -107,7 +135,10 @@ for (const route of ROUTES) {
       })
       .map((el) => el.textContent?.trim().slice(0, 30) || el.tagName),
   );
-  check(hidden.length === 0, `no content is hidden${hidden.length ? `: ${hidden.slice(0, 4).join(", ")}` : ""}`);
+  check(
+    hidden.length === 0,
+    `no content is hidden${hidden.length ? `: ${hidden.slice(0, 4).join(", ")}` : ""}`,
+  );
   await page.close();
 }
 

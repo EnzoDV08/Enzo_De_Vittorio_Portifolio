@@ -29,27 +29,53 @@ export function projectLinks(p: Pick<Project, "links">): ProjectLink[] {
 
 export const caseStudyPath = (p: Pick<Project, "slug">) => `/work/${p.slug}`;
 
-/** A light tint of the project's own colour, for the panels its devices sit on. */
+/** A light tint of the project's own colour, for small chips and badges. */
 export const projectTint = (p: Pick<Project, "theme">, amount = 24) =>
   p.theme?.accent
     ? `color-mix(in oklab, ${p.theme.accent} ${amount}%, var(--color-bg-2))`
     : "var(--color-bg-2)";
 
+/** True for colours dark enough to need light text (relative luminance under 0.18). */
+export function isDarkColor(hex: string): boolean {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+  const digits = m?.[1];
+  if (!digits) return false;
+  const [r, g, b] = [0, 2, 4].map((i) => {
+    const c = parseInt(digits.slice(i, i + 2), 16) / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  }) as [number, number, number];
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 0.18;
+}
+
+/**
+ * The panel a project's work sits on: its website's own background colour when known, else a
+ * tint of its accent. `className` switches text to the light theme on dark surfaces.
+ */
+export function projectSurface(p: Pick<Project, "theme">, tint = 30) {
+  const surface = p.theme?.surface;
+  if (!surface) return { style: { background: projectTint(p, tint) }, className: "" };
+  return { style: { background: surface }, className: isDarkColor(surface) ? "theme-night" : "" };
+}
+
 // ───────────── Shapes sent from route loaders (prerendered into the HTML) ─────────────
 
-/** What a card or list row needs — no case-study text, so pages stay light. */
+/** What a card or list row needs, no case-study text, so pages stay light. */
 export type ProjectSummary = Omit<
   Project,
-  "caseStudy" | "gallery" | "team" | "client" | "context" | "role"
+  "caseStudy" | "gallery" | "team" | "client" | "role"
 > & {
   hasCaseStudy: boolean;
   picture?: Picture;
+  markPicture?: Picture;
+  wordmarkPicture?: Picture;
   devices: Devices;
 };
 
 /** Everything a case-study page needs, with images already resolved. */
 export type ProjectDetail = Omit<Project, "gallery"> & {
   picture?: Picture;
+  markPicture?: Picture;
+  wordmarkPicture?: Picture;
   devices: Devices;
   gallery?: (GalleryImage & { picture?: Picture })[];
 };

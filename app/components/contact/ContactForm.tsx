@@ -32,7 +32,7 @@ const inputClass =
   "transition-colors duration-300 focus:border-fg";
 
 /**
- * EmailJS form. Renders nothing unless all three VITE_EMAILJS_* variables exist — never a
+ * EmailJS form. Renders nothing unless all three VITE_EMAILJS_* variables exist, never a
  * broken form. The EmailJS SDK is imported on submit, so it never weighs down the page.
  */
 export function ContactForm() {

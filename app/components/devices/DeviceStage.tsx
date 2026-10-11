@@ -13,7 +13,7 @@ type Props = {
   label: string;
   /** Short captions under the devices, e.g. "Desktop" / "Mobile". */
   captions: { laptop: string; phone: string };
-  /** "Scroll to open" — shown only when the motion will actually play. */
+  /** "Scroll to open", shown only when the motion will actually play. */
   hint?: string;
   className?: string;
 };
@@ -21,8 +21,8 @@ type Props = {
 /**
  * The case-study device moment. With motion, the section is tall and its stage sticks to the
  * screen while you scroll: the laptop opens on the project's site, then the phone slides in
- * and turns round to show the mobile view (DeviceStageFx). Without motion — reduced motion,
- * no JS, before hydration — both devices simply sit there at rest.
+ * and turns round to show the mobile view (DeviceStageFx). Without motion, reduced motion,
+ * no JS, before hydration, both devices simply sit there at rest.
  */
 export function DeviceStage({ devices, label, captions, hint, className }: Props) {
   const section = useRef<HTMLElement>(null);

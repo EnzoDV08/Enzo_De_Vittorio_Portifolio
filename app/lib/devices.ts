@@ -39,7 +39,7 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export const frameSrc = (seq: DeviceSequence, frame: number, width: number) =>
   `${seq.base}frame-${pad(frame)}-${width}.webp`;
 
-/** srcset of the last frame — framed like the sequence, so it can sit under the canvas. */
+/** srcset of the last frame, framed like the sequence, so it can sit under the canvas. */
 export const lastFrameSrcSet = (seq: DeviceSequence) =>
   seq.widths.map((w) => `${frameSrc(seq, seq.frames - 1, w)} ${w}w`).join(", ");
 
