@@ -43,7 +43,7 @@ function tint(accent, amount) {
   return accent ? `color-mix(in oklab, ${accent} ${amount}%, #e1e5eb)` : "#e1e5eb";
 }
 
-function template({ eyebrow, titleHtml, sub, meta, accent, stage, image, cobalt = false }) {
+function template({ eyebrow, titleHtml, sub, meta, stage, image, cobalt = false }) {
   const bg = cobalt ? "#2b36f5" : "#eceef2";
   const fg = cobalt ? "#ffffff" : "#0c0e16";
   const spark = cobalt ? "#d4ff3c" : "#2b36f5";
