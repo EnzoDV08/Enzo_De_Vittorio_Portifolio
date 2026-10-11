@@ -186,8 +186,9 @@
     }
   }
   @keyframes wall {
+    /* One of HeroWall's four copies. */
     to {
-      transform: translate3d(0, -50%, 0);
+      transform: translate3d(0, -25%, 0);
     }
   }
   @keyframes drift {
