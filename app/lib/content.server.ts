@@ -15,6 +15,7 @@ import { join } from "node:path";
 import { capabilities } from "~/content/capabilities";
 import { heroPortrait as heroPortraitEntry, heroWall as heroWallEntries } from "~/content/hero-wall";
 import { about } from "~/content/pages";
+import { principles } from "~/content/principles";
 import type { Project } from "~/content/types";
 import { deviceSpecs, type DeviceKind, type DeviceSequence, type Devices } from "./devices";
 import { getGalleryPicture } from "./gallery-images";
@@ -117,6 +118,9 @@ export function caseStudyData(slug: string | undefined) {
 export const caseStudySlugs = () => caseStudies.map((p) => p.slug);
 
 export const portrait = () => ({ ...about.portrait, picture: getPicture(about.portrait.src) });
+
+/** The How I work lines, sent as page data so the copy stays out of the JS bundle. */
+export const principleLines = () => principles.map((p) => ({ ...p }));
 
 /** The What I do panels. Pipelines also carries this site's CI steps. */
 export const capabilityPanels = () =>

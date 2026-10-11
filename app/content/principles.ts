@@ -1,7 +1,7 @@
-/** From Enzo's manifesto. One line each, they're meant to be read big. */
+/** How Enzo works, in plain words. One line each, they're meant to be read big. */
 export const principles = [
-  { line: "Function first,", emphasis: "decoration second." },
-  { line: "Design for", emphasis: "the many." },
-  { line: "I won't design", emphasis: "to trick." },
-  { line: "Built to be", emphasis: "felt." },
+  { line: "Make it work,", emphasis: "then make it look good." },
+  { line: "Easy to use,", emphasis: "for everyone." },
+  { line: "Honest design,", emphasis: "no tricks." },
+  { line: "Fast on", emphasis: "every device." },
 ] as const;

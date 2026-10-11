@@ -355,23 +355,6 @@ export const projects: Project[] = [
 
   // ───────────────────────────── More work ─────────────────────────────
   {
-    slug: "built-to-be-felt",
-    title: "Built to Be Felt",
-    tagline: "A scroll-driven PGDip journal tracing my growth as a creative developer.",
-    year: 2026,
-    disciplines: ["Interactive", "UX", "Development"],
-    role: "Design and development",
-    client: "Academic",
-    context: "PGDip Creative Practice",
-    stack: ["React", "TypeScript", "Tailwind", "Vite", "GSAP", "Firebase"],
-    links: { code: "https://github.com/EnzoDV08/built-to-be-felt" },
-    featured: false,
-    order: 6,
-    theme: { accent: "#D6A15E", surface: "#0A090E" },
-    cover: "projects/built-to-be-felt/cover.png",
-    coverAlt: "Built to Be Felt opening scene, with Enzo's manifesto in expressive serif type",
-  },
-  {
     slug: "salon-friend",
     title: "Salon Friend",
     // From the live site: accounts and sign-in, cart, checkout, and admin pages for products,

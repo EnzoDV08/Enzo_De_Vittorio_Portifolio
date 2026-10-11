@@ -13,7 +13,6 @@ import { LogoMarquee, Marquee } from "~/components/ui/Marquee";
 import { Section } from "~/components/ui/Section";
 import { SectionLabel } from "~/components/ui/SectionLabel";
 import { home, ui } from "~/content/pages";
-import { principles } from "~/content/principles";
 import { site } from "~/content/site";
 import { logoWall } from "~/content/toolkit";
 import {
@@ -22,6 +21,7 @@ import {
   featuredSummaries,
   heroPortrait,
   heroWall,
+  principleLines,
   picturesFor,
   workStats,
 } from "~/lib/content.server";
@@ -35,6 +35,7 @@ export function loader() {
   return {
     featured: featuredSummaries(),
     wall: heroWall(),
+    principles: principleLines(),
     portrait: heroPortrait(),
     panels: capabilityPanels(),
     tags: capabilityTags(),
@@ -154,7 +155,7 @@ function Proof({ stats, logos }: ProofProps) {
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { featured, wall, portrait, panels, tags, stats, logos } = loaderData;
+  const { featured, wall, portrait, panels, tags, stats, logos, principles } = loaderData;
   const studio = featured.find((p) => p.slug === site.studio.caseStudy);
 
   return (
