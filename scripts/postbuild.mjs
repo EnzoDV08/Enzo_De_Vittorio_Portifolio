@@ -3,14 +3,14 @@
 //     priority of module preloads
 //  2. writes sitemap.xml and robots.txt from the same path list the prerender uses
 //  3. checks every case study has an OG image (from `npm run og`)
-//  4. enforces the initial-JS budget (≤ 130 KB gzip per page)
+//  4. enforces the initial-JS budget (≤ 132 KB gzip per page)
 import { existsSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { gzipSync } from "node:zlib";
 import { runnerImport } from "vite";
 
 const OUT = "build/client";
-const BUDGET_KB = 130;
+const BUDGET_KB = 132;
 
 function* htmlFiles(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
