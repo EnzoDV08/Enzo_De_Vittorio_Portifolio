@@ -53,6 +53,16 @@ export const projects: Project[] = [
         alt: "King Dingane kaSenzangakhona's story card beside an engraved portrait, the river winding behind him",
         caption: CAPTURED,
       },
+      {
+        src: "projects/one-river-two-memories/gallery-5.jpg",
+        alt: "Andries Pretorius's story card beside a seated portrait of him, the river winding between them",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/one-river-two-memories/gallery-6.jpg",
+        alt: "The aftermath as a split timeline, 1881–1902: “Authority Under Pressure” on the Zulu side, “The British Enemy Returns” on the Voortrekker side",
+        caption: CAPTURED,
+      },
     ],
     caseStudy: {
       challenge:
@@ -185,6 +195,16 @@ export const projects: Project[] = [
         alt: "Adoption steps on stacked honeycomb cards: “Your hive is yours.” and “You follow the story.”",
         caption: CAPTURED,
       },
+      {
+        src: "projects/honeybee-heroes/gallery-5.jpg",
+        alt: "“A third of every plate.”, a spread of fruit, vegetables and cheese with pollination stats and Mellie explaining",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/honeybee-heroes/gallery-6.jpg",
+        alt: "“Four ways to become a hero.”, the Honeybee adoption package at R2,900 beside three more package cards",
+        caption: CAPTURED,
+      },
     ],
     caseStudy: {
       challenge:
@@ -251,6 +271,16 @@ export const projects: Project[] = [
         alt: "The GC Solar case study on the home page, its site shown on a laptop and a phone",
         caption: CAPTURED_LOCAL,
       },
+      {
+        src: "projects/stack-studio/gallery-5.jpg",
+        alt: "“From the first idea to what comes next.” under a strip of tool logos, beside the “A website that stands out” service",
+        caption: CAPTURED_LOCAL,
+      },
+      {
+        src: "projects/stack-studio/gallery-6.jpg",
+        alt: "“Proof, not promises.”, the GC Solar and MPG Foundation case studies as device mockups",
+        caption: CAPTURED_LOCAL,
+      },
     ],
     caseStudy: {
       challenge:
@@ -313,6 +343,16 @@ export const projects: Project[] = [
       {
         src: "projects/mpg-foundation/gallery-4.jpg",
         alt: "“Get Involved.”, volunteer, donation, partnership and nomination panels",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/mpg-foundation/gallery-6.jpg",
+        alt: "“The same four steps, every project.”: Identify the need, Bring people together, Restore and rebuild",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/mpg-foundation/gallery-7.jpg",
+        alt: "“Bringing the Centurion waterfront back to life.”, the first project, above photos of the volunteers and the restored river",
         caption: CAPTURED,
       },
       {
