@@ -9,7 +9,6 @@ Every item shows as a visible "TODO(enzo)" marker on the site (or hides its link
 
 ### projects.ts
 
-- [ ] Group 3 member names and roles — `projects.ts` · leke-lente-lingo → team
 - [ ] Stack Studio live URL — `projects.ts` · stack-studio → links
 - [ ] Salon Friend year — `projects.ts` · salon-friend → year
 - [ ] your role on Salon Friend — `projects.ts` · salon-friend → role

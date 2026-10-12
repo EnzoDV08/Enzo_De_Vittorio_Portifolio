@@ -86,7 +86,6 @@ export const projects: Project[] = [
     year: 2026,
     disciplines: ["Campaign", "Development"],
     role: "Campaign team · built the Lente Book website",
-    team: todo("Group 3 member names and roles"),
     client: "Lentedag",
     context: "Postgrad (PGDip), PP 410, Group 3",
     stack: ["React", "TypeScript", "Vite", "Tailwind", "Firebase"],
