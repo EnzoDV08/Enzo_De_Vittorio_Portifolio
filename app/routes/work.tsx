@@ -72,7 +72,9 @@ export default function Work({ loaderData }: Route.ComponentProps) {
         <h1 className="display text-display">
           {work.heading}
           <sup className="ml-2 align-top text-[0.28em] font-bold tracking-normal text-accent tabular-nums">
-            {String(featuredProjects.length + moreProjects.length + earlierProjects.length).padStart(2, "0")}
+            {String(
+              featuredProjects.length + moreProjects.length + earlierProjects.length,
+            ).padStart(2, "0")}
           </sup>
         </h1>
         <div className="mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-start md:justify-between">
@@ -100,9 +102,10 @@ export default function Work({ loaderData }: Route.ComponentProps) {
 
       {featured.length > 0 && (
         <Section index={1} label={work.featuredLabel} spacing="tight">
-          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-16 md:grid-cols-2 md:gap-y-20">
+          {/* auto-rows-fr: every row as tall as the tallest card, so all case studies match. */}
+          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-16 md:auto-rows-fr md:grid-cols-2 md:gap-y-20">
             {featured.map((project) => (
-              <li key={project.slug}>
+              <li key={project.slug} className="flex">
                 <ProjectCard
                   project={project}
                   index={featuredProjects.indexOf(project) + 1}

@@ -71,7 +71,7 @@ export function ProjectCard({
   return (
     <article
       className={cn(
-        "group relative flex flex-col",
+        "group relative flex w-full flex-col",
         uniform && "h-[37rem] rounded-lg border border-line bg-surface p-3 sm:h-[35rem]",
       )}
       data-cursor={internal ? ui.view : undefined}
@@ -120,7 +120,12 @@ export function ProjectCard({
         )}
       </div>
 
-      <div className={cn("mt-5 flex items-center justify-between gap-4 text-sm text-muted", uniform && "px-2")}>
+      <div
+        className={cn(
+          "mt-5 flex items-center justify-between gap-4 text-sm text-muted",
+          uniform && "px-2",
+        )}
+      >
         <span>{disciplinesText(project)}</span>
         <ProjectYear project={project} />
       </div>
@@ -131,7 +136,7 @@ export function ProjectCard({
           variant === "feature" && "text-2xl md:text-[2.5rem]",
           variant === "compact" && "text-xl md:text-2xl",
           variant === "earlier" && "text-lg md:text-xl",
-          uniform && "min-h-[3.75rem] px-2 text-2xl leading-tight line-clamp-2",
+          uniform && "line-clamp-2 min-h-[3.75rem] px-2 text-2xl leading-tight",
         )}
       >
         {internal ? (
@@ -156,7 +161,7 @@ export function ProjectCard({
           className={cn(
             "mt-1 font-semibold tracking-wide text-accent",
             variant === "feature" ? "text-sm" : "text-xs",
-            uniform && "px-2 line-clamp-1",
+            uniform && "line-clamp-1 px-2",
           )}
         >
           {project.context}
@@ -167,7 +172,7 @@ export function ProjectCard({
         className={cn(
           "mt-2 max-w-prose text-muted",
           variant === "earlier" ? "text-sm" : "text-base",
-          uniform && "px-2 line-clamp-2",
+          uniform && "line-clamp-2 px-2",
         )}
       >
         {project.tagline}
@@ -190,8 +195,9 @@ export function ProjectCard({
         <p
           aria-hidden="true"
           className={cn(
-            "mt-5 inline-flex items-center gap-2 text-sm font-semibold transition-colors duration-300 group-hover:text-accent",
-            uniform && "mt-auto px-2 pb-2 pt-4",
+            // Pinned to the bottom, so it lines up across cards of one height.
+            "mt-auto inline-flex items-center gap-2 pt-5 text-sm font-semibold transition-colors duration-300 group-hover:text-accent",
+            uniform && "px-2 pt-4 pb-2",
           )}
         >
           {internal ? work.caseStudy : external?.label}
