@@ -2,12 +2,14 @@ import { ArrowRight, Award } from "lucide-react";
 import { DeviceStill } from "~/components/devices/DeviceStill";
 import { TransitionLink } from "~/components/motion/TransitionLink";
 import { TagList } from "~/components/ui/Tag";
+import { ResponsiveImage } from "~/components/ui/ResponsiveImage";
 import { home, ui } from "~/content/pages";
+import { cn } from "~/lib/cn";
 import {
   caseStudyPath,
   disciplinesText,
   indexLabel,
-  projectTint,
+  projectSurface,
   type ProjectSummary,
 } from "~/lib/project";
 import { ProjectMedia } from "./ProjectMedia";
@@ -16,7 +18,7 @@ import { ProjectYear } from "./ProjectYear";
 /**
  * The home page's selected work: one big panel per project, each on a tint of its own colour
  * with the project on its laptop and phone. From lg up the panels are sticky, so each one
- * slides up over the last like a stack of cards — plain CSS, nothing to load.
+ * slides up over the last like a stack of cards, plain CSS, nothing to load.
  */
 export function ProjectShowcase({ projects }: { projects: ProjectSummary[] }) {
   return (
@@ -29,10 +31,13 @@ export function ProjectShowcase({ projects }: { projects: ProjectSummary[] }) {
         >
           <article
             data-cursor={ui.view}
-            className="group relative grid overflow-clip rounded-xl lg:min-h-[min(78svh,50rem)] lg:grid-cols-12"
-            style={{ background: projectTint(project, 30) }}
+            className={cn(
+              "group relative grid overflow-clip rounded-xl lg:min-h-[min(78svh,50rem)] lg:grid-cols-12",
+              projectSurface(project).className,
+            )}
+            style={projectSurface(project).style}
           >
-            <div className="relative z-10 flex flex-col p-6 pb-0 sm:p-9 sm:pb-0 lg:col-span-5 lg:p-12 xl:p-14">
+            <div className="z-10 flex flex-col p-6 pb-0 sm:p-9 sm:pb-0 lg:col-span-5 lg:p-12 xl:p-14">
               <div className="flex items-center gap-3 text-sm font-medium text-fg/75">
                 <span className="grid h-8 min-w-8 place-items-center rounded-full bg-fg px-2 meta text-bg">
                   {indexLabel(i + 1)}
@@ -41,6 +46,16 @@ export function ProjectShowcase({ projects }: { projects: ProjectSummary[] }) {
                 <span aria-hidden="true">·</span>
                 <ProjectYear project={project} />
               </div>
+              {project.wordmarkPicture && (
+                <span className="mt-9 inline-flex w-fit items-center rounded-md bg-[#111216] px-4 py-3 lg:mt-12">
+                  <ResponsiveImage
+                    picture={project.wordmarkPicture}
+                    alt=""
+                    sizes="152px"
+                    className="w-32 sm:w-38"
+                  />
+                </span>
+              )}
               <h3 className="mt-8 display text-[clamp(2.5rem,1.6rem+3.6vw,5.5rem)] lg:mt-auto">
                 <TransitionLink
                   to={caseStudyPath(project)}
@@ -51,7 +66,10 @@ export function ProjectShowcase({ projects }: { projects: ProjectSummary[] }) {
                 </TransitionLink>
               </h3>
               <p className="mt-5 max-w-[34ch] text-lg text-fg/80">{project.tagline}</p>
-              <TagList items={project.stack.slice(0, 4)} className="mt-6 [&_span]:border-fg/25 [&_span]:text-fg/75" />
+              <TagList
+                items={project.stack.slice(0, 4)}
+                className="mt-6 [&_span]:border-fg/25 [&_span]:text-fg/75"
+              />
               <div className="mt-8 flex flex-wrap items-center gap-3 lg:mb-2">
                 <span
                   aria-hidden="true"
@@ -80,7 +98,11 @@ export function ProjectShowcase({ projects }: { projects: ProjectSummary[] }) {
                 </div>
               ) : (
                 <div className="relative aspect-[16/10] overflow-clip rounded-md">
-                  <ProjectMedia project={project} sizes="(min-width: 1024px) 54vw, 88vw" decorative />
+                  <ProjectMedia
+                    project={project}
+                    sizes="(min-width: 1024px) 54vw, 88vw"
+                    decorative
+                  />
                 </div>
               )}
             </div>

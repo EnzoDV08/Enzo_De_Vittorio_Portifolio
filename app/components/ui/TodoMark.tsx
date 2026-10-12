@@ -4,7 +4,7 @@ import { cn } from "~/lib/cn";
 export const showTodos = import.meta.env.DEV;
 
 /**
- * Visible stand-in for content Enzo still has to supply — in dev only. Deliberately obvious
+ * Visible stand-in for content Enzo still has to supply, in dev only. Deliberately obvious
  * (dashed outline, mono) so a missing fact can never pass for a real one; renders nothing in
  * production, where CONTENT_TODO.md is the list to work through.
  */

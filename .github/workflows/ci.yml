@@ -1,0 +1,23 @@
+# Checks every pull request and every push to main. Netlify builds and deploys the site itself
+# (see netlify.toml): a deploy preview per pull request, and the live site on merge to main.
+name: CI
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run build

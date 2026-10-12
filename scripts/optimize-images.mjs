@@ -29,7 +29,8 @@ function* walk(dir) {
 }
 
 function target(file) {
-  const [group, ...rest] = relative(SRC, file).split("/");
+  // Either separator, so the script also runs on Windows.
+  const [group, ...rest] = relative(SRC, file).split(/[\\/]/);
   const name = basename(file, extname(file)).toLowerCase();
   if (group === "archive" && rest.length === 1) return join(OUT, "projects", name, "cover");
   if (group === "about") return join(OUT, "about", name);

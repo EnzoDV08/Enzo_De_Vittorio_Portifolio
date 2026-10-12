@@ -10,7 +10,7 @@ type Props = {
 
 /**
  * Stand-in for project imagery that doesn't exist yet: the title in display type on a tint of
- * the project's accent, over the dot grid. Decorative — the title is always present as real
+ * the project's accent, over the dot grid. Decorative, the title is always present as real
  * text nearby.
  */
 export function ProjectPlaceholder({ title, accent, ratio = "16 / 10", fill, className }: Props) {

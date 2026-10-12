@@ -23,10 +23,12 @@ import { toolFor } from "~/content/toolkit";
 import { caseStudyData } from "~/lib/content.server";
 import { lastFrameSrc, lastFrameSrcSet } from "~/lib/devices";
 import { creativeWorkJsonLd } from "~/lib/jsonld";
+import { cn } from "~/lib/cn";
 import {
   caseStudyPath,
   indexLabel,
   projectLinks,
+  projectSurface,
   projectTint,
   type ProjectDetail,
 } from "~/lib/project";
@@ -58,7 +60,7 @@ export function meta({ params, loaderData }: Route.MetaArgs) {
     return pageMeta({ ...notFound.meta, path: `/work/${params.slug}`, noindex: true });
   }
   return pageMeta({
-    title: `${project.title} — ${site.name}`,
+    title: `${project.title}, ${site.name}`,
     description: project.tagline,
     path: caseStudyPath(project),
     image: `/og/${project.slug}.jpg`,
@@ -114,7 +116,9 @@ function InlineImage({ image, address }: { image: GalleryItem; address?: string 
           </div>
         </BrowserFrame>
       </RevealMedia>
-      {image.caption && <figcaption className="mt-3 text-sm text-muted">{image.caption}</figcaption>}
+      {image.caption && (
+        <figcaption className="mt-3 text-sm text-muted">{image.caption}</figcaption>
+      )}
     </Container>
   );
 }
@@ -170,6 +174,8 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
   // when there are at least two; a single leftover image stays inline.
   const [lead, ...rest] = gallery;
   const accent = project.theme?.accent ?? "var(--color-cobalt)";
+  const stage = projectSurface(project, 34);
+  const nextSurface = projectSurface(next);
 
   const metaRow = [
     { label: copy.meta.role, raw: project.role, value: <Copy value={project.role} /> },
@@ -182,7 +188,9 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
   ].filter((item) => present(item.raw) && item.raw !== "");
 
   return (
-    <article style={{ "--project-accent": accent } as React.CSSProperties}>
+    // Keyed by project: going from one case study to the next reuses this route, so without the
+    // key the device and gallery islands would keep the previous project's frames and triggers.
+    <article key={project.slug} style={{ "--project-accent": accent } as React.CSSProperties}>
       <Container className="pt-32 md:pt-40">
         <p className="flex flex-wrap items-center gap-2 text-sm font-semibold">
           <TransitionLink
@@ -204,6 +212,16 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
             </span>
           ))}
         </p>
+        {project.wordmarkPicture && (
+          <span className="mt-8 inline-flex w-fit items-center rounded-md bg-[#111216] px-5 py-3">
+            <ResponsiveImage
+              picture={project.wordmarkPicture}
+              alt=""
+              sizes="176px"
+              className="w-44"
+            />
+          </span>
+        )}
         <h1 className="mt-6 display text-[clamp(3rem,10vw,10.5rem)]">{project.title}</h1>
         <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:items-end">
           <p className="max-w-[36ch] text-xl text-fg/85 lg:col-span-7">{project.tagline}</p>
@@ -246,8 +264,11 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
       {/* The devices. Full-bleed tint of the project's colour. */}
       {laptop ? (
         <div className="mt-12 md:mt-16">
-          <div className="relative mx-[var(--spacing-gutter)] rounded-xl" style={{ background: projectTint(project, 34) }}>
-            <div aria-hidden="true" className="absolute inset-0 rounded-xl opacity-70 dot-grid" />
+          <div
+            className={cn("relative mx-[var(--spacing-gutter)] rounded-xl", stage.className)}
+            style={stage.style}
+          >
+            <div aria-hidden="true" className="absolute inset-0 rounded-xl dot-grid opacity-70" />
             <DeviceStage
               devices={project.devices}
               label={copy.devices}
@@ -284,7 +305,10 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
       <Row label={copy.approach} index={2}>
         <ol className="grid gap-4 md:grid-cols-2">
           {cs.approach.map((block, i) => (
-            <li key={block.heading} className="flex flex-col rounded-lg border border-line bg-surface p-6 md:p-8">
+            <li
+              key={block.heading}
+              className="flex flex-col rounded-lg border border-line bg-surface p-6 md:p-8"
+            >
               <span
                 className="grid size-10 place-items-center rounded-full meta text-fg"
                 style={{ background: projectTint(project, 55) }}
@@ -329,27 +353,20 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
         </ul>
       </Row>
 
-      {present(cs.outcome) && (
-        <Row label={copy.outcome} index={4}>
-          {isTodo(cs.outcome) ? (
-            <TodoMark>{cs.outcome}</TodoMark>
-          ) : (
-            <p className="max-w-[30ch] display text-2xl">{cs.outcome}</p>
-          )}
-        </Row>
-      )}
-
-      <Row label={copy.credits} index={present(cs.outcome) ? 5 : 4}>
+      <Row label={copy.credits} index={4}>
         <Credits project={project} />
       </Row>
 
       <Container as="nav" aria-label={copy.next} className="pt-20 md:pt-32">
         <article
           data-cursor={ui.view}
-          className="group relative grid overflow-clip rounded-xl lg:grid-cols-12"
-          style={{ background: projectTint(next, 30) }}
+          className={cn(
+            "group relative grid overflow-clip rounded-xl lg:grid-cols-12",
+            nextSurface.className,
+          )}
+          style={nextSurface.style}
         >
-          <div className="relative z-10 flex flex-col justify-between gap-8 p-6 sm:p-10 lg:col-span-5 lg:p-14">
+          <div className="z-10 flex flex-col justify-between gap-8 p-6 sm:p-10 lg:col-span-5 lg:p-14">
             <p className="flex items-center gap-2 text-sm font-semibold text-fg/70">
               {copy.next}
               <ArrowRight
@@ -373,7 +390,11 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
           <div className="px-6 pb-12 sm:px-12 lg:col-span-7 lg:py-14 lg:pr-14 lg:pl-0">
             {next.devices.laptop ? (
               <div className="transition-transform duration-700 ease-out-expo group-hover:-translate-y-[2%]">
-                <DeviceStill devices={next.devices} sizes="(min-width: 1024px) 50vw, 88vw" decorative />
+                <DeviceStill
+                  devices={next.devices}
+                  sizes="(min-width: 1024px) 50vw, 88vw"
+                  decorative
+                />
               </div>
             ) : (
               <div className="relative aspect-[16/10] overflow-clip rounded-md">

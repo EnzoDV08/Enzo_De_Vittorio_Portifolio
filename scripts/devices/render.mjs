@@ -8,7 +8,7 @@
  * Transparent WebP frames, played back by scroll (components/media/DeviceSequence). The site
  * never loads a 3D library: three.js runs only here, in headless Chromium, from a pinned CDN
  * build. The scenes (laptop-scene.js, phone-scene.js) are adapted from Stack Studio's renderer;
- * the models live in _originals/models (local only — see REDESIGN_NOTES.md for the licence note).
+ * the models live in _originals/models (local only, see REDESIGN_NOTES.md for the licence note).
  *
  *   node scripts/devices/render.mjs                        # every project, both devices
  *   node scripts/devices/render.mjs honeybee-heroes        # one project

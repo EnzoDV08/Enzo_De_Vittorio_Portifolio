@@ -1,0 +1,22 @@
+# Netlify hosts the live site. These settings override the site's UI settings: every deploy
+# (live or pull-request preview) type-checks, lints and builds, then publishes the prerendered
+# site. Netlify's default caching already revalidates HTML and files like the CV on every request.
+[build]
+  command = "npm run typecheck && npm run lint && npm run build"
+  publish = "build/client"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

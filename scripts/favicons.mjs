@@ -1,5 +1,5 @@
 // "EDV" monogram favicons: Satoshi Black outlines (not live text, so every browser draws the
-// same thing), white on a cobalt disc — the nav mark. Writes public/favicon.svg, favicon-32.png,
+// same thing), white on a cobalt disc, the nav mark. Writes public/favicon.svg, favicon-32.png,
 // apple-touch-icon.png. (opentype.js can't read woff2, hence the TTF in scripts/fonts.)
 import { readFileSync, writeFileSync } from "node:fs";
 import opentype from "opentype.js";
@@ -46,7 +46,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE
 
 writeFileSync("public/favicon.svg", svg);
 await sharp(Buffer.from(svg)).resize(32, 32).png().toFile("public/favicon-32.png");
-// Apple touch icons get their corners rounded by iOS — supply a full-bleed square.
+// Apple touch icons get their corners rounded by iOS, supply a full-bleed square.
 await sharp(Buffer.from(svg.replace(` rx="${SIZE / 2}"`, "")))
   .resize(180, 180)
   .png()

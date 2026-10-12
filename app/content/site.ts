@@ -1,23 +1,26 @@
 import { todo } from "./todo";
 
 /*
- * Site-wide facts. No location anywhere on the site, by Enzo's request — not in copy, meta,
+ * Site-wide facts. No location anywhere on the site, by Enzo's request, not in copy, meta,
  * JSON-LD or OG images.
  */
 export const site = {
   name: "Enzo De Vittorio",
   shortName: "Enzo",
   monogram: "EDV",
-  roles: ["Developer & UX Designer", "Co-founder, Stack Studio"],
+  roles: ["Full-stack Developer & UX Designer", "Co-founder, Stack Studio"],
   /** Mono line above the hero. */
-  descriptor: "Developer & UX Designer",
-  tagline: "Built to be felt.",
-  availability: "Open to freelance & graduate roles — 2027",
+  descriptor: "Full-stack Developer & UX Designer",
+  tagline: "Built for real use.",
   /** The address the previous site's buttons used. */
   email: "enzo.devittorio5@gmail.com",
+  /**
+   * South African mobile, written as dialled locally (e.g. "073 000 0000").
+   */
+  whatsapp: "073 662 4471",
   socials: {
     github: "https://github.com/EnzoDV08",
-    linkedin: todo("full LinkedIn profile URL"),
+    linkedin: "https://www.linkedin.com/in/enzo-de-vittorio-426327145/",
     instagram: "https://www.instagram.com/enzo_devittorio/",
   },
   cv: {
@@ -25,10 +28,10 @@ export const site = {
     fileName: "Enzo-De-Vittorio-CV.pdf",
   },
   /**
-   * Canonical origin for SEO, OG and sitemap URLs. The Firebase default domain is used until
-   * a custom domain exists — see CONTENT_TODO.md.
+   * Canonical origin for SEO, OG and sitemap URLs. The Netlify domain is used until a custom
+   * domain exists, see CONTENT_TODO.md.
    */
-  url: "https://myportfolio-8c863.web.app",
+  url: "https://enzodvportfolio.netlify.app",
   studio: {
     name: "Stack Studio",
     legalName: "StackStudio (Pty) Ltd",

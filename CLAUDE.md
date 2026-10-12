@@ -1,16 +1,17 @@
 # CLAUDE.md
 
-Enzo De Vittorio's portfolio. Static, prerendered React site deployed to Firebase Hosting.
+Enzo De Vittorio's portfolio. Static, prerendered React site deployed to Netlify (`netlify.toml`).
 
 ## Commands
 
 - `npm run dev` — dev server (Vite, port 5173)
 - `npm run build` — `react-router build` (prerenders every route into `build/client`) then `scripts/postbuild.mjs` (404 page, sitemap, robots, OG images)
-- `npm run preview` — `scripts/preview.mjs`, a tiny static server that mimics Firebase (cleanUrls, no trailing slash, 404.html)
+- `npm run preview` — `scripts/preview.mjs`, a tiny static server that mimics the live host (clean URLs, no trailing slash, 404.html)
 - `npm run typecheck && npm run lint && npm run build` — must all pass with zero errors/warnings before any commit
 - `npm run images` — `scripts/optimize-images.mjs`: `_originals/<slug>/*` → `app/assets/projects/<slug>/*` (max 2400px masters)
 - `npm run shots` — `scripts/shots.mjs`: Playwright screenshots of every route at 390/768/1440/1920 into `.shots/` (needs `npm run preview` running). Fails on horizontal overflow or console errors.
 - `npm run og` — `scripts/og.mjs` + `scripts/favicons.mjs`: OG images (`public/og/*.jpg`) and favicons, rendered with the real fonts. Re-run when a case study's title, tagline or cover changes; commit the output.
+- `npm run cv` — `scripts/cv/build.mjs`: prints `scripts/cv/cv.html` to `public/Enzo-De-Vittorio-CV.pdf` (one A4 page, real fonts). Edit the CV there, never the PDF.
 - `npm run todo` — regenerates `CONTENT_TODO.md` from `todo()` values and missing images.
 
 ## Stack
@@ -18,7 +19,7 @@ Enzo De Vittorio's portfolio. Static, prerendered React site deployed to Firebas
 - React 19, TypeScript strict (`noUncheckedIndexedAccess` on)
 - React Router v7 **framework mode**, `ssr: false` + `prerender` (see `react-router.config.ts`). Routes are declared in `app/routes.ts`; prerendered paths come from `staticPaths`, which reads the case studies from content.
 - **Loaders run at build time.** Routes that need project data or images have a `loader` that calls `app/lib/content.server.ts`; React Router embeds the result in the HTML (and a `.data` file for client navigation). Because it's a `.server` module, content files and image registries never ship in the JS bundle. Don't import `~/content/projects` or `~/lib/images` from components.
-- **Motion islands.** Every GSAP/Lenis behaviour is a lazy component in `app/components/motion/fx/`, mounted via `<Island>` only when `useMotionAllowed()` (hydrated + no reduced motion). Content components never depend on GSAP. `postbuild` fails the build if any page's initial JS exceeds 130 KB gzip.
+- **Motion islands.** Every GSAP/Lenis behaviour is a lazy component in `app/components/motion/fx/`, mounted via `<Island>` only when `useMotionAllowed()` (hydrated + no reduced motion). Content components never depend on GSAP. `postbuild` fails the build if any page's initial JS exceeds 132 KB gzip.
 - Vite 8, Tailwind CSS v4 via `@tailwindcss/vite`. Design tokens live in `@theme` in `app/styles/app.css`.
 - GSAP (core, ScrollTrigger, SplitText) + `@gsap/react` `useGSAP`; Lenis smooth scroll driven by GSAP's ticker.
 - `vite-imagetools` turns project images into AVIF/WebP `srcset`s (see `app/lib/images.ts`).

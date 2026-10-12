@@ -72,7 +72,9 @@ export default function Work({ loaderData }: Route.ComponentProps) {
         <h1 className="display text-display">
           {work.heading}
           <sup className="ml-2 align-top text-[0.28em] font-bold tracking-normal text-accent tabular-nums">
-            {String(featuredProjects.length + moreProjects.length + earlierProjects.length).padStart(2, "0")}
+            {String(
+              featuredProjects.length + moreProjects.length + earlierProjects.length,
+            ).padStart(2, "0")}
           </sup>
         </h1>
         <div className="mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-start md:justify-between">
@@ -100,9 +102,10 @@ export default function Work({ loaderData }: Route.ComponentProps) {
 
       {featured.length > 0 && (
         <Section index={1} label={work.featuredLabel} spacing="tight">
-          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-16 md:grid-cols-2 md:gap-y-20">
+          {/* auto-rows-fr: every row as tall as the tallest card, so all case studies match. */}
+          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-16 md:auto-rows-fr md:grid-cols-2 md:gap-y-20">
             {featured.map((project) => (
-              <li key={project.slug}>
+              <li key={project.slug} className="flex">
                 <ProjectCard
                   project={project}
                   index={featuredProjects.indexOf(project) + 1}
@@ -117,7 +120,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
 
       {more.length > 0 && (
         <Section index={2} label={work.moreLabel}>
-          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {more.map((project) => (
               <li key={project.slug}>
                 <ProjectCard project={project} variant="compact" headingLevel="h2" />
@@ -153,7 +156,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
                   </h2>
                   <span className="meta text-muted">{String(group.length).padStart(2, "0")}</span>
                 </div>
-                <ul className="mt-8 grid gap-x-[var(--spacing-gutter)] gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+                <ul className="mt-8 grid gap-x-[var(--spacing-gutter)] gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
                   {group.map((project) => (
                     <li key={project.slug}>
                       <ProjectCard project={project} variant="earlier" />

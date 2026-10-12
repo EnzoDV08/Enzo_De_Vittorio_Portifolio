@@ -16,7 +16,7 @@ class Boundary extends Component<{ children: React.ReactNode }, { failed: boolea
 /**
  * Wrapper for lazy motion components. Renders nothing while the chunk loads, and if an
  * animation ever throws, it unmounts quietly (GSAP reverts its inline styles) instead of
- * taking the page down. Motion is decoration — content must survive it.
+ * taking the page down. Motion is decoration, content must survive it.
  */
 export function Island({ children }: { children: React.ReactNode }) {
   return (

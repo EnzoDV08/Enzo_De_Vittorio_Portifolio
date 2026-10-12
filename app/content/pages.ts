@@ -10,23 +10,19 @@ export const navCta = "Let's talk";
 
 export const home = {
   meta: {
-    title: "Enzo De Vittorio — Developer & UX Designer",
+    title: "Enzo De Vittorio, Developer & UX Designer",
     description:
-      "Enzo De Vittorio designs and builds websites and interactive stories that are built to be felt — function first, then the feeling. Developer, UX designer and co-founder of Stack Studio.",
+      "Enzo De Vittorio is a full-stack developer and UX designer: interfaces for web, mobile and desktop, the APIs and databases behind them, and the pipelines that ship them. Co-founder of Stack Studio.",
   },
   hero: {
-    eyebrow: "Enzo De Vittorio — Developer & UX Designer",
+    eyebrow: "Enzo De Vittorio, Full-stack Developer & UX Designer",
     // The headline, split so the last word takes the italic accent.
-    lead: "I design & build websites you can",
+    lead: "I design & build software you can",
     accent: "feel.",
     intro:
-      "Interactive stories, campaigns and production sites — researched like a UX designer, engineered like a developer, and finished with motion.",
+      "Full-stack, front to back: the interface, the APIs and integrations behind it, the database underneath and the pipeline that ships it. Researched like a UX designer, engineered like a developer.",
     primary: "See the work",
     secondary: "About me",
-    reelLink: "Open the case study for",
-    reelShow: "Show",
-    reelPlay: "Play the showreel",
-    reelPause: "Pause the showreel",
   },
   proof: {
     label: "At a glance",
@@ -34,12 +30,14 @@ export const home = {
     projects: "Projects on this site",
     award: "Pendoring Finalist",
     awardDetail: "Leke Lente Lingo, 2026",
+    awardLogo: "logos/pendoring.png",
     studio: "Co-founded",
     studioDetail: "Stack Studio",
+    studioLogo: "projects/stack-studio/mark.png",
   },
   work: {
     label: "Selected work",
-    intro: "Six projects, each with the device it lives on. Open one for the full story.",
+    intro: "Selected projects, each on the devices it lives on. Open one for the full story.",
     allWork: "All work",
     view: "View case study",
   },
@@ -47,23 +45,10 @@ export const home = {
     label: "What I do",
     heading: "One person,",
     accent: "the whole stack.",
-    columns: [
-      {
-        title: "Build",
-        body: "Front-end and full-stack builds that are fast, smooth and easy to keep running.",
-        tags: ["Front-end", "Full-stack", "Firebase", "Performance"],
-      },
-      {
-        title: "Design",
-        body: "Research-led UX — from interviews and prototypes to the design system that holds it together.",
-        tags: ["UX research", "Prototyping", "Design systems"],
-      },
-      {
-        title: "Direct",
-        body: "Campaigns and interactive stories where motion carries the message.",
-        tags: ["Campaigns", "Interactive storytelling", "Motion"],
-      },
-    ],
+    intro:
+      "Six parts of a product, front to back. Open one to see what goes into it.",
+    practice: "In practice",
+    pipelineLabel: "This site's pipeline",
   },
   tools: {
     label: "Toolkit",
@@ -74,7 +59,7 @@ export const home = {
   howIWork: { label: "How I work" },
   studio: {
     label: "Now",
-    line: "Co-founder of Stack Studio — a two-person studio building brand-led, cinematic websites with Armand Naudé.",
+    line: "Co-founder of Stack Studio, a two-person studio building brand-led, cinematic websites with Armand Naudé.",
     cta: "Read the studio case study",
   },
 };
@@ -90,18 +75,18 @@ export const contactCta = {
 
 export const work = {
   meta: {
-    title: "Work — Enzo De Vittorio",
+    title: "Work, Enzo De Vittorio",
     description:
       "Selected and earlier work by Enzo De Vittorio: interactive storytelling, campaigns, UX and production web development.",
   },
   heading: "Work",
-  intro: "Interactive stories, campaigns, UX and production builds — newest first.",
+  intro: "Interactive stories, campaigns, UX and production builds, newest first.",
   filterLabel: "Filter by discipline",
   all: "All",
   featuredLabel: "Case studies",
   moreLabel: "More work",
   earlierLabel: "Earlier work",
-  earlierIntro: "Where it started — student builds and prototypes, grouped by year.",
+  earlierIntro: "Where it started, student builds and prototypes, grouped by year.",
   yearFilterLabel: "Filter earlier work by year",
   allYears: "All years",
   unknownYear: "Undated",
@@ -125,34 +110,36 @@ export const caseStudy = {
   galleryHint: "Scroll",
   highlights: "Highlights",
   stack: "Built with",
-  outcome: "Outcome",
   credits: "Credits",
   next: "Next project",
 };
 
 export const about = {
   meta: {
-    title: "About — Enzo De Vittorio",
+    title: "About, Enzo De Vittorio",
     description:
-      "Developer who designs. Software Development and UX Design at Open Window Institute, PGDip in Creative Practice, co-founder of Stack Studio. Languages, tools and experience.",
+      "User Experience Design and Interactive Development at Open Window Institute (Class of 2025). Developer, PGDip student and co-founder of Stack Studio.",
   },
   heading: "A developer",
   accent: "who designs.",
-  portraitAlt: "Portrait of Enzo De Vittorio",
+  portrait: {
+    src: "about/E + I-115.jpg",
+    alt: "Enzo seated outdoors in tall grass, resting a hand on his chin",
+  },
   bio: [
-    "I'm Enzo — a developer who designs. I studied Software Development and UX Design as a double major at Open Window Institute, and I'm finishing a PGDip in Creative Practice focused on interactive development.",
+    "I'm Enzo, a developer who designs. I graduated in 2025 from Open Window Institute, where I studied User Experience Design and Interactive Development. I'm finishing a PGDip in Creative Practice focused on interactive development.",
     "With Armand Naudé I run Stack Studio, a two-person studio building brand-led, cinematic websites.",
-    "I build things to be felt: function first, then the feeling — accessible on every device, and never designed to trick.",
+    "I work across the whole stack: interfaces for web, mobile and desktop, the APIs and integrations behind them, the databases that hold the data, and the CI/CD pipelines that test and ship it.",
+    "I build things to be felt: function first, then the feeling. Accessible on every device, and honest, with no dark patterns or tricks to keep people clicking.",
   ],
   quick: [
     { label: "Studying", value: "PGDip Creative Practice" },
     { label: "Running", value: "Stack Studio" },
-    { label: "Open to", value: "Freelance & graduate roles" },
   ],
-  languages: "Languages",
-  languagesIntro: "What I write every week.",
+  coreStack: "Core stack",
+  coreStackIntro: "What I build and test with.",
   toolkit: "Tools & frameworks",
-  toolkitIntro: "Every one of these is in a project on this site or in my repos.",
+  toolkitIntro: "More tools and practices I use across projects.",
   experience: "Experience",
   education: "Education",
   recognition: "Recognition",
@@ -163,25 +150,34 @@ export const about = {
 
 export const contact = {
   meta: {
-    title: "Contact — Enzo De Vittorio",
+    title: "Contact, Enzo De Vittorio",
     description:
-      "Get in touch with Enzo De Vittorio about freelance projects, graduate roles or collaborations.",
+      "Get in touch with Enzo De Vittorio by email, WhatsApp or message, about a project, a role or a collaboration.",
   },
   heading: "Say",
   accent: "hello.",
-  intro: "Freelance project, job opportunity or collaboration — email is fastest.",
+  eyebrow: "Contact",
+  intro: "Email, WhatsApp or the form below, whichever is easiest. Tell me what you're working on.",
   socialsLabel: "Elsewhere",
+  email: { label: "Email", write: "Write an email" },
+  whatsapp: {
+    label: "WhatsApp",
+    chat: "Chat on WhatsApp",
+    /** Pre-filled in the chat, so the first message has context. */
+    message: "Hi Enzo, I found you through your portfolio.",
+  },
+  elsewhere: { label: "Elsewhere", cv: "Download CV" },
   form: {
     label: "Or send a message",
     name: "Name",
     email: "Email",
     topic: "I'm reaching out about",
-    topics: ["Freelance project", "Job opportunity", "Collaboration", "Other"],
+    topics: ["A project", "A job opportunity", "A collaboration", "Something else"],
     message: "Message",
     honeypot: "Leave this field empty",
     submit: "Send message",
     sending: "Sending…",
-    success: "Thanks — your message is on its way.",
+    success: "Thanks, your message is on its way.",
     failure: "Something went wrong sending that. Please email me directly instead.",
     errors: {
       name: "Please tell me your name.",
@@ -192,10 +188,10 @@ export const contact = {
 };
 
 export const notFound = {
-  meta: { title: "Not found — Enzo De Vittorio", description: "This page doesn't exist." },
+  meta: { title: "Not found, Enzo De Vittorio", description: "This page doesn't exist." },
   heading: "Lost in the",
   accent: "scroll.",
-  copy: "That page doesn't exist — or it moved. Here's some work instead.",
+  copy: "That page doesn't exist, or it moved. Here's some work instead.",
   home: "Back home",
 };
 

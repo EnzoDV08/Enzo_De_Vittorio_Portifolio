@@ -1,5 +1,4 @@
 import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
-import { AvailabilityPill } from "~/components/ui/AvailabilityPill";
 import { Button } from "~/components/ui/Button";
 import { Container } from "~/components/ui/Container";
 import { GitHubIcon, InstagramIcon, LinkedInIcon, FigmaIcon } from "~/components/ui/icons";
@@ -45,7 +44,7 @@ export default function Styleguide() {
   return (
     <main className="pb-section">
       <Container className="pt-16">
-        <SectionLabel>Design system — dev only</SectionLabel>
+        <SectionLabel>Design system, dev only</SectionLabel>
         <h1 className="mt-6 display text-display">
           Styleguide <span className="italic-accent text-accent">tokens</span>.
         </h1>
@@ -67,11 +66,11 @@ export default function Styleguide() {
           <p className="display text-display">Display</p>
           {sizes.toReversed().map(([name, cls]) => (
             <p key={name} className={`${cls} display`}>
-              {name} — Satoshi
+              {name}, Satoshi
             </p>
           ))}
           <p className="italic-accent text-3xl">Satoshi italic accent</p>
-          <p className="meta text-muted">Geist Mono meta — 0.06em tracking, uppercase</p>
+          <p className="meta text-muted">Geist Mono meta, 0.06em tracking, uppercase</p>
           <p className="max-w-prose text-base text-muted">
             Body copy is Satoshi 450 at 16–18px with 1.6 line height and a 65ch measure. Muted text
             uses --color-muted, which clears WCAG AA on chalk, night and cobalt.
@@ -108,7 +107,7 @@ export default function Styleguide() {
 
       <Section index={4} label="Signature details">
         <div className="flex flex-wrap items-center gap-6">
-          <AvailabilityPill>Availability pill</AvailabilityPill>
+          <span className="meta text-muted">No availability pill: removed from the site, October 2026.</span>
         </div>
       </Section>
 

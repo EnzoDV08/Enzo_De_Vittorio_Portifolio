@@ -2,7 +2,6 @@ import { ArrowUpRight } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { TransitionLink } from "~/components/motion/TransitionLink";
 import { useLenis } from "~/components/motion/SmoothScroll";
-import { AvailabilityPill } from "~/components/ui/AvailabilityPill";
 import { CopyEmail } from "~/components/ui/CopyEmail";
 import { Socials } from "~/components/ui/Socials";
 import { nav, navCta, ui } from "~/content/pages";
@@ -91,7 +90,7 @@ export function Nav() {
           <TransitionLink
             to="/"
             className="group flex min-h-11 items-center gap-3 rounded-full pr-2"
-            aria-label={`${site.name} — ${ui.home}`}
+            aria-label={`${site.name}, ${ui.home}`}
           >
             <Mark className="transition-transform duration-500 ease-out-expo group-hover:rotate-[-12deg]" />
             <span className="hidden text-[0.9375rem] font-bold tracking-[-0.02em] sm:inline">
@@ -191,7 +190,6 @@ export function Nav() {
             ))}
           </ul>
           <div className="mt-auto space-y-6 pt-12">
-            <AvailabilityPill>{site.availability}</AvailabilityPill>
             <CopyEmail />
             <Socials withLabels />
           </div>

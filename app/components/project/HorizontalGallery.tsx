@@ -30,57 +30,61 @@ export function HorizontalGallery({ images, label, hint, address }: Props) {
   const pinned = desktop && motion;
 
   return (
-    <section ref={section} aria-label={label} className="overflow-clip">
-      <div className={cn(pinned && "flex h-svh flex-col justify-center")}>
-        <div className="container-site mb-6 flex items-baseline justify-between text-sm font-medium text-muted">
-          <span>{label}</span>
-          <span>
-            {String(images.length).padStart(2, "0")} <span aria-hidden="true">—</span> {hint}
-          </span>
+    <>
+      <section ref={section} aria-label={label} className="overflow-clip">
+        <div className={cn(pinned && "flex h-svh flex-col justify-center")}>
+          <div className="container-site mb-6 flex items-baseline justify-between text-sm font-medium text-muted">
+            <span>{label}</span>
+            <span>
+              {String(images.length).padStart(2, "0")} <span aria-hidden="true">—</span> {hint}
+            </span>
+          </div>
+          <div
+            ref={track}
+            // Keyboard users can focus the strip and scroll it with arrow keys when it's native.
+            tabIndex={pinned ? undefined : 0}
+            role={pinned ? undefined : "region"}
+            aria-label={pinned ? undefined : label}
+            className={cn(
+              "flex gap-4 md:gap-6",
+              pinned
+                ? "w-max px-[var(--spacing-gutter)] will-change-transform"
+                : "snap-x snap-mandatory scroll-px-[var(--spacing-gutter)] [scrollbar-width:thin] overflow-x-auto overscroll-x-contain px-[var(--spacing-gutter)] pb-4",
+            )}
+          >
+            {images.map((image) => (
+              <figure
+                key={image.src}
+                className={cn(
+                  "shrink-0 snap-start",
+                  pinned ? "w-[min(68vw,72rem)]" : "w-[85vw] md:w-[70vw]",
+                )}
+              >
+                <BrowserFrame label={address}>
+                  <div className="relative aspect-[16/10] bg-bg-2">
+                    <ResponsiveImage
+                      picture={image.picture}
+                      alt={image.alt}
+                      fill
+                      sizes="(min-width: 1024px) 68vw, 85vw"
+                    />
+                  </div>
+                </BrowserFrame>
+                {image.caption && (
+                  <figcaption className="mt-3 text-sm text-muted">{image.caption}</figcaption>
+                )}
+              </figure>
+            ))}
+          </div>
         </div>
-        <div
-          ref={track}
-          // Keyboard users can focus the strip and scroll it with arrow keys when it's native.
-          tabIndex={pinned ? undefined : 0}
-          role={pinned ? undefined : "region"}
-          aria-label={pinned ? undefined : label}
-          className={cn(
-            "flex gap-4 md:gap-6",
-            pinned
-              ? "w-max px-[var(--spacing-gutter)] will-change-transform"
-              : "snap-x snap-mandatory scroll-px-[var(--spacing-gutter)] [scrollbar-width:thin] overflow-x-auto overscroll-x-contain px-[var(--spacing-gutter)] pb-4",
-          )}
-        >
-          {images.map((image) => (
-            <figure
-              key={image.src}
-              className={cn(
-                "shrink-0 snap-start",
-                pinned ? "w-[min(68vw,72rem)]" : "w-[85vw] md:w-[70vw]",
-              )}
-            >
-              <BrowserFrame label={address}>
-                <div className="relative aspect-[16/10] bg-bg-2">
-                  <ResponsiveImage
-                    picture={image.picture}
-                    alt={image.alt}
-                    fill
-                    sizes="(min-width: 1024px) 68vw, 85vw"
-                  />
-                </div>
-              </BrowserFrame>
-              {image.caption && (
-                <figcaption className="mt-3 text-sm text-muted">{image.caption}</figcaption>
-              )}
-            </figure>
-          ))}
-        </div>
-      </div>
+      </section>
+      {/* After the element, not inside it: React attaches a parent's ref only after its
+        children's effects run, so an island inside would find the ref still empty. */}
       {pinned && (
         <Island>
           <GalleryPinFx section={section} track={track} />
         </Island>
       )}
-    </section>
+    </>
   );
 }

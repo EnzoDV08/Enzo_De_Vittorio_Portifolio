@@ -74,8 +74,9 @@ try {
       const page = await context.newPage();
       await page.goto(url, { waitUntil: "networkidle", timeout: 90_000 }).catch(() => undefined);
       await page.waitForTimeout(target.settle ?? 3500);
-      if (target.hide) {
-        await page.addStyleTag({ content: `${target.hide} { display: none !important; }` });
+      const hide = mobile ? (target.hideMobile ?? target.hide) : target.hide;
+      if (hide) {
+        await page.addStyleTag({ content: `${hide} { display: none !important; }` });
       }
       if (target.redact) {
         // Hide the smallest elements whose text mentions any of these words.
