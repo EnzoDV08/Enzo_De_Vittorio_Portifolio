@@ -188,7 +188,9 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
   ].filter((item) => present(item.raw) && item.raw !== "");
 
   return (
-    <article style={{ "--project-accent": accent } as React.CSSProperties}>
+    // Keyed by project: going from one case study to the next reuses this route, so without the
+    // key the device and gallery islands would keep the previous project's frames and triggers.
+    <article key={project.slug} style={{ "--project-accent": accent } as React.CSSProperties}>
       <Container className="pt-32 md:pt-40">
         <p className="flex flex-wrap items-center gap-2 text-sm font-semibold">
           <TransitionLink
@@ -358,10 +360,13 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
       <Container as="nav" aria-label={copy.next} className="pt-20 md:pt-32">
         <article
           data-cursor={ui.view}
-          className={cn("group relative grid overflow-clip rounded-xl lg:grid-cols-12", nextSurface.className)}
+          className={cn(
+            "group relative grid overflow-clip rounded-xl lg:grid-cols-12",
+            nextSurface.className,
+          )}
           style={nextSurface.style}
         >
-          <div className="relative z-10 flex flex-col justify-between gap-8 p-6 sm:p-10 lg:col-span-5 lg:p-14">
+          <div className="z-10 flex flex-col justify-between gap-8 p-6 sm:p-10 lg:col-span-5 lg:p-14">
             <p className="flex items-center gap-2 text-sm font-semibold text-fg/70">
               {copy.next}
               <ArrowRight

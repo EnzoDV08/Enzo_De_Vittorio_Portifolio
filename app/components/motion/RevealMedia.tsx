@@ -13,15 +13,19 @@ export function RevealMedia({ children, className, innerClassName }: Props) {
   const inner = useRef<HTMLDivElement>(null);
   const motion = useMotionAllowed();
   return (
-    <div ref={frame} className={cn("relative overflow-clip", className)}>
-      <div ref={inner} className={cn("relative size-full", innerClassName)}>
-        {children}
+    <>
+      <div ref={frame} className={cn("relative overflow-clip", className)}>
+        <div ref={inner} className={cn("relative size-full", innerClassName)}>
+          {children}
+        </div>
       </div>
+      {/* After the element, not inside it: React attaches a parent's ref only after its
+          children's effects run, so an island inside would find the ref still empty. */}
       {motion && (
         <Island>
           <RevealMediaFx frame={frame} inner={inner} />
         </Island>
       )}
-    </div>
+    </>
   );
 }

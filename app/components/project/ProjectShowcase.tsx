@@ -37,7 +37,7 @@ export function ProjectShowcase({ projects }: { projects: ProjectSummary[] }) {
             )}
             style={projectSurface(project).style}
           >
-            <div className="relative z-10 flex flex-col p-6 pb-0 sm:p-9 sm:pb-0 lg:col-span-5 lg:p-12 xl:p-14">
+            <div className="z-10 flex flex-col p-6 pb-0 sm:p-9 sm:pb-0 lg:col-span-5 lg:p-12 xl:p-14">
               <div className="flex items-center gap-3 text-sm font-medium text-fg/75">
                 <span className="grid h-8 min-w-8 place-items-center rounded-full bg-fg px-2 meta text-bg">
                   {indexLabel(i + 1)}

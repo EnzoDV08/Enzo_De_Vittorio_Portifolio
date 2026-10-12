@@ -11,6 +11,7 @@ Enzo De Vittorio's portfolio. Static, prerendered React site deployed to Netlify
 - `npm run images` — `scripts/optimize-images.mjs`: `_originals/<slug>/*` → `app/assets/projects/<slug>/*` (max 2400px masters)
 - `npm run shots` — `scripts/shots.mjs`: Playwright screenshots of every route at 390/768/1440/1920 into `.shots/` (needs `npm run preview` running). Fails on horizontal overflow or console errors.
 - `npm run og` — `scripts/og.mjs` + `scripts/favicons.mjs`: OG images (`public/og/*.jpg`) and favicons, rendered with the real fonts. Re-run when a case study's title, tagline or cover changes; commit the output.
+- `npm run cv` — `scripts/cv/build.mjs`: prints `scripts/cv/cv.html` to `public/Enzo-De-Vittorio-CV.pdf` (one A4 page, real fonts). Edit the CV there, never the PDF.
 - `npm run todo` — regenerates `CONTENT_TODO.md` from `todo()` values and missing images.
 
 ## Stack

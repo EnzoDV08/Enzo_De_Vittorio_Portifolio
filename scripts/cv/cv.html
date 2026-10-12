@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en-ZA">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Enzo De Vittorio, CV</title>
+    <!-- Source of public/Enzo-De-Vittorio-CV.pdf. Edit here, then run `npm run cv`. -->
+    <style>
+      @font-face {
+        font-family: "Satoshi";
+        src: url("../../app/styles/fonts/Satoshi-Variable.woff2") format("woff2-variations");
+        font-weight: 300 900;
+        font-style: normal;
+      }
+      @font-face {
+        font-family: "Satoshi";
+        src: url("../../app/styles/fonts/Satoshi-VariableItalic.woff2") format("woff2-variations");
+        font-weight: 300 900;
+        font-style: italic;
+      }
+      @font-face {
+        font-family: "Geist Mono";
+        src: url("../../node_modules/@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2")
+          format("woff2-variations");
+        font-weight: 100 900;
+      }
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      :root {
+        --night: #0c0e16;
+        --cobalt: #2b36f5;
+        --lime: #d4ff3c;
+        --muted: #6b7080;
+        --line: #dfe1e7;
+        --side: #f1f2f6;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 210mm;
+        height: 297mm;
+      }
+      body {
+        font-family: "Satoshi", sans-serif;
+        color: var(--night);
+        background: #fff;
+        font-size: 11px;
+        line-height: 1.5;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        position: relative;
+        overflow: hidden;
+      }
+      .mono {
+        font-family: "Geist Mono", monospace;
+      }
+
+      header {
+        height: 235px;
+        background: var(--night);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        padding: 0 53px;
+      }
+      .photo {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        border: 3px solid var(--cobalt);
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      h1 {
+        font-size: 43px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+      .title {
+        margin-top: 8px;
+        font-size: 17px;
+        font-weight: 400;
+      }
+      .title em {
+        color: #9aa0ff;
+      }
+      .contact {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: auto auto;
+        column-gap: 30px;
+        row-gap: 6px;
+        font-size: 10.5px;
+        color: #e4e6ee;
+        justify-content: start;
+      }
+      .contact span b {
+        color: var(--lime);
+        font-weight: 400;
+        margin-right: 7px;
+      }
+
+      .cols {
+        display: grid;
+        grid-template-columns: 1fr 236px;
+        height: calc(297mm - 235px);
+      }
+      main {
+        padding: 34px 34px 0 53px;
+      }
+      aside {
+        background: var(--side);
+        padding: 34px 30px 0 31px;
+      }
+      h2 {
+        font-family: "Geist Mono", monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        color: var(--cobalt);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      section + section {
+        margin-top: 26px;
+      }
+      .lead {
+        font-size: 13.4px;
+        line-height: 1.6;
+      }
+
+      .do {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 26px;
+        row-gap: 14px;
+      }
+      .do h3,
+      .job h3 {
+        font-size: 12.6px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .do h3::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--cobalt);
+      }
+      .do p,
+      .muted {
+        color: var(--muted);
+        font-size: 10.5px;
+        line-height: 1.5;
+      }
+      .do p {
+        margin-top: 2px;
+      }
+
+      .job {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .job h3 {
+        font-size: 14px;
+      }
+      .job .mono {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      ul.points {
+        list-style: none;
+        margin-top: 6px;
+      }
+      ul.points li {
+        position: relative;
+        padding-left: 14px;
+        font-size: 11.4px;
+        line-height: 1.55;
+        margin-top: 3px;
+      }
+      ul.points li::before {
+        content: "";
+        position: absolute;
+        left: 1px;
+        top: 0.62em;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--cobalt);
+      }
+      .earlier {
+        margin-top: 12px;
+        font-size: 11.4px;
+      }
+      .earlier b {
+        font-weight: 600;
+      }
+      .earlier span {
+        color: var(--muted);
+      }
+
+      .wins {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 13px;
+      }
+      .win {
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 14px 15px 15px;
+      }
+      .win .mono {
+        font-size: 9.5px;
+        color: var(--cobalt);
+      }
+      .win h3 {
+        margin-top: 4px;
+        font-size: 13.6px;
+        font-weight: 600;
+        line-height: 1.25;
+      }
+      .win p {
+        margin-top: 4px;
+        font-size: 10.5px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      .win.dark {
+        background: var(--night);
+        border-color: var(--night);
+        color: #fff;
+      }
+      .win.dark .mono {
+        color: var(--lime);
+      }
+      .win.dark p {
+        color: #c9ccd6;
+      }
+
+      .edu {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 26px;
+      }
+      .edu h3 {
+        font-size: 12.6px;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+
+      aside h3 {
+        font-size: 11px;
+        font-weight: 600;
+        margin: 14px 0 6px;
+      }
+      aside h2 + h3 {
+        margin-top: 0;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .chips span {
+        font-size: 9.6px;
+        padding: 3px 9px;
+        border: 1px solid #d6d8e0;
+        border-radius: 999px;
+        background: #fff;
+      }
+      aside p {
+        font-size: 11.4px;
+        line-height: 1.55;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img class="photo" src="portrait.jpg" alt="" />
+      <div>
+        <h1>Enzo De Vittorio</h1>
+        <p class="title">Full-stack Developer &amp; <em>UX Designer</em></p>
+        <div class="contact mono">
+          <span><b>@</b>enzo.devittorio5@gmail.com</span>
+          <span><b>T</b>+27 73 662 4471</span>
+          <span><b>W</b>enzodvportfolio.netlify.app</span>
+          <span><b>G</b>github.com/EnzoDV08</span>
+          <span><b>in</b>linkedin.com/in/enzo-de-vittorio-426327145</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="cols">
+      <main>
+        <section>
+          <h2>Profile</h2>
+          <p class="lead">
+            A full-stack developer who designs. I build software end to end: the interface, the APIs
+            and database behind it, the AI features inside it, and the pipeline that ships it. I
+            graduated from Open Window Institute in 2025 and I'm finishing a PGDip in Interactive
+            Development. Open to developer roles.
+          </p>
+        </section>
+
+        <section>
+          <h2>What I do</h2>
+          <div class="do">
+            <div>
+              <h3>Interfaces</h3>
+              <p>Web, mobile and desktop apps in React, React Native and Electron.</p>
+            </div>
+            <div>
+              <h3>APIs &amp; data</h3>
+              <p>Node.js and .NET services, SQL and NoSQL databases with secure access rules.</p>
+            </div>
+            <div>
+              <h3>AI features</h3>
+              <p>Chat and voice built on the OpenAI API and ElevenLabs, like a talking 3D bee guide.</p>
+            </div>
+            <div>
+              <h3>Pipelines</h3>
+              <p>Every change type-checked, linted and built with GitHub Actions before it ships.</p>
+            </div>
+            <div>
+              <h3>UX design</h3>
+              <p>User research, prototypes and usability tests in Figma before the code.</p>
+            </div>
+            <div>
+              <h3>Motion &amp; 3D</h3>
+              <p>Scroll-driven storytelling with GSAP and interactive 3D with Three.js.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Experience</h2>
+          <div class="job">
+            <h3>Freelance Web &amp; App Developer</h3>
+            <span class="mono">2024 – 2026</span>
+          </div>
+          <ul class="points">
+            <li>Built web and desktop apps for clients with React, .NET, Firebase and Electron.</li>
+            <li>
+              Launched a production site for a non-profit, including a domain move that kept every
+              printed QR code working.
+            </li>
+            <li>Secured client data with Firestore security rules and made sites easy to find with SEO.</li>
+          </ul>
+          <p class="earlier">
+            <b>Earlier:</b> <span>Technician, Vodacom (2023–2024) · Brand Promoter (2020–2024)</span>
+          </p>
+        </section>
+
+        <section>
+          <h2>Achievements</h2>
+          <div class="wins">
+            <div class="win dark">
+              <span class="mono">2026</span>
+              <h3>Pendoring Finalist</h3>
+              <p>Built the web app for the Leke Lente Lingo campaign.</p>
+            </div>
+            <div class="win">
+              <span class="mono">2024</span>
+              <h3>Hackathon Winner</h3>
+              <p>Open Window Hackathon, as part of the winning team.</p>
+            </div>
+            <div class="win">
+              <span class="mono">2023</span>
+              <h3>Top 10, Industrial Design</h3>
+              <p>Open Window, for a sculptural wooden chandelier.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Education</h2>
+          <div class="edu">
+            <div>
+              <h3>PGDip Creative Practice, Interactive Development</h3>
+              <p class="muted">Open Window Institute · 2026</p>
+            </div>
+            <div>
+              <h3>UX Design &amp; Interactive Development</h3>
+              <p class="muted">Open Window Institute · 2023–2025</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside>
+        <section>
+          <h2>Skills</h2>
+          <h3>Front end</h3>
+          <div class="chips">
+            <span>React</span><span>TypeScript</span><span>JavaScript</span><span>React Native</span
+            ><span>Tailwind CSS</span><span>Electron</span>
+          </div>
+          <h3>Back end &amp; data</h3>
+          <div class="chips">
+            <span>Node.js</span><span>C# / .NET</span><span>Firebase</span><span>PostgreSQL</span
+            ><span>MySQL</span><span>MongoDB</span>
+          </div>
+          <h3>AI</h3>
+          <div class="chips">
+            <span>OpenAI API</span><span>ElevenLabs</span><span>Claude</span>
+          </div>
+          <h3>Workflow</h3>
+          <div class="chips">
+            <span>Git</span><span>GitHub Actions</span><span>CI/CD</span><span>Unit testing</span>
+          </div>
+          <h3>UX &amp; design</h3>
+          <div class="chips">
+            <span>Figma</span><span>User research</span><span>Prototyping</span
+            ><span>Usability testing</span>
+          </div>
+          <h3>Motion &amp; 3D</h3>
+          <div class="chips"><span>GSAP</span><span>Three.js</span></div>
+        </section>
+
+        <section>
+          <h2>Languages</h2>
+          <p>Afrikaans, English</p>
+        </section>
+
+        <section>
+          <h2>Off-screen</h2>
+          <p>Rock climbing, cooking, road trips, cinema, music, gaming</p>
+        </section>
+      </aside>
+    </div>
+  </body>
+</html>
