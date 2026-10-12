@@ -110,7 +110,8 @@ export const projects: Project[] = [
     cover: "projects/leke-lente-lingo/cover.jpg",
     coverAlt:
       "Lente Book welcome screen, the Leke Lente Lingo logo on a bright cloud-filled sky with a hand-drawn sun",
-    // Lente Book is an app: past these three onboarding screens it needs a username.
+    // Lente Book is an app: past the three onboarding screens it needs a username. The home
+    // screen (gallery-4) is Enzo's own screenshot from inside the app.
     gallery: [
       {
         src: "projects/leke-lente-lingo/gallery-1.jpg",
@@ -125,6 +126,11 @@ export const projects: Project[] = [
       {
         src: "projects/leke-lente-lingo/gallery-3.jpg",
         alt: "“Bou jou profiel.”, a pixel-art avatar picker above the username field",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/leke-lente-lingo/gallery-4.jpg",
+        alt: "The Lente Book home: the Leke Lente Lingo logo in a cloud, ringed by polaroids of shared concert photos and a live count of 1 284 photos",
         caption: CAPTURED,
       },
     ],
