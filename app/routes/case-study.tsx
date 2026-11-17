@@ -1,9 +1,7 @@
 import { ArrowRight, ArrowUpRight, Award } from "lucide-react";
-import { preload } from "react-dom";
 import { data } from "react-router";
-import { DeviceStage } from "~/components/devices/DeviceStage";
+import { ScreenScroll } from "~/components/project/ScreenScroll";
 import { DeviceStill } from "~/components/devices/DeviceStill";
-import { RevealMedia } from "~/components/motion/RevealMedia";
 import { RevealText } from "~/components/motion/RevealText";
 import { TransitionLink } from "~/components/motion/TransitionLink";
 import { HorizontalGallery } from "~/components/project/HorizontalGallery";
@@ -16,12 +14,11 @@ import { ResponsiveImage } from "~/components/ui/ResponsiveImage";
 import { SectionLabel } from "~/components/ui/SectionLabel";
 import { showTodos, TodoMark } from "~/components/ui/TodoMark";
 import { ToolChip } from "~/components/ui/ToolLogo";
-import { caseStudy as copy, notFound, ui, work } from "~/content/pages";
+import { caseStudy as copy, notFound, work } from "~/content/pages";
 import { site } from "~/content/site";
 import { isTodo, real } from "~/content/todo";
 import { toolFor } from "~/content/toolkit";
 import { caseStudyData } from "~/lib/content.server";
-import { lastFrameSrc, lastFrameSrcSet } from "~/lib/devices";
 import { creativeWorkJsonLd } from "~/lib/jsonld";
 import { cn } from "~/lib/cn";
 import {
@@ -99,30 +96,6 @@ function Row({
   );
 }
 
-type GalleryItem = NonNullable<ProjectDetail["gallery"]>[number];
-
-function InlineImage({ image, address }: { image: GalleryItem; address?: string }) {
-  return (
-    <Container as="figure" className="pt-16 md:pt-24">
-      <RevealMedia className="rounded-md">
-        <BrowserFrame label={address}>
-          <div className="relative aspect-[16/10] bg-bg-2">
-            <ResponsiveImage
-              picture={image.picture}
-              alt={image.alt}
-              fill
-              sizes="(min-width: 1600px) 1520px, 94vw"
-            />
-          </div>
-        </BrowserFrame>
-      </RevealMedia>
-      {image.caption && (
-        <figcaption className="mt-3 text-sm text-muted">{image.caption}</figcaption>
-      )}
-    </Container>
-  );
-}
-
 function Credits({ project }: { project: ProjectDetail }) {
   const team = project.team;
   const cells: { label: string; value: string }[] = [];
@@ -154,27 +127,11 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
   if (!loaderData?.project.caseStudy) return <NotFound />;
   const { project, next } = loaderData;
   const cs = loaderData.project.caseStudy;
-  const { laptop } = project.devices;
-  // The device still is the largest thing above the fold. React hoists high-priority image
-  // preloads to the top of <head>, ahead of the module preloads.
-  if (laptop) {
-    preload(lastFrameSrc(laptop), {
-      as: "image",
-      type: "image/webp",
-      imageSrcSet: lastFrameSrcSet(laptop),
-      imageSizes: "80vw",
-      fetchPriority: "high",
-    });
-  }
   const links = projectLinks(project);
   const live = real(project.links.live);
   const address = live ? new URL(live).hostname.replace(/^www\./, "") : project.title;
   const gallery = project.gallery ?? [];
-  // First gallery image sits between Challenge and Approach. The rest form the pinned strip
-  // when there are at least two; a single leftover image stays inline.
-  const [lead, ...rest] = gallery;
   const accent = project.theme?.accent ?? "var(--color-cobalt)";
-  const stage = projectSurface(project, 34);
   const nextSurface = projectSurface(next);
 
   const metaRow = [
@@ -254,32 +211,32 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
               <dd className="mt-1.5 font-semibold">{item.value}</dd>
             </div>
           ))}
-          <div className="bg-bg p-5 sm:col-span-2 md:p-6 lg:col-span-4">
+          {/* The stack fills whatever the row leaves, so a missing field never leaves a gap. */}
+          <div
+            className="bg-bg p-5 sm:col-[span_var(--sm)] md:p-6 lg:col-[span_var(--lg)]"
+            style={
+              {
+                "--sm": metaRow.length % 2 === 1 ? 1 : 2,
+                "--lg": metaRow.length < 4 ? 4 - metaRow.length : 4,
+              } as React.CSSProperties
+            }
+          >
             <dt className="text-sm text-muted">{copy.meta.stack}</dt>
             <dd className="mt-1.5 font-semibold">{project.stack.join(" · ")}</dd>
           </div>
         </dl>
       </Container>
 
-      {/* The devices. Full-bleed tint of the project's colour. */}
-      {laptop ? (
-        <div className="mt-12 md:mt-16">
-          <div
-            className={cn("relative mx-[var(--spacing-gutter)] rounded-xl", stage.className)}
-            style={stage.style}
-          >
-            <div aria-hidden="true" className="absolute inset-0 rounded-xl dot-grid opacity-70" />
-            <DeviceStage
-              devices={project.devices}
-              label={copy.devices}
-              captions={{ laptop: copy.desktop, phone: copy.mobile }}
-              hint={copy.scrollHint}
-              className="relative"
-            />
-          </div>
-        </div>
+      {/* The live site in a browser window: slides up, then scrolls the top of the site. */}
+      {project.screen ? (
+        <ScreenScroll
+          picture={project.screen}
+          alt={`${project.title}, ${copy.screenAlt}`}
+          address={address}
+          label={copy.screen}
+        />
       ) : (
-        <Container className="mt-12 md:mt-16">
+        <Container className="mt-12 hidden md:mt-16 md:block">
           <BrowserFrame label={address}>
             <div className="relative aspect-[16/10] bg-bg-2">
               <ProjectMedia project={project} sizes="94vw" priority />
@@ -300,14 +257,12 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
         </Row>
       )}
 
-      {lead && <InlineImage image={lead} address={address} />}
-
       <Row label={copy.approach} index={2}>
-        <ol className="grid gap-4 md:grid-cols-2">
+        <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {cs.approach.map((block, i) => (
             <li
               key={block.heading}
-              className="flex flex-col rounded-lg border border-line bg-surface p-6 md:p-8"
+              className="flex flex-col rounded-lg border border-line bg-surface p-6 md:p-8 lg:p-6"
             >
               <span
                 className="grid size-10 place-items-center rounded-full meta text-fg"
@@ -315,24 +270,25 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
               >
                 {indexLabel(i + 1)}
               </span>
-              <h3 className="mt-8 display text-2xl">{block.heading}</h3>
+              <h3 className="mt-8 display text-2xl lg:mt-6 lg:text-[clamp(1.5rem,1.5vw,2rem)]">
+                {block.heading}
+              </h3>
               <p className="mt-3 max-w-[48ch] text-muted">{block.body}</p>
             </li>
           ))}
         </ol>
       </Row>
 
-      {rest.length >= 2 && (
+      {gallery.length >= 2 && (
         <div className="pt-20 md:pt-28">
           <HorizontalGallery
-            images={rest}
+            images={gallery}
             label={copy.gallery}
             hint={copy.galleryHint}
             address={address}
           />
         </div>
       )}
-      {rest.length === 1 && rest[0] && <InlineImage image={rest[0]} address={address} />}
 
       <Row label={copy.highlights} index={3}>
         <ol className="divide-y divide-line border-y border-line">
@@ -359,7 +315,6 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
 
       <Container as="nav" aria-label={copy.next} className="pt-20 md:pt-32">
         <article
-          data-cursor={ui.view}
           className={cn(
             "group relative grid overflow-clip rounded-xl lg:grid-cols-12",
             nextSurface.className,

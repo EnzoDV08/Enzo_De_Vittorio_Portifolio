@@ -10,6 +10,8 @@ type Props = {
   sizes?: string;
   /** Above-the-fold hero/cover: eager + fetchpriority=high. Use once per page. */
   priority?: boolean;
+  /** Load right away (no lazy loading) but at normal priority, e.g. a decorative hero layer. */
+  eager?: boolean;
   /** Fill the parent (parent must be positioned and sized) instead of flowing at intrinsic ratio. */
   fill?: boolean;
   className?: string;
@@ -23,6 +25,7 @@ export function ResponsiveImage({
   alt,
   sizes = "100vw",
   priority = false,
+  eager = false,
   fill = false,
   className,
   placeholder,
@@ -51,7 +54,7 @@ export function ResponsiveImage({
         height={picture.img.h}
         alt={alt}
         sizes={sizes}
-        loading={priority ? "eager" : "lazy"}
+        loading={priority || eager ? "eager" : "lazy"}
         decoding={priority ? "sync" : "async"}
         fetchPriority={priority ? "high" : "auto"}
         className={cn(fill ? "size-full object-cover" : "h-auto w-full", className)}

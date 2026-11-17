@@ -1,3 +1,4 @@
+import { useRef, type PointerEvent } from "react";
 import { useSearchParams } from "react-router";
 import { ProjectCard } from "~/components/project/ProjectCard";
 import { Container } from "~/components/ui/Container";
@@ -32,6 +33,91 @@ function groupByYear(list: ProjectSummary[]) {
     groups.set(key, [...(groups.get(key) ?? []), p]);
   }
   return [...groups.entries()];
+}
+
+function YearCarousel({ year, projects }: { year: string; projects: ProjectSummary[] }) {
+  const drag = useRef<{
+    id: number;
+    x: number;
+    y: number;
+    scrollLeft: number;
+    moved: boolean;
+  } | null>(null);
+  const suppressClick = useRef(false);
+
+  const finishDrag = (event: PointerEvent<HTMLUListElement>) => {
+    const current = drag.current;
+    if (!current || current.id !== event.pointerId) return;
+    if (current.moved) {
+      suppressClick.current = true;
+      event.currentTarget.style.scrollSnapType = "";
+      event.currentTarget.classList.remove("select-none");
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    }
+    drag.current = null;
+  };
+
+  return (
+    <section aria-labelledby={`year-${year}`}>
+      <div className="flex items-center justify-between gap-4 border-t border-line pt-5">
+        <h2 id={`year-${year}`} className="display text-3xl tabular-nums">
+          {year === TBC ? work.unknownYear : year}
+        </h2>
+        <span className="meta text-muted">{String(projects.length).padStart(2, "0")}</span>
+      </div>
+      <div className="relative left-1/2 mt-8 w-screen -translate-x-1/2 [--lens-width:clamp(2rem,6vw,5rem)] motion-safe:lens-edges">
+        <ul
+          aria-label={`${year} projects`}
+          onPointerDown={(event) => {
+            if (event.pointerType !== "mouse" || event.button !== 0) return;
+            suppressClick.current = false;
+            drag.current = {
+              id: event.pointerId,
+              x: event.clientX,
+              y: event.clientY,
+              scrollLeft: event.currentTarget.scrollLeft,
+              moved: false,
+            };
+          }}
+          onPointerMove={(event) => {
+            const current = drag.current;
+            if (!current || current.id !== event.pointerId || event.buttons !== 1) return;
+            const dx = event.clientX - current.x;
+            if (!current.moved) {
+              if (Math.abs(dx) < 6 || Math.abs(dx) <= Math.abs(event.clientY - current.y)) return;
+              current.moved = true;
+              event.currentTarget.setPointerCapture(event.pointerId);
+              event.currentTarget.style.scrollSnapType = "none";
+              event.currentTarget.classList.add("select-none");
+            }
+            event.preventDefault();
+            event.currentTarget.scrollLeft = current.scrollLeft - dx;
+          }}
+          onPointerUp={finishDrag}
+          onPointerCancel={finishDrag}
+          onDragStart={(event) => event.preventDefault()}
+          onClickCapture={(event) => {
+            if (!suppressClick.current) return;
+            event.preventDefault();
+            event.stopPropagation();
+            suppressClick.current = false;
+          }}
+          className="year-carousel-track flex cursor-grab snap-x snap-mandatory gap-[var(--spacing-gutter)] overflow-x-auto overscroll-x-contain pb-4 active:cursor-grabbing"
+        >
+          {projects.map((project) => (
+            <li
+              key={project.slug}
+              className="w-[85%] shrink-0 snap-start sm:w-[52%] lg:w-[calc((min(100vw,var(--container-site))-2*var(--spacing-gutter))/4)]"
+            >
+              <ProjectCard project={project} variant="earlier" />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
 }
 
 export default function Work({ loaderData }: Route.ComponentProps) {
@@ -149,21 +235,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
           </div>
           <div className="mt-14 space-y-20">
             {earlier.map(([key, group]) => (
-              <section key={key} aria-labelledby={`year-${key}`}>
-                <div className="flex items-baseline justify-between border-t border-line pt-5">
-                  <h2 id={`year-${key}`} className="display text-3xl tabular-nums">
-                    {key === TBC ? work.unknownYear : key}
-                  </h2>
-                  <span className="meta text-muted">{String(group.length).padStart(2, "0")}</span>
-                </div>
-                <ul className="mt-8 grid gap-x-[var(--spacing-gutter)] gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-                  {group.map((project) => (
-                    <li key={project.slug}>
-                      <ProjectCard project={project} variant="earlier" />
-                    </li>
-                  ))}
-                </ul>
-              </section>
+              <YearCarousel key={`${key}-${discipline ?? "all"}`} year={key} projects={group} />
             ))}
           </div>
         </Section>

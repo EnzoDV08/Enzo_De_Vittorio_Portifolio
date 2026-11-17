@@ -13,13 +13,14 @@ import {
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { capabilities } from "~/content/capabilities";
-import { heroPortrait as heroPortraitEntry, heroWall as heroWallEntries } from "~/content/hero-wall";
-import { about } from "~/content/pages";
+import { about, home } from "~/content/pages";
+import { coreStack, languages, toolkit } from "~/content/toolkit";
 import { principles } from "~/content/principles";
 import type { Project } from "~/content/types";
 import { deviceSpecs, type DeviceKind, type DeviceSequence, type Devices } from "./devices";
 import { getGalleryPicture } from "./gallery-images";
 import { getPicture } from "./images";
+import { getVideo } from "./videos";
 import { getRecognitionPicture } from "./recognition-images";
 import type { ProjectDetail, ProjectSummary } from "./project";
 
@@ -76,6 +77,7 @@ export function toSummary(p: Project): ProjectSummary {
     markPicture: getPicture(p.mark),
     wordmarkPicture: getPicture(p.wordmark),
     devices: devicesFor(p),
+    video: getVideo(p.slug),
   };
 }
 
@@ -87,19 +89,11 @@ function toDetail(p: Project): ProjectDetail {
     wordmarkPicture: getPicture(p.wordmark),
     devices: devicesFor(p),
     gallery: p.gallery?.map((image) => ({ ...image, picture: getGalleryPicture(image.src) })),
+    screen: getGalleryPicture(`projects/${p.slug}/scroll.jpg`),
   };
 }
 
 export const featuredSummaries = () => featuredProjects.map(toSummary);
-
-/** The home hero's wall of project screenshots, column by column. */
-export const heroWall = () =>
-  heroWallEntries.map((column) =>
-    column.flatMap((key) => {
-      const picture = getGalleryPicture(key);
-      return picture ? [{ key, picture }] : [];
-    }),
-  );
 
 export function workSummaries() {
   return {
@@ -129,11 +123,6 @@ export const capabilityPanels = () =>
 /** Every panel's tags, for the marquee under What I do. */
 export const capabilityTags = () => capabilities.flatMap((panel) => panel.tags);
 
-export const heroPortrait = () => ({
-  ...heroPortraitEntry,
-  picture: getPicture(heroPortraitEntry.src),
-});
-
 /** Pictures by asset key: covers, gallery screens, portraits, logos or recognition photos. */
 export function picturesFor(keys: string[]) {
   return Object.fromEntries(
@@ -142,6 +131,21 @@ export function picturesFor(keys: string[]) {
       getPicture(key) ?? getGalleryPicture(key) ?? getRecognitionPicture(key),
     ]),
   );
+}
+
+/** The home page's intro bento: counts derived from content, never typed in. */
+export function introData() {
+  const tools = new Set(
+    [...languages, ...coreStack, ...toolkit.flatMap((g) => g.items)].map((t) => t.name),
+  );
+  return {
+    projects: featuredProjects.length + moreProjects.length + earlierProjects.length,
+    tools: tools.size,
+    portrait: { ...about.portrait, picture: getPicture(about.portrait.src) },
+    cutout: getPicture(home.hero.portrait),
+    pictures: picturesFor([home.intro.awardLogo, home.intro.studioLogo]),
+    video: getVideo(home.intro.video),
+  };
 }
 
 /** Counts for the home page proof strip, derived, never typed in. */

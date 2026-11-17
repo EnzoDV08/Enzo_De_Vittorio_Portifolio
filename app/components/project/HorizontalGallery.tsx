@@ -39,42 +39,45 @@ export function HorizontalGallery({ images, label, hint, address }: Props) {
               {String(images.length).padStart(2, "0")} <span aria-hidden="true">—</span> {hint}
             </span>
           </div>
-          <div
-            ref={track}
-            // Keyboard users can focus the strip and scroll it with arrow keys when it's native.
-            tabIndex={pinned ? undefined : 0}
-            role={pinned ? undefined : "region"}
-            aria-label={pinned ? undefined : label}
-            className={cn(
-              "flex gap-4 md:gap-6",
-              pinned
-                ? "w-max px-[var(--spacing-gutter)] will-change-transform"
-                : "snap-x snap-mandatory scroll-px-[var(--spacing-gutter)] [scrollbar-width:thin] overflow-x-auto overscroll-x-contain px-[var(--spacing-gutter)] pb-4",
-            )}
-          >
-            {images.map((image) => (
-              <figure
-                key={image.src}
-                className={cn(
-                  "shrink-0 snap-start",
-                  pinned ? "w-[min(68vw,72rem)]" : "w-[85vw] md:w-[70vw]",
-                )}
-              >
-                <BrowserFrame label={address}>
-                  <div className="relative aspect-[16/10] bg-bg-2">
-                    <ResponsiveImage
-                      picture={image.picture}
-                      alt={image.alt}
-                      fill
-                      sizes="(min-width: 1024px) 68vw, 85vw"
-                    />
-                  </div>
-                </BrowserFrame>
-                {image.caption && (
-                  <figcaption className="mt-3 text-sm text-muted">{image.caption}</figcaption>
-                )}
-              </figure>
-            ))}
+          {/* The lens: screenshots blur in and out at the edges as the strip moves. */}
+          <div className="motion-safe:lens-edges">
+            <div
+              ref={track}
+              // Keyboard users can focus the strip and scroll it with arrow keys when it's native.
+              tabIndex={pinned ? undefined : 0}
+              role={pinned ? undefined : "region"}
+              aria-label={pinned ? undefined : label}
+              className={cn(
+                "flex gap-4 md:gap-6",
+                pinned
+                  ? "w-max px-[var(--spacing-gutter)] will-change-transform"
+                  : "snap-x snap-mandatory scroll-px-[var(--spacing-gutter)] [scrollbar-width:thin] overflow-x-auto overscroll-x-contain px-[var(--spacing-gutter)] pb-4",
+              )}
+            >
+              {images.map((image) => (
+                <figure
+                  key={image.src}
+                  className={cn(
+                    "shrink-0 snap-start",
+                    pinned ? "w-[min(68vw,72rem)]" : "w-[85vw] md:w-[70vw]",
+                  )}
+                >
+                  <BrowserFrame label={address}>
+                    <div className="relative aspect-[16/10] bg-bg-2">
+                      <ResponsiveImage
+                        picture={image.picture}
+                        alt={image.alt}
+                        fill
+                        sizes="(min-width: 1024px) 68vw, 85vw"
+                      />
+                    </div>
+                  </BrowserFrame>
+                  {image.caption && (
+                    <figcaption className="mt-3 text-sm text-muted">{image.caption}</figcaption>
+                  )}
+                </figure>
+              ))}
+            </div>
           </div>
         </div>
       </section>

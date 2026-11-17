@@ -13,7 +13,6 @@ import {
 import type { Route } from "./+types/root";
 import { Footer } from "./components/layout/Footer";
 import { Nav } from "./components/layout/Nav";
-import { Cursor } from "./components/motion/Cursor";
 import { Island } from "./components/motion/Island";
 import { PageTransition } from "./components/motion/PageTransition";
 import { SmoothScroll } from "./components/motion/SmoothScroll";
@@ -90,7 +89,6 @@ function Shell({ children }: { children: React.ReactNode }) {
           {children}
         </main>
         <Footer />
-        <Cursor />
         <RouteFocus />
       </PageTransition>
     </SmoothScroll>

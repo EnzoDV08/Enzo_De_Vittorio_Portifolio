@@ -245,8 +245,7 @@ export const projects: Project[] = [
       { name: "Enzo De Vittorio", role: "Co-founder" },
       { name: "Armand Naudé", role: "Co-founder" },
     ],
-    client: "Stack Studio",
-    context: "Postgrad (PGDip), PP 410, Theme 4, own studio",
+    context: "Own business, co-founded with Armand Naudé",
     stack: ["React", "TypeScript", "Vite", "Tailwind CSS", "GSAP", "Lenis", "Three.js", "Zod"],
     links: { live: todo("Stack Studio live URL") },
     featured: true,
@@ -318,7 +317,6 @@ export const projects: Project[] = [
     title: "MPG Foundation",
     tagline: "Production site for a community non-profit, built to last and be found.",
     year: 2026,
-    yearLabel: "2025–2026",
     disciplines: ["Development", "UX"],
     role: "Developer",
     team: [
@@ -397,6 +395,92 @@ export const projects: Project[] = [
       ],
     },
   },
+  {
+    slug: "forge-your-future",
+    title: "Forge Your Future",
+    // From the live site and its repo (D:/Coding/Forge_Your_Future_Open_Window: README, git):
+    // Open Window's Digital Open Day campaign. A planet-orbit home, four degree worlds (Shape,
+    // Capture, Imagine, Build) with their studios, people and student work, a mini game, an
+    // eight-question quiz that matches you to a school and degree, and an Exam Stress Buster
+    // campaign page. Built Oct–Nov 2026. Role still to confirm.
+    tagline: "Four creative worlds, a mini game and a quiz that match students to a degree.",
+    year: 2026,
+    disciplines: ["Campaign", "Interactive"],
+    role: todo("your role on Forge Your Future"),
+    // Open Window, Enzo's own university, came to him as the client for this one.
+    client: "Open Window Institute",
+    context: "Client work",
+    stack: ["React", "TypeScript", "Vite", "Tailwind CSS", "three.js", "MapLibre GL", "React Router"],
+    links: { live: "https://virtualwindow.co.za/fyf/forge-your-future/" },
+    featured: true,
+    order: 6,
+    theme: { accent: "#F2C230", surface: "#1E1257" },
+    cover: "projects/forge-your-future/cover.jpg",
+    coverAlt:
+      "Forge Your Future home page, “Find the creative world that fits you.” beside an illustrated figure holding a game controller, film reel and colour swatches above the Forge Your Future banner",
+    gallery: [
+      {
+        src: "projects/forge-your-future/gallery-1.jpg",
+        alt: "“You've arrived in Shape”, the Visual Communication Design world, beside its character and the Shape Your Future banner",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/forge-your-future/gallery-2.jpg",
+        alt: "“Now entering Capture”, the Film Arts world, a film backlot of five sets, with the Capture Your Future character",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/forge-your-future/gallery-3.jpg",
+        alt: "“You've landed on Imagine”, the Game Design & Animation world, with Explore and Play mini game buttons",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/forge-your-future/gallery-4.jpg",
+        alt: "“You've landed on Build”, the Creative Technologies world, a maker city drawn as a living blueprint",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/forge-your-future/gallery-5.jpg",
+        alt: "The home page's degree row: Visual Communication Design, its planet ringed by student work, and its three majors",
+        caption: CAPTURED,
+      },
+      {
+        src: "projects/forge-your-future/gallery-6.jpg",
+        alt: "“Where will your creative path take you?”, the eight-question quiz intro with Take the quiz",
+        caption: CAPTURED,
+      },
+    ],
+    caseStudy: {
+      challenge:
+        "Open Window's Digital Open Day had to speak to school learners who haven't chosen a creative field yet: four degrees that feel like places to explore, and a clear way for every visitor to find the one that fits.",
+      approach: [
+        {
+          heading: "Four worlds, one template",
+          body: "Shape, Capture, Imagine and Build share one layout driven by per-world config, so each degree gets its own colours, zones and signature interaction (a poster restyler, an edit suite, a lamp teardown) without four separate builds.",
+        },
+        {
+          heading: "Campaign art, rebuilt in code",
+          body: "Each finished poster is rebuilt from its PSD layers around a shared bag. On a world change the items dive into the bag, the character rematerialises and the new items land in place; on desktop the layers drift with the pointer.",
+        },
+        {
+          heading: "A path to the right degree",
+          body: "A planet-orbit home you can hover, click or tap, a mini game in every world and an eight-question quiz that matches each visitor to an Open Window school and degree.",
+        },
+        {
+          heading: "Shipped onto the school's hosting",
+          body: "A deploy script uploads the build over FTPS into its own folder on Open Window's shared hosting and removes only its own stale files, never the live quiz beside it.",
+        },
+      ],
+      highlights: [
+        "Four degree worlds from one config-driven template",
+        "Campaign posters rebuilt from PSD layers, with pointer depth",
+        "Planet-orbit home for mouse and touch",
+        "Eight-question quiz that matches visitors to a degree",
+        "Reduced-motion preferences respected",
+        "FTPS deploy scoped to its own folder",
+      ],
+    },
+  },
 
   // ───────────────────────────── More work ─────────────────────────────
   {
@@ -405,7 +489,7 @@ export const projects: Project[] = [
     // From the live site: accounts and sign-in, cart, checkout, and admin pages for products,
     // orders, users, analytics and emails (its deployed code), on Firebase.
     tagline: "Wholesale salon supplies store with accounts, checkout and an admin dashboard.",
-    year: todo("Salon Friend year"),
+    year: 2026,
     disciplines: ["Development"],
     role: todo("your role on Salon Friend"),
     client: "Salon Friend",
@@ -418,6 +502,26 @@ export const projects: Project[] = [
     cover: "projects/salon-friend/cover.jpg",
     coverAlt:
       "Salon Friend home page, “Everything behind the chair, in one delivery.” over shelves of salon products",
+  },
+  {
+    slug: "sympli",
+    title: "Sympli",
+    // From the repo (github.com/EnzoDV08/Sympli-AI-health): README, assets and git history
+    // (Sep–Nov 2025, every commit Enzo's; the hero art carries his student number).
+    tagline: "An AI nurse in your pocket: health chat, voice and medication reminders.",
+    year: 2025,
+    disciplines: ["UX", "Development"],
+    role: "Design and development",
+    client: "Academic",
+    stack: ["Flutter", "Firebase", "OpenAI API", "Google Cloud TTS / STT", "Riverpod", "GoRouter", "Lottie"],
+    links: { code: "https://github.com/EnzoDV08/Sympli-AI-health" },
+    featured: false,
+    earlier: true,
+    order: 10,
+    theme: { accent: "#1FB6A6" },
+    cover: "projects/sympli/cover.jpg",
+    coverAlt:
+      "Three Sympli phone screens: chat history, the Sympli AI home with Quick Ask for medication and symptoms, and account settings with medication reminders",
   },
   {
     slug: "hushly-mobile-app",

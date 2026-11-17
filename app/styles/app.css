@@ -107,7 +107,8 @@
   --color-spark: #2b36f5;
   --color-signal: #14a85a; /* availability dot only */
 
-  --font-sans: "Satoshi", "Satoshi Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans:
+    "Satoshi", "Satoshi Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* Fluid type scale */
@@ -162,7 +163,8 @@
   --animate-float: float 7s ease-in-out infinite;
   --animate-spin-slow: spin 28s linear infinite;
   --animate-drift: drift 80s linear infinite;
-  --animate-wall: wall 40s linear infinite;
+  /* The hero portrait surfacing out of the light: slow, soft, in step with the ASCII intro. */
+  --animate-portrait-in: portrait-in 2.4s var(--ease-out-expo) both;
 
   @keyframes marquee {
     to {
@@ -185,10 +187,11 @@
       transform: translate3d(0, 0.75rem, 0);
     }
   }
-  @keyframes wall {
-    /* One of HeroWall's four copies. */
-    to {
-      transform: translate3d(0, -25%, 0);
+  @keyframes portrait-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 3%, 0) scale(1.06);
+      filter: blur(16px);
     }
   }
   @keyframes drift {
@@ -228,6 +231,24 @@
   color: var(--color-fg);
 }
 
+/* theme-night's colours without its background: for chrome that floats over a night section
+   (the nav over the home hero) and draws its own surface. Keep in step with theme-night. */
+@utility on-night {
+  --color-bg: #0c0e16;
+  --color-bg-2: #151826;
+  --color-bg-3: #1e2233;
+  --color-surface: #151826;
+  --color-fg: #eceef2;
+  --color-muted: #9aa1b4;
+  --color-line: rgb(236 238 242 / 0.1);
+  --color-line-strong: rgb(236 238 242 / 0.22);
+  --color-accent: #d4ff3c;
+  --color-accent-fg: #0c0e16;
+  --color-spark: #d4ff3c;
+  --color-signal: #3ddc84;
+  color: var(--color-fg);
+}
+
 @utility theme-cobalt {
   --color-bg: #2b36f5;
   --color-bg-2: #3540ff;
@@ -254,6 +275,13 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scrollbar-color: var(--color-bg-3) var(--color-bg);
+    transition: scrollbar-color 0.4s var(--ease-out-3);
+  }
+
+  /* On a page that opens on a night hero, the scrollbar blends into it until the visitor
+     scrolls; Nav sets data-scrolled. CSS-only at first paint, so it's right before hydration. */
+  html:has([data-nav="night"]):not([data-scrolled]) {
+    scrollbar-color: #2a2f45 #0c0e16;
   }
 
   body {
@@ -350,7 +378,10 @@
 /* Line mask for text reveals: children slide up from below the clip. */
 @utility line-mask {
   display: block;
-  overflow: clip;
+  /* Clip only vertically, where the line rises in. Sideways, a display face's overhangs (the tail
+     of a "y" at the start of a line) would otherwise be cut. clip + visible is a valid pair. */
+  overflow-x: visible;
+  overflow-y: clip;
   /* room for descenders and italic overhang without showing the line below */
   padding-block: 0.06em;
   margin-block: -0.06em;
@@ -366,22 +397,86 @@
 }
 
 /*
- * An inverted corner: page colour everywhere but a quarter circle at the bottom-left, so the
- * shape behind it reads as rounded where it meets a notch.
+ * Liquid glass. A frosted tint of the theme's surface (milky on chalk, smoky on night), a bright
+ * rim along the top edge where the light catches it, a faint inner glow and a soft drop shadow.
+ * --glass-tint sets how much of the surface colour comes through.
  */
-@utility notch-curve {
-  width: var(--radius-xl);
-  height: var(--radius-xl);
-  background: radial-gradient(
-    circle at 0 100%,
-    transparent calc(var(--radius-xl) - 0.5px),
-    var(--color-bg) var(--radius-xl)
+@utility glass {
+  background-image: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-surface) var(--glass-tint, 58%), transparent),
+    color-mix(in srgb, var(--color-surface) calc(var(--glass-tint, 58%) * 0.45), transparent)
   );
+  border: 1px solid color-mix(in srgb, var(--color-fg) 13%, transparent);
+  box-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.32),
+    inset 0 -1px 0 0 rgb(255 255 255 / 0.05),
+    inset 0 0 22px 0 color-mix(in srgb, var(--color-fg) 5%, transparent),
+    0 18px 40px -24px rgb(5 8 30 / 0.55);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  backdrop-filter: blur(18px) saturate(170%);
 }
 
-/* The hero's tilted wall of screens, centred on its parent. */
-@utility screen-wall {
-  transform: translate(-50%, -50%) rotate(-20deg);
+/*
+ * The lens: the work carousel's soft, blurred sides, as a site-wide signature for anything that
+ * moves sideways (tickers, the case-study gallery). A band at each edge blurs and lifts what
+ * passes under it, strongest at the very edge, so content drifts in and out of focus.
+ * Use sparingly: only on horizontal motion. --lens-width / --lens-blur tune it per use.
+ */
+@utility lens-edges {
+  position: relative;
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    z-index: 2;
+    width: var(--lens-width, clamp(3rem, 11vw, 11rem));
+    pointer-events: none;
+    -webkit-backdrop-filter: blur(var(--lens-blur, 7px)) saturate(1.35);
+    backdrop-filter: blur(var(--lens-blur, 7px)) saturate(1.35);
+  }
+  &::before {
+    left: 0;
+    -webkit-mask-image: linear-gradient(to right, #000 20%, transparent);
+    mask-image: linear-gradient(to right, #000 20%, transparent);
+  }
+  &::after {
+    right: 0;
+    -webkit-mask-image: linear-gradient(to left, #000 20%, transparent);
+    mask-image: linear-gradient(to left, #000 20%, transparent);
+  }
+}
+
+/* The hero's backdrop before (or without) the WebGL canvas: the same cobalt light, as CSS. */
+@utility hero-glow {
+  background:
+    radial-gradient(85% 55% at 50% 0%, rgb(43 54 245 / 0.42), transparent 72%),
+    radial-gradient(60% 40% at 50% 100%, rgb(27 35 184 / 0.3), transparent 70%);
+}
+
+/* The portrait behind the hero copy: toned into the night / cobalt palette (grey, then a blue
+   duotone, dimmed) so it sits inside the light instead of on top of it, and dissolving into the
+   frame towards the bottom. */
+@utility hero-portrait {
+  filter: grayscale(1) sepia(1) hue-rotate(190deg) saturate(2.6) brightness(0.58) contrast(1.1);
+  opacity: 0.9;
+  /* The frame shows the image down to ~75-80% (waist); fade out just before that. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 48%, transparent 80%);
+  mask-image: linear-gradient(to bottom, #000 48%, transparent 80%);
+}
+
+/* Darkens the middle of the hero just enough that the headline always reads over the light, and
+   the top band where the nav sits, so its name and links never land on the brightest glyphs. */
+@utility hero-scrim {
+  background:
+    linear-gradient(
+      to bottom,
+      rgb(12 14 22 / 0.82),
+      rgb(12 14 22 / 0.45) 5.5rem,
+      rgb(12 14 22 / 0) 11rem
+    ),
+    radial-gradient(55% 42% at 50% 50%, rgb(12 14 22 / 0.72), rgb(12 14 22 / 0) 100%);
 }
 
 @utility dot-grid {
@@ -409,10 +504,21 @@
   }
 }
 
-/* Native cursor gives way to the "View →" follower over project media, only once the
-   follower is actually mounted (it adds .has-cursor), so a JS failure never hides the cursor. */
-.has-cursor [data-cursor] {
-  cursor: none;
+/* Earlier work carousels keep their next card visible without drawing a scrollbar. */
+.year-carousel-track {
+  --carousel-inset: max(
+    var(--spacing-gutter),
+    calc((100vw - var(--container-site)) / 2 + var(--spacing-gutter))
+  );
+  padding-inline-start: var(--carousel-inset);
+  padding-inline-end: var(--carousel-inset);
+  scroll-padding-inline-start: var(--carousel-inset);
+  scroll-padding-inline-end: var(--carousel-inset);
+  scrollbar-width: none;
+}
+
+.year-carousel-track::-webkit-scrollbar {
+  display: none;
 }
 
 /* About: a responsive studio wall for the core stack. */
@@ -434,7 +540,9 @@
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-fg);
-  transition: translate 300ms var(--ease-out-3), box-shadow 300ms var(--ease-out-3);
+  transition:
+    translate 300ms var(--ease-out-3),
+    box-shadow 300ms var(--ease-out-3);
 }
 
 .core-stack-card:nth-child(1) {

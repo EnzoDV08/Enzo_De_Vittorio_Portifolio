@@ -8,6 +8,7 @@
  * - hide: CSS selector for overlays that don't belong in a still (cookie bars, badges)
  * - hideMobile: the same, for the phone capture only (overrides `hide` there)
  * - redact: words whose elements are hidden before capture (no location on this site)
+ * - unstick: un-stick sticky elements for capture-scroll.mjs (stitched tall capture)
  * - finish: the iPhone's colour in this project's renders
  */
 const DV200 = "/Users/enzodevittorio/Desktop/DV 200/Semester 1/Term 1/Week 2";
@@ -51,6 +52,17 @@ export const targets = [
     slug: "mpg-foundation",
     url: "https://mpgf.org.za/",
     stops: [0],
+    // Its sticky logo would repeat across the case-study screen's stitched capture.
+    unstick: true,
     finish: "#9bb88a",
+  },
+  {
+    slug: "forge-your-future",
+    url: "https://virtualwindow.co.za/fyf/forge-your-future/",
+    stops: [0],
+    // The planet orbit animates in; let it settle with motion on so Forge and the planets show.
+    motion: true,
+    settle: 6000,
+    finish: "#3b3478",
   },
 ];

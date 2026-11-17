@@ -18,43 +18,38 @@ export const languages: Tool[] = [
   { name: "CSS", logo: "css3" },
 ];
 
-/** The tools and practices Enzo uses most, in the order shown on About. */
+/** The website stack Enzo reaches for most, from front end through data. */
 export const coreStack: (Tool & { detail: string })[] = [
-  { name: "Tailwind CSS", logo: "tailwindcss", detail: "Style built to flex" },
-  { name: "TypeScript", logo: "typescript", detail: "Fewer surprises in code" },
-  { name: "Vite", logo: "vite", detail: "Idea to preview, fast" },
-  { name: "Firebase", logo: "firebase", detail: "From app to live" },
-  { name: "C#", logo: "csharp", detail: "Logic behind the screen" },
-  { name: ".NET", logo: "dotnet", detail: "Services that connect" },
-  { name: "pgAdmin 4", logo: "postgresql", detail: "Know the data" },
-  { name: "Unit testing", monogram: "✓", detail: "Break it before users do" },
+  { name: "React", logo: "react", detail: "Interactive interfaces" },
+  { name: "TypeScript", logo: "typescript", detail: "Typed code throughout" },
+  { name: "Vite", logo: "vite", detail: "Fast builds and previews" },
+  { name: "Tailwind CSS", logo: "tailwindcss", detail: "Responsive design systems" },
+  { name: "Node.js", logo: "nodedotjs", detail: "APIs and services" },
+  { name: "Firebase", logo: "firebase", detail: "Auth and deployment" },
+  { name: "Firestore", logo: "firebase", detail: "Real-time app data" },
+  { name: "PostgreSQL", logo: "postgresql", detail: "Structured SQL data" },
 ];
 
 export const toolkit: ToolGroup[] = [
   {
-    group: "Frameworks",
-    blurb: "Front ends, apps and the odd desktop build.",
+    group: "Apps & frameworks",
+    blurb: "Mobile apps, desktop software and other web frameworks.",
     items: [
-      { name: "React", logo: "react" },
       { name: "React Native", logo: "react" },
       { name: "Expo", logo: "expo" },
-      { name: "Vite", logo: "vite" },
+      { name: "Flutter", monogram: "Fl" },
       { name: "Astro", logo: "astro" },
       { name: "Vue", logo: "vuedotjs" },
-      { name: "Tailwind CSS", logo: "tailwindcss" },
       { name: "Bootstrap", logo: "bootstrap" },
+      { name: "C#", logo: "csharp" },
       { name: ".NET", logo: "dotnet" },
-      { name: "Node.js", logo: "nodedotjs" },
       { name: "Electron", logo: "electron" },
     ],
   },
   {
     group: "Backend & data",
-    blurb: "APIs, auth, SQL and NoSQL databases, and the data models behind them.",
+    blurb: "More data stores, API tools and validation for different projects.",
     items: [
-      { name: "Firebase", logo: "firebase" },
-      { name: "Firestore", logo: "firebase" },
-      { name: "PostgreSQL", logo: "postgresql" },
       { name: "pgAdmin 4", logo: "postgresql" },
       { name: "MySQL", logo: "mysql" },
       { name: "MSSQL", logo: "mssql" },
@@ -105,16 +100,17 @@ export const toolkit: ToolGroup[] = [
       { name: "GitHub", logo: "github" },
       { name: "GitHub Actions", monogram: "GA" },
       { name: "CI/CD pipelines", monogram: "CI" },
-      { name: "Firebase Hosting", logo: "firebase" },
       { name: "Unit testing", monogram: "✓" },
     ],
   },
 ];
 
 /** Every tool with a logo, once, for the home page logo strip. */
-export const logoWall: Tool[] = [...languages, ...toolkit.flatMap((g) => g.items)].filter(
-  (tool, i, all) => tool.logo && all.findIndex((t) => t.logo === tool.logo) === i,
-);
+export const logoWall: Tool[] = [
+  ...languages,
+  ...coreStack,
+  ...toolkit.flatMap((g) => g.items),
+].filter((tool, i, all) => tool.logo && all.findIndex((t) => t.logo === tool.logo) === i);
 
 export const offScreen = ["Rock climbing", "Cooking", "Road trips", "Cinema", "Music", "Gaming"];
 
@@ -132,7 +128,7 @@ const aliases: Record<string, string> = {
  * so case studies can show the right mark. Unknown entries come back as a plain tool.
  */
 export function toolFor(entry: string): Tool {
-  const all = [...languages, ...toolkit.flatMap((g) => g.items)];
+  const all = [...languages, ...coreStack, ...toolkit.flatMap((g) => g.items)];
   const key = entry.toLowerCase();
   // An exact name keeps its monogram when it has no logo (Lenis, EmailJS).
   const exact = all.find((t) => t.name.toLowerCase() === key);

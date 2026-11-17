@@ -74,7 +74,6 @@ export function ProjectCard({
         "group relative flex w-full flex-col",
         uniform && "h-[37rem] rounded-lg border border-line bg-surface p-3 sm:h-[35rem]",
       )}
-      data-cursor={internal ? ui.view : undefined}
     >
       <div
         className={cn(

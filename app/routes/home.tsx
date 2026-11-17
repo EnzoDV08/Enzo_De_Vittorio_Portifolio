@@ -1,46 +1,45 @@
 import { ArrowRight } from "lucide-react";
-import { DeviceStill } from "~/components/devices/DeviceStill";
+import { lazy, useCallback, useRef, useState } from "react";
+import { Island } from "~/components/motion/Island";
 import { RevealText } from "~/components/motion/RevealText";
-import { TransitionLink } from "~/components/motion/TransitionLink";
-import { ProjectShowcase } from "~/components/project/ProjectShowcase";
+import { WorkStrip } from "~/components/project/WorkStrip";
 import { Capabilities } from "~/components/sections/Capabilities";
-import { HeroWall } from "~/components/sections/HeroWall";
+import { IntroBento } from "~/components/sections/IntroBento";
+import { Principles } from "~/components/sections/Principles";
 import { Button } from "~/components/ui/Button";
-import { Container } from "~/components/ui/Container";
-import { LogoTile } from "~/components/ui/LogoTile";
+import { Marquee } from "~/components/ui/Marquee";
 import { ResponsiveImage } from "~/components/ui/ResponsiveImage";
-import { LogoMarquee, Marquee } from "~/components/ui/Marquee";
 import { Section } from "~/components/ui/Section";
-import { SectionLabel } from "~/components/ui/SectionLabel";
-import { home, ui } from "~/content/pages";
-import { site } from "~/content/site";
-import { logoWall } from "~/content/toolkit";
+import { home } from "~/content/pages";
 import {
   capabilityPanels,
   capabilityTags,
+  introData,
   featuredSummaries,
-  heroPortrait,
-  heroWall,
-  principleLines,
   picturesFor,
-  workStats,
+  principleLines,
 } from "~/lib/content.server";
+import type { Picture } from "~/lib/images";
 import { personJsonLd } from "~/lib/jsonld";
-import { caseStudyPath, indexLabel } from "~/lib/project";
+import { useMotionAllowed } from "~/lib/motion";
+import { HERO_LIGHT } from "~/lib/palette";
 import { pageMeta } from "~/lib/seo";
+import { useHydrated } from "~/lib/useHydrated";
 import type { Route } from "./+types/home";
+
+const GradientASCII = lazy(() => import("~/components/ui/GradientASCII"));
+const HeroFrameFx = lazy(() => import("~/components/motion/fx/HeroFrameFx"));
+const WorkOrbitFx = lazy(() => import("~/components/motion/fx/WorkOrbitFx"));
 
 // Runs at build time; the result is embedded in the prerendered HTML.
 export function loader() {
   return {
     featured: featuredSummaries(),
-    wall: heroWall(),
     principles: principleLines(),
-    portrait: heroPortrait(),
     panels: capabilityPanels(),
     tags: capabilityTags(),
-    stats: workStats(),
-    logos: picturesFor([home.proof.awardLogo, home.proof.studioLogo]),
+    intro: introData(),
+    portrait: picturesFor([home.hero.portrait])[home.hero.portrait],
   };
 }
 
@@ -51,22 +50,82 @@ export function meta() {
 /** Staggered CSS entrance, runs at first paint without waiting for JS, off with reduced motion. */
 const delay = (ms: number) => ({ animationDelay: `${ms}ms` });
 
-type HeroProps = Pick<Route.ComponentProps["loaderData"], "wall" | "portrait">;
 
-function Hero({ wall, portrait }: HeroProps) {
+/**
+ * Full-bleed night frame with the ASCII light behind centred copy. From the first scroll,
+ * HeroFrameFx closes the frame in to a rounded card. Without motion it is simply a full-height section.
+ */
+function Hero({ portrait }: { portrait: Picture | undefined }) {
+  const section = useRef<HTMLElement>(null);
+  const frame = useRef<HTMLDivElement>(null);
+  const backdrop = useRef<HTMLDivElement>(null);
+  const content = useRef<HTMLDivElement>(null);
+  const hydrated = useHydrated();
+  const motion = useMotionAllowed();
   return (
-    <section aria-labelledby="hero-heading" className="relative pt-24 md:pt-28">
-      <Container>
-        <div className="grid items-center gap-x-[var(--spacing-gutter)] gap-y-12 lg:min-h-[calc(100svh-7rem)] lg:grid-cols-12">
-          <div className="lg:col-span-6 xl:col-span-5">
-            <p className="text-sm font-semibold text-muted motion-safe:animate-fade-up" style={delay(0)}>
+    <>
+      <section ref={section} aria-labelledby="hero-heading" data-nav="night" className="relative">
+        <div ref={frame} className="relative isolate flex min-h-svh flex-col overflow-clip theme-night">
+          <div ref={backdrop} aria-hidden="true" className="absolute inset-0 -z-10">
+            <div className="absolute inset-0 hero-glow" />
+            {/* WebGL, so client only. With reduced motion it draws one still frame. */}
+            {hydrated && (
+              <Island>
+                <GradientASCII
+                  colors={HERO_LIGHT}
+                  shape="horizon"
+                  cellSize={16}
+                  density={0.75}
+                  gradientOpacity={0.75}
+                  glow={0.35}
+                  // Soft, glowing glyphs: 1.25x looks the same as 1.5x for ~30% fewer pixels.
+                  dpr={1.25}
+                  scrollFps={30}
+                />
+              </Island>
+            )}
+          </div>
+
+          {/* Enzo, behind the copy. Its own layer, untouched by HeroFrameFx: while the frame closes
+            in on scroll, the portrait keeps its size and the frame crops around it. Decorative
+            (the name is in the copy), so no alt. */}
+          {portrait && (
+            <div
+              aria-hidden="true"
+              data-hero-portrait
+              // Larger than the frame and lifted, so the frame crops at the waist: in the cut-out the
+              // head starts ~20% down, so -16% / 155% puts it ~15% from the top of the hero.
+              className="pointer-events-none absolute inset-x-0 top-[-8%] -z-10 flex h-[125%] justify-center motion-safe:animate-portrait-in md:top-[-16%] md:h-[155%]"
+              style={delay(150)}
+            >
+              <ResponsiveImage
+                picture={portrait}
+                alt=""
+                sizes="(orientation: landscape) 104vh, 140vw"
+                eager
+                className="h-full! w-auto! max-w-none hero-portrait"
+              />
+            </div>
+          )}
+          <div aria-hidden="true" className="absolute inset-0 -z-10 hero-scrim" />
+
+          <div
+            ref={content}
+            className="flex flex-1 flex-col items-center justify-center container-site pt-28 pb-24 text-center"
+          >
+            <p
+              className="glass rounded-full px-4 py-2 meta text-fg motion-safe:animate-fade-up"
+              style={delay(0)}
+            >
               {home.hero.eyebrow}
             </p>
             <h1
               id="hero-heading"
-              className="mt-5 display text-[clamp(2.9rem,1.2rem+5.4vw,7rem)] md:mt-6"
+              className="mt-7 max-w-[11ch] display text-[clamp(3.5rem,1rem+10vw,11.5rem)] md:mt-9"
             >
-              <span className="line-mask">
+              {/* Extra room below: at this size and line-height the descender of "y" hangs about
+                0.19em under the line box, past line-mask's default padding. */}
+              <span className="line-mask" style={{ paddingBottom: "0.24em", marginBottom: "-0.24em" }}>
                 {/* The LCP line rises from partly visible, so it counts as painted on frame one. */}
                 <span className="block motion-safe:animate-rise-short" style={delay(80)}>
                   {home.hero.lead}{" "}
@@ -75,13 +134,16 @@ function Hero({ wall, portrait }: HeroProps) {
               </span>
             </h1>
             <p
-              className="mt-7 max-w-[40ch] text-lg text-fg/80 motion-safe:animate-fade-up"
+              className="mt-7 max-w-[44ch] text-lg text-fg/80 motion-safe:animate-fade-up md:mt-9"
               style={delay(320)}
             >
               {home.hero.intro}
             </p>
-            <div className="mt-9 flex flex-wrap gap-3 motion-safe:animate-fade-up" style={delay(420)}>
-              <Button to="/work" icon={<ArrowRight />}>
+            <div
+              className="mt-9 flex flex-wrap justify-center gap-3 motion-safe:animate-fade-up"
+              style={delay(420)}
+            >
+              <Button to="/work" variant="solid" icon={<ArrowRight />}>
                 {home.hero.primary}
               </Button>
               <Button to="/about" variant="ghost">
@@ -89,95 +151,56 @@ function Hero({ wall, portrait }: HeroProps) {
               </Button>
             </div>
           </div>
-
-          <div
-            className="relative motion-safe:animate-fade-up lg:col-span-6 lg:self-stretch lg:py-8 xl:col-span-7"
-            style={delay(200)}
-          >
-            <div className="relative aspect-4/3 lg:h-full lg:min-h-[34rem] lg:aspect-auto">
-              <div className="absolute inset-0 overflow-hidden rounded-xl theme-cobalt">
-                <div aria-hidden="true" className="absolute inset-0 opacity-45 dot-grid" />
-                <HeroWall columns={wall} />
-              </div>
-              <div className="absolute top-0 right-0 aspect-square w-[30%] rounded-bl-[calc(var(--radius-lg)+0.875rem)] bg-bg pb-3 pl-3 sm:w-[32%] sm:pb-3.5 sm:pl-3.5">
-                <span aria-hidden="true" className="absolute top-0 right-full notch-curve" />
-                <span aria-hidden="true" className="absolute top-full right-0 notch-curve" />
-                <div className="relative size-full overflow-hidden rounded-lg">
-                  <ResponsiveImage
-                    picture={portrait.picture}
-                    alt={portrait.alt}
-                    fill
-                    sizes="(min-width: 1024px) 18vw, 30vw"
-                    className="object-[center_28%]"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </Container>
-    </section>
+      </section>
+      {/* After the section, not inside it: refs attach only after children's effects run. */}
+      {motion && (
+        <Island>
+          <HeroFrameFx section={section} frame={frame} backdrop={backdrop} content={content} />
+        </Island>
+      )}
+    </>
   );
 }
 
-type ProofProps = Pick<Route.ComponentProps["loaderData"], "stats" | "logos">;
+type Featured = Route.ComponentProps["loaderData"]["featured"];
 
-function Proof({ stats, logos }: ProofProps) {
-  const items = [
-    { big: indexLabel(stats.caseStudies), small: home.proof.caseStudies },
-    { big: String(stats.projects), small: home.proof.projects },
-    { big: home.proof.award, small: home.proof.awardDetail, logo: logos[home.proof.awardLogo] },
-    { big: home.proof.studio, small: home.proof.studioDetail, logo: logos[home.proof.studioLogo] },
-  ];
+/**
+ * Selected work. With motion, the room of screens (WorkOrbitFx, lazy, WebGL2); prerendered, with
+ * reduced motion, while it loads or without WebGL2, the same projects as a flat strip.
+ */
+function SelectedWork({ projects }: { projects: Featured }) {
+  const motion = useMotionAllowed();
+  const [failed, setFailed] = useState(false);
+  const fail = useCallback(() => setFailed(true), []);
+  const fallback = <WorkStrip projects={projects} />;
+  if (!motion || failed) return fallback;
   return (
-    <section aria-label={home.proof.label} className="pt-16 md:pt-24">
-      <Container>
-        <dl className="grid grid-cols-2 gap-px overflow-clip rounded-lg border border-line bg-line lg:grid-cols-4">
-          {items.map((item) => (
-            <div key={item.small} className="flex flex-col-reverse justify-end gap-2 bg-bg p-6 md:p-8">
-              <dt className="text-sm text-muted">{item.small}</dt>
-              <dd
-                className={
-                  "logo" in item
-                    ? "text-[clamp(1.375rem,1rem+1.4vw,2.25rem)] leading-tight font-bold tracking-[-0.03em]"
-                    : "display text-[clamp(3rem,2rem+4vw,6rem)] text-accent"
-                }
-              >
-                {"logo" in item && <LogoTile picture={item.logo} className="mb-4 size-14 md:size-16" />}
-                {item.big}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </Container>
-    </section>
+    <Island fallback={fallback}>
+      <WorkOrbitFx projects={projects} onFail={fail} />
+    </Island>
   );
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { featured, wall, portrait, panels, tags, stats, logos, principles } = loaderData;
-  const studio = featured.find((p) => p.slug === site.studio.caseStudy);
+  const { featured, panels, tags, principles, portrait, intro } = loaderData;
 
   return (
     <>
-      <Hero wall={wall} portrait={portrait} />
-      <Proof stats={stats} logos={logos} />
+      <Hero portrait={portrait} />
 
-      {/* 01, Selected work */}
-      <Section id="work" index={1} label={home.work.label}>
-        <div className="mb-10 flex flex-col gap-6 md:mb-14 md:flex-row md:items-end md:justify-between">
-          <p className="max-w-[44ch] text-lg text-muted">{home.work.intro}</p>
-          <Button to="/work" variant="ghost" icon={<ArrowRight />}>
-            {home.work.allWork}
-          </Button>
-        </div>
-        <ProjectShowcase projects={featured} />
-      </Section>
+      {/* What I do, as a ticker: room to breathe after the hero, and before the work. */}
+      <Marquee label={home.whatIDo.label} items={tags} className="mt-6 md:mt-10" />
 
-      {/* 02, What I do */}
+      {/* Selected work */}
+      <div className="mt-20 md:mt-32">
+        <SelectedWork projects={featured} />
+      </div>
+
+      {/* What I do */}
       <Section index={2} label={home.whatIDo.label}>
         <div className="mb-10 flex flex-col gap-6 md:mb-14 lg:flex-row lg:items-end lg:justify-between">
-          <RevealText className="max-w-[16ch] display text-4xl">
+          <RevealText className="max-w-[16ch] display text-3xl">
             {home.whatIDo.heading} <span className="italic-accent">{home.whatIDo.accent}</span>
           </RevealText>
           <p className="max-w-[40ch] text-lg text-muted">{home.whatIDo.intro}</p>
@@ -185,78 +208,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <Capabilities panels={panels} />
       </Section>
 
-      <Marquee
-        label={home.whatIDo.label}
-        items={tags}
-        className="mt-16 md:mt-24"
-      />
+      {/* How I work */}
+      <Principles items={principles} />
 
-      {/* 03, Toolkit */}
-      <Section index={3} label={home.tools.label} spacing="tight">
-        <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <RevealText className="max-w-[18ch] display text-3xl">
-            {home.tools.heading} <span className="italic-accent">{home.tools.accent}</span>
-          </RevealText>
-          <Button to="/about" variant="ghost" icon={<ArrowRight />}>
-            {home.tools.cta}
-          </Button>
-        </div>
-      </Section>
-      <LogoMarquee tools={logoWall} label={home.tools.label} />
-
-      {/* 04, How I work */}
-      <section aria-labelledby="principles-label" className="pt-section">
-        <Container>
-          <div className="overflow-clip rounded-xl p-6 theme-cobalt sm:p-10 lg:p-16">
-            <SectionLabel id="principles-label" index={4}>
-              {home.howIWork.label}
-            </SectionLabel>
-            <ol className="mt-12 space-y-6 md:mt-16 md:space-y-8">
-              {principles.map((p, i) => (
-                <li key={p.line} className="grid grid-cols-12 items-baseline gap-x-4 border-t border-line pt-5">
-                  <span className="col-span-2 meta text-muted md:col-span-1">{indexLabel(i + 1)}</span>
-                  <RevealText as="p" className="col-span-10 display text-4xl md:col-span-11">
-                    {p.line} <span className="italic-accent">{p.emphasis}</span>
-                  </RevealText>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </Container>
-      </section>
-
-      {/* 05, Now */}
-      <Section index={5} label={home.studio.label}>
-        <div className="grid items-center gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-6">
-            <RevealText as="p" className="display text-3xl">
-              {home.studio.line}
-            </RevealText>
-            {studio && (
-              <Button to={caseStudyPath(studio)} variant="solid" icon={<ArrowRight />} className="mt-10">
-                {home.studio.cta}
-              </Button>
-            )}
-          </div>
-          {studio?.devices.laptop && (
-            <TransitionLink
-              to={caseStudyPath(studio)}
-              label={studio.title}
-              tabIndex={-1}
-              aria-hidden="true"
-              data-cursor={ui.view}
-              className="block rounded-xl bg-night px-[10%] pt-[10%] pb-[8%] lg:col-span-6"
-            >
-              <DeviceStill
-                devices={studio.devices}
-                sizes="(min-width: 1024px) 40vw, 80vw"
-                laptopOnly
-                decorative
-              />
-            </TransitionLink>
-          )}
-        </div>
-      </Section>
+      {/* A quick about-me: every card leads to /about. */}
+      <IntroBento data={intro} />
     </>
   );
 }

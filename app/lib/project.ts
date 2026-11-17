@@ -3,6 +3,7 @@ import { isTodo, real } from "~/content/todo";
 import type { GalleryImage, Project } from "~/content/types";
 import type { Devices } from "./devices";
 import type { Picture } from "./images";
+import type { ProjectVideo } from "./videos";
 
 export const indexLabel = (n: number) => String(n).padStart(2, "0");
 
@@ -28,6 +29,10 @@ export function projectLinks(p: Pick<Project, "links">): ProjectLink[] {
 }
 
 export const caseStudyPath = (p: Pick<Project, "slug">) => `/work/${p.slug}`;
+
+/** Where a project card leads: its case study, or the work index when it has none yet. */
+export const projectHref = (p: Pick<Project, "slug"> & { hasCaseStudy: boolean }) =>
+  p.hasCaseStudy ? caseStudyPath(p) : "/work";
 
 /** A light tint of the project's own colour, for small chips and badges. */
 export const projectTint = (p: Pick<Project, "theme">, amount = 24) =>
@@ -69,6 +74,8 @@ export type ProjectSummary = Omit<
   markPicture?: Picture;
   wordmarkPicture?: Picture;
   devices: Devices;
+  /** Preview loop for the home carousel (scripts/optimize-videos.mjs), if one is encoded. */
+  video?: ProjectVideo;
 };
 
 /** Everything a case-study page needs, with images already resolved. */
@@ -78,4 +85,6 @@ export type ProjectDetail = Omit<Project, "gallery"> & {
   wordmarkPicture?: Picture;
   devices: Devices;
   gallery?: (GalleryImage & { picture?: Picture })[];
+  /** Tall capture of the top of the site, for the case-study screen (capture-scroll.mjs). */
+  screen?: Picture;
 };

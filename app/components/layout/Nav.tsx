@@ -9,6 +9,9 @@ import { site } from "~/content/site";
 import { cn } from "~/lib/cn";
 import { usePathname } from "~/lib/usePathname";
 
+/** Viewport y (px) through the middle of the nav pill, for the over-night check. */
+const NAV_LINE = 48;
+
 function isActive(pathname: string, to: string) {
   return pathname === to || pathname.startsWith(`${to}/`);
 }
@@ -32,18 +35,45 @@ export function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // Home opens on its night hero, so the prerendered nav starts in night colours there.
+  const [overNight, setOverNight] = useState(() => pathname === "/");
   const toggle = useRef<HTMLButtonElement>(null);
   const menu = useRef<HTMLDivElement>(null);
   const navigatedAway = useRef(false);
   const lenis = useLenis();
 
-  // A floating pill: clear over the top of the page, frosted once it has moved.
+  // A floating pill: clear over the top of the page, glass once it has moved. Over a section
+  // marked data-nav="night" (the home hero) it takes night colours so it stays readable.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    // Once per frame at most, and all reads before any write: measuring right after a DOM
+    // write forces a synchronous layout, which on every scroll event costs frames.
+    let queued = 0;
+    const update = () => {
+      queued = 0;
+      const moved = window.scrollY > 12;
+      const over = [...document.querySelectorAll("[data-nav='night']")].some((night) => {
+        const rect = night.getBoundingClientRect();
+        return rect.top < NAV_LINE && rect.bottom > NAV_LINE;
+      });
+      // The scrollbar matches a night hero only until scrolling starts (see app.css).
+      document.documentElement.toggleAttribute("data-scrolled", moved);
+      setScrolled(moved);
+      setOverNight(over);
+    };
+    const onScroll = () => {
+      if (!queued) queued = requestAnimationFrame(update);
+    };
+    update();
+    // The new page's DOM lands after the route change, so check again on the next frame.
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(queued);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [pathname]);
 
   // Close the menu when a link inside it navigates.
   useEffect(() => {
@@ -81,10 +111,9 @@ export function Nav() {
       <div className="container-site">
         <div
           className={cn(
-            "relative z-10 flex h-14 items-center justify-between gap-4 rounded-full border pr-2 pl-2.5 transition-[background-color,border-color,box-shadow] duration-500 md:h-16",
-            scrolled || open
-              ? "border-line bg-surface/80 shadow-[0_12px_40px_-20px_rgb(12_14_22/0.35)] backdrop-blur-xl"
-              : "border-transparent bg-transparent",
+            "relative z-10 flex h-14 items-center justify-between gap-4 rounded-full border pr-2 pl-2.5 transition-[background-color,border-color,box-shadow,color] duration-500 md:h-16",
+            overNight && !open && "on-night",
+            scrolled || open ? "glass [--glass-tint:72%]" : "border-transparent bg-transparent",
           )}
         >
           <TransitionLink

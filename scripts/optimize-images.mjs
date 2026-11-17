@@ -16,8 +16,9 @@ const MAX_WIDTH = 2400;
 const force = process.argv.includes("--force");
 const exts = new Set([".jpg", ".jpeg", ".png", ".webp", ".tif", ".tiff", ".heic", ".avif"]);
 
-// Raw device captures and 3D models feed scripts/devices, not the site's images.
-const SKIP = new Set([join(SRC, "devices"), join(SRC, "models")]);
+// Raw device captures and 3D models feed scripts/devices, and video masters scripts/
+// optimize-videos, not the site's images.
+const SKIP = new Set([join(SRC, "devices"), join(SRC, "models"), join(SRC, "videos")]);
 
 function* walk(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {

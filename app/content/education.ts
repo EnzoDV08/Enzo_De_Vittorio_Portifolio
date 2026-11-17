@@ -3,6 +3,7 @@ import type { TimelineEntry } from "./types";
 export const education: TimelineEntry[] = [
   {
     title: "PGDip Creative Practice, Interactive Development",
+    note: "Completed",
     org: "Open Window Institute",
     logo: "Openwindow.jpg",
     period: "2026",

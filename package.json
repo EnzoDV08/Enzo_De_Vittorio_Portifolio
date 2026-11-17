@@ -13,6 +13,7 @@
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "images": "node scripts/optimize-images.mjs",
+    "videos": "node scripts/optimize-videos.mjs",
     "shots": "node scripts/shots.mjs",
     "todo": "node scripts/content-todo.mjs",
     "og": "node scripts/og.mjs && node scripts/favicons.mjs",

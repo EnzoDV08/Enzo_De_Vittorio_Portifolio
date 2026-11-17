@@ -13,7 +13,8 @@ const variants: Record<Variant, string> = {
   accent: "bg-accent text-accent-fg hover:bg-fg hover:text-bg",
   /** Ink pill. */
   solid: "bg-fg text-bg hover:bg-accent hover:text-accent-fg",
-  ghost: "border border-line-strong text-fg hover:border-fg hover:bg-fg hover:text-bg",
+  /** Liquid glass pill, filled with ink on hover. */
+  ghost: "glass text-fg hover:border-fg hover:bg-fg hover:bg-none hover:text-bg",
   quiet: "min-h-11 px-0 text-fg hover:text-accent",
 };
 

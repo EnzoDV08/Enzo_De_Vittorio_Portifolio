@@ -1,5 +1,6 @@
 import { ArrowRight, ChevronLeft, ChevronRight, Download } from "lucide-react";
-import { useRef, useState } from "react";
+import { lazy, useRef, useState } from "react";
+import { Island } from "~/components/motion/Island";
 import { RevealMedia } from "~/components/motion/RevealMedia";
 import { RevealText } from "~/components/motion/RevealText";
 import { Button } from "~/components/ui/Button";
@@ -22,8 +23,12 @@ import type { TimelineEntry } from "~/content/types";
 import { picturesFor, portrait } from "~/lib/content.server";
 import type { Picture } from "~/lib/images";
 import { personJsonLd } from "~/lib/jsonld";
+import { HERO_LIGHT } from "~/lib/palette";
 import { pageMeta } from "~/lib/seo";
+import { useHydrated } from "~/lib/useHydrated";
 import type { Route } from "./+types/about";
+
+const GradientASCII = lazy(() => import("~/components/ui/GradientASCII"));
 
 export function loader() {
   return {
@@ -78,20 +83,21 @@ function Timeline({ entries, pictures }: { entries: TimelineEntry[]; pictures: P
 }
 
 export default function About({ loaderData }: Route.ComponentProps) {
+  const hydrated = useHydrated();
   return (
     <>
-      <Container className="pt-32 md:pt-40">
+      <Container className="pt-28 pb-8 lg:flex lg:min-h-svh lg:items-center lg:pt-28 lg:pb-10">
         <div className="grid gap-x-gutter gap-y-16 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-7">
-            <h1 className="display text-[clamp(3.25rem,9vw,9rem)]">
+            <h1 className="display text-[clamp(3rem,4.6vw,6.25rem)]">
               {about.heading} <span className="italic-accent">{about.accent}</span>
             </h1>
-            <div className="mt-10 max-w-prose space-y-5 text-lg text-fg/85">
+            <div className="mt-6 max-w-prose space-y-3 text-base text-fg/85 lg:leading-[1.45]">
               {about.bio.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
-            <dl className="mt-10 flex flex-wrap gap-2">
+            <dl className="mt-6 flex flex-wrap gap-2">
               {about.quick.map((item) => (
                 <div
                   key={item.label}
@@ -104,7 +110,7 @@ export default function About({ loaderData }: Route.ComponentProps) {
                 </div>
               ))}
             </dl>
-            <div className="mt-10 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-3">
               <Button
                 href={site.cv.href}
                 download={site.cv.fileName}
@@ -126,8 +132,9 @@ export default function About({ loaderData }: Route.ComponentProps) {
 
       {/* 01, Core stack */}
       <Section index={1} label={about.coreStack}>
-        <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="mb-10">
           <RevealText className="display text-3xl">{about.coreStackIntro}</RevealText>
+          <p className="mt-4 max-w-prose text-lg text-muted">{about.coreStackDescription}</p>
         </div>
         <ul className="core-stack-grid">
           {coreStack.map((tool) => (
@@ -148,37 +155,61 @@ export default function About({ loaderData }: Route.ComponentProps) {
       {/* 02, Tools & frameworks */}
       <section aria-labelledby="toolkit-label" className="pt-section">
         <Container>
-          <div className="rounded-xl theme-night p-6 sm:p-10 lg:p-16">
-            <SectionLabel id="toolkit-label" index={2}>
-              {about.toolkit}
-            </SectionLabel>
-            <p className="mt-8 max-w-[34ch] text-lg text-muted">{about.toolkitIntro}</p>
-            <div className="mt-12 grid gap-x-[var(--spacing-gutter)] gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-              {toolkit.map((group) => (
-                <div key={group.group} className="border-t border-line pt-6">
-                  <h3 className="display text-2xl">{group.group}</h3>
-                  <p className="mt-2 text-sm text-muted">{group.blurb}</p>
-                  <ul className="mt-6 flex flex-wrap gap-2">
-                    {group.items.map((tool) => (
-                      <li key={tool.name}>
-                        <ToolChip tool={tool} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+          <div className="relative isolate overflow-hidden rounded-xl theme-night p-6 sm:p-10 lg:p-16">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
+              <div className="absolute inset-0 hero-glow" />
+              {hydrated && (
+                <Island>
+                  <GradientASCII
+                    colors={HERO_LIGHT}
+                    shape="horizon"
+                    cellSize={16}
+                    density={0.75}
+                    gradientOpacity={0.75}
+                    glow={0.35}
+                    dpr={1.25}
+                    scrollFps={30}
+                    mouseInteraction={false}
+                    clickEffect="none"
+                  />
+                </Island>
+              )}
+              <div className="absolute inset-0 bg-linear-to-b from-night/75 via-night/80 to-night/90" />
+            </div>
+            <div className="relative z-10">
+              <SectionLabel id="toolkit-label" index={2}>
+                {about.toolkit}
+              </SectionLabel>
+              <p className="max-w-[34ch] text-lg text-fg/85">{about.toolkitIntro}</p>
+              <div className="mt-12 grid gap-x-[var(--spacing-gutter)] gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+                {toolkit.map((group) => (
+                  <div key={group.group} className="border-t border-line pt-6">
+                    <h3 className="display text-2xl">{group.group}</h3>
+                    <p className="mt-2 text-sm text-muted">{group.blurb}</p>
+                    <ul className="mt-6 flex flex-wrap gap-2">
+                      {group.items.map((tool) => (
+                        <li key={tool.name}>
+                          <ToolChip tool={tool} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* 03, Experience */}
+      {/* 03, My experiences */}
       <Section index={3} label={about.experience}>
+        <h2 className="mb-8 display text-3xl">{about.experience}</h2>
         <Timeline entries={experience} pictures={loaderData.pictures} />
       </Section>
 
-      {/* 04, Education */}
+      {/* 04, My qualifications */}
       <Section index={4} label={about.education} spacing="tight">
+        <h2 className="mb-8 display text-3xl">{about.education}</h2>
         <Timeline entries={education} pictures={loaderData.pictures} />
       </Section>
 
@@ -210,17 +241,17 @@ const badgeText = `${site.tagline.replace(/\.$/, "")} • `.repeat(2).toUpperCas
 
 function Portrait({ photo }: { photo: Photo }) {
   return (
-    <figure className="relative mx-auto w-full max-w-md lg:max-w-none">
+    <figure className="relative mx-auto w-full max-w-md lg:max-w-[min(100%,calc(75svh-9rem))]">
       {/* Cobalt arch behind the frame, and a hairline arch echoing it the other way. */}
       <div
         aria-hidden="true"
-        className="arch absolute inset-x-0 top-0 translate-x-3 -translate-y-3 bg-cobalt md:translate-x-5 md:-translate-y-5"
+        className="absolute inset-x-0 top-0 arch translate-x-3 -translate-y-3 bg-cobalt md:translate-x-5 md:-translate-y-5"
       />
       <div
         aria-hidden="true"
-        className="arch absolute inset-x-0 top-0 -translate-x-3 translate-y-3 border border-line-strong md:-translate-x-5 md:translate-y-5"
+        className="absolute inset-x-0 top-0 arch -translate-x-3 translate-y-3 border border-line-strong md:-translate-x-5 md:translate-y-5"
       />
-      <RevealMedia className="arch relative bg-bg-2">
+      <RevealMedia className="relative arch bg-bg-2">
         <ResponsiveImage
           picture={photo.picture}
           alt={photo.alt}
@@ -230,7 +261,7 @@ function Portrait({ photo }: { photo: Photo }) {
           className="object-[center_18%]"
         />
         <figcaption className="absolute inset-x-0 bottom-0 bg-linear-to-t from-night/70 via-night/25 to-transparent p-5 pt-20 text-white sm:p-6 sm:pt-24">
-          <span className="display block text-xl">{site.name}</span>
+          <span className="block display text-xl">{site.name}</span>
           <span className="mt-2 block font-mono text-[0.65rem] font-semibold tracking-[0.14em] uppercase opacity-80">
             {site.roles.join(" / ")}
           </span>
@@ -240,7 +271,10 @@ function Portrait({ photo }: { photo: Photo }) {
         aria-hidden="true"
         className="absolute top-[30%] -left-3 grid size-24 place-items-center rounded-full bg-lime text-night shadow-xl sm:size-28 md:-left-8 md:size-32"
       >
-        <svg viewBox="0 0 120 120" className="absolute inset-0 size-full motion-safe:animate-spin-slow">
+        <svg
+          viewBox="0 0 120 120"
+          className="absolute inset-0 size-full motion-safe:animate-spin-slow"
+        >
           <defs>
             <path id="portrait-badge-ring" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0" />
           </defs>

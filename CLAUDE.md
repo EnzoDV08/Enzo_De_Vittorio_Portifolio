@@ -9,6 +9,7 @@ Enzo De Vittorio's portfolio. Static, prerendered React site deployed to Netlify
 - `npm run preview` — `scripts/preview.mjs`, a tiny static server that mimics the live host (clean URLs, no trailing slash, 404.html)
 - `npm run typecheck && npm run lint && npm run build` — must all pass with zero errors/warnings before any commit
 - `npm run images` — `scripts/optimize-images.mjs`: `_originals/<slug>/*` → `app/assets/projects/<slug>/*` (max 2400px masters)
+- `npm run videos` — `scripts/optimize-videos.mjs`: `_originals/videos/<slug>.mp4` → `app/assets/videos/<slug>/` (1600×1000 AV1 WebM + H.264 MP4 + poster, silent). Needs ffmpeg. Masters never go in `app/`.
 - `npm run shots` — `scripts/shots.mjs`: Playwright screenshots of every route at 390/768/1440/1920 into `.shots/` (needs `npm run preview` running). Fails on horizontal overflow or console errors.
 - `npm run og` — `scripts/og.mjs` + `scripts/favicons.mjs`: OG images (`public/og/*.jpg`) and favicons, rendered with the real fonts. Re-run when a case study's title, tagline or cover changes; commit the output.
 - `npm run cv` — `scripts/cv/build.mjs`: prints `scripts/cv/cv.html` to `public/Enzo-De-Vittorio-CV.pdf` (one A4 page, real fonts). Edit the CV there, never the PDF.

@@ -38,11 +38,9 @@ export function Section({
     >
       <Container className={containerClassName}>
         {label && (
-          <div className="mb-10 md:mb-14">
-            <SectionLabel id={labelId} index={index}>
-              {label}
-            </SectionLabel>
-          </div>
+          <SectionLabel id={labelId} index={index}>
+            {label}
+          </SectionLabel>
         )}
         {children}
       </Container>

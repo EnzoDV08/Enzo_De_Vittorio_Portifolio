@@ -31,7 +31,9 @@ type Props = {
 export function Marquee({ items, secondsPerItem = WORD_SECONDS, className, label }: Props) {
   const run = repeat(items, MIN_WORDS);
   return (
-    <div className={cn("group relative overflow-clip py-6 md:py-8", className)}>
+    // The lens blurs the words as they drift in and out at the edges (not on the static
+    // reduced-motion list).
+    <div className={cn("group relative overflow-clip py-6 motion-safe:lens-edges md:py-8", className)}>
       <ul
         aria-label={label}
         className="sr-only motion-reduce:not-sr-only motion-reduce:container-site motion-reduce:flex motion-reduce:flex-wrap motion-reduce:gap-x-8 motion-reduce:gap-y-2"
@@ -75,7 +77,7 @@ export function LogoMarquee({ tools, label }: { tools: readonly Tool[]; label: s
   const half = Math.ceil(tools.length / 2);
   const rows = [tools.slice(0, half), tools.slice(half)];
   return (
-    <div className="relative space-y-3 overflow-clip [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+    <div className="relative space-y-3 overflow-clip [--lens-blur:5px] [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)] motion-safe:lens-edges">
       <p className="sr-only">
         {label}: {tools.map((t) => t.name).join(", ")}
       </p>
