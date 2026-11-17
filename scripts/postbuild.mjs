@@ -3,7 +3,9 @@
 //     priority of module preloads
 //  2. writes sitemap.xml and robots.txt from the same path list the prerender uses
 //  3. checks every case study has an OG image (from `npm run og`)
-//  4. enforces the initial-JS budget (≤ 132 KB gzip per page)
+//  4. writes the deployed version for open tabs to detect updates
+//  5. enforces the initial-JS budget (≤ 132 KB gzip per page)
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { gzipSync } from "node:zlib";
@@ -24,6 +26,10 @@ if (!existsSync(`${OUT}/index.html`)) {
   console.error(`postbuild: expected ${OUT}/index.html, did the prerender run?`);
   process.exit(1);
 }
+
+const buildId =
+  process.env.COMMIT_REF?.trim() || execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+writeFileSync(`${OUT}/version.json`, `${JSON.stringify({ version: buildId })}\n`);
 
 // 404: the splat route was prerendered at /404. Firebase serves /404.html (with a 404 status)
 // for any path that has no file. Remove the /404 directory so it isn't a 200 page too, and the

@@ -19,6 +19,8 @@ import { SmoothScroll } from "./components/motion/SmoothScroll";
 import { ui } from "./content/pages";
 import { usePathname } from "./lib/usePathname";
 
+declare const __SITE_BUILD_ID__: string;
+
 // Only needed when something throws a 404 at runtime (e.g. /work/<unknown> on client nav).
 const NotFound = lazy(() => import("./routes/not-found").then((m) => ({ default: m.NotFound })));
 // Rendered with `precedence` so React 19 hoists it above the module preloads, the one
@@ -74,6 +76,48 @@ function RouteFocus() {
   return null;
 }
 
+/** Refresh an open tab when Netlify publishes a newer build. */
+function SiteVersionCheck() {
+  useEffect(() => {
+    if (import.meta.env.DEV) return;
+
+    let inFlight = false;
+    const check = async () => {
+      if (document.hidden || inFlight) return;
+      inFlight = true;
+      try {
+        const response = await fetch(`/version.json?t=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) return;
+        const latest = (await response.json()) as { version?: unknown };
+        if (typeof latest.version !== "string" || latest.version === __SITE_BUILD_ID__) return;
+
+        // A new URL bypasses the cached document. The query also prevents a reload loop if an
+        // edge briefly serves the old HTML after publishing the new version file.
+        const url = new URL(window.location.href);
+        if (url.searchParams.get("_site_v") === latest.version) return;
+        url.searchParams.set("_site_v", latest.version);
+        window.location.replace(url.href);
+      } catch {
+        // Keep the current page usable when the visitor is offline.
+      } finally {
+        inFlight = false;
+      }
+    };
+
+    void check();
+    const timer = window.setInterval(() => void check(), 60_000);
+    const onReturn = () => void check();
+    window.addEventListener("focus", onReturn);
+    document.addEventListener("visibilitychange", onReturn);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", onReturn);
+      document.removeEventListener("visibilitychange", onReturn);
+    };
+  }, []);
+  return null;
+}
+
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <SmoothScroll>
@@ -97,9 +141,12 @@ function Shell({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <Shell>
-      <Outlet />
-    </Shell>
+    <>
+      <SiteVersionCheck />
+      <Shell>
+        <Outlet />
+      </Shell>
+    </>
   );
 }
 
