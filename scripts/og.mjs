@@ -96,7 +96,7 @@ const lead = featuredProjects.find((p) => devices(p.slug));
 await render(
   template({
     eyebrow: `${site.name}, ${site.descriptor}`,
-    titleHtml: `Looks good. <em>Works well.</em>`,
+    titleHtml: `Code you can <em>count on.</em>`,
     meta: `${site.name} · ${site.studio.name}`,
     cobalt: true,
     stage: "rgb(255 255 255 / .08)",
