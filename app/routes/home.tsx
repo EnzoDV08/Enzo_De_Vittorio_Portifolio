@@ -123,8 +123,7 @@ function Hero({ portrait }: { portrait: Picture | undefined }) {
               id="hero-heading"
               className="mt-7 max-w-[11ch] display text-[clamp(3.5rem,1rem+10vw,11.5rem)] md:mt-9"
             >
-              {/* Extra room below: at this size and line-height the descender of "y" hangs about
-                0.19em under the line box, past line-mask's default padding. */}
+              {/* Extra room below keeps italic descenders inside the line mask. */}
               <span className="line-mask" style={{ paddingBottom: "0.24em", marginBottom: "-0.24em" }}>
                 {/* The LCP line rises from partly visible, so it counts as painted on frame one. */}
                 <span className="block motion-safe:animate-rise-short" style={delay(80)}>

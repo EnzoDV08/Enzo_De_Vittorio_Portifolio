@@ -10,7 +10,6 @@ Every item shows as a visible "TODO(enzo)" marker on the site (or hides its link
 ### projects.ts
 
 - [ ] Stack Studio live URL — `projects.ts` · stack-studio → links
-- [ ] your role on Forge Your Future — `projects.ts` · forge-your-future → role
 - [ ] your role on Salon Friend — `projects.ts` · salon-friend → role
 - [ ] your role on the Sportify team — `projects.ts` · sportify → role
 - [ ] role — `projects.ts` · sportify → @JoshuaDeKlerk

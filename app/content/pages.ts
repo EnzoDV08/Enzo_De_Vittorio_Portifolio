@@ -17,10 +17,10 @@ export const home = {
   hero: {
     eyebrow: "Full-stack Developer · UX Designer",
     // The headline, split so the last word takes the italic accent.
-    lead: "Software you can",
-    accent: "feel.",
+    lead: "I design.",
+    accent: "I build.",
     intro:
-      "Enzo De Vittorio. Researched like a UX designer, engineered like a developer, from the interface to the database.",
+      "I'm Enzo De Vittorio. I design and build websites and apps, from what people see to the systems behind them.",
     primary: "See the work",
     secondary: "About me",
     /** Cut-out portrait standing behind the headline (decorative: the name is in the copy). */

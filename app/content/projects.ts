@@ -402,11 +402,15 @@ export const projects: Project[] = [
     // Open Window's Digital Open Day campaign. A planet-orbit home, four degree worlds (Shape,
     // Capture, Imagine, Build) with their studios, people and student work, a mini game, an
     // eight-question quiz that matches you to a school and degree, and an Exam Stress Buster
-    // campaign page. Built Oct–Nov 2026. Role still to confirm.
+    // campaign page. Built Oct–Nov 2026.
     tagline: "Four creative worlds, a mini game and a quiz that match students to a degree.",
     year: 2026,
     disciplines: ["Campaign", "Interactive"],
-    role: todo("your role on Forge Your Future"),
+    role: "Frontend developer",
+    team: [
+      { name: "Enzo De Vittorio", role: "Frontend development" },
+      { name: "Armand Naudé", role: "Mini game development" },
+    ],
     // Open Window, Enzo's own university, came to him as the client for this one.
     client: "Open Window Institute",
     context: "Client work",
@@ -464,7 +468,7 @@ export const projects: Project[] = [
         },
         {
           heading: "A path to the right degree",
-          body: "A planet-orbit home you can hover, click or tap, a mini game in every world and an eight-question quiz that matches each visitor to an Open Window school and degree.",
+          body: "I developed the site's frontend, including the planet-orbit home and degree quiz. Armand developed the mini games in the four worlds.",
         },
         {
           heading: "Shipped onto the school's hosting",
