@@ -3,7 +3,7 @@
  * Adapted for this codebase: strict-mode typings (noUncheckedIndexedAccess), and the cleanup /
  * markup at the end of the effect completed. Loaded lazily after hydration, never prerendered.
  */
-import { useEffect, useRef, type CSSProperties, type HTMLAttributes } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type HTMLAttributes } from "react";
 
 export type GradientASCIIShape = "horizon" | "pinch" | "rise" | "eclipse";
 
@@ -35,6 +35,11 @@ export interface GradientASCIIProps extends Omit<HTMLAttributes<HTMLDivElement>,
   dpr?: number;
   /** Frame-rate cap while the page is scrolling, so scrolling keeps the frame budget. */
   scrollFps?: number;
+  /**
+   * Frame-rate cap at rest. The light drifts slowly, so it looks the same at 60fps as at the
+   * display's 120/144Hz, for half the GPU work or less.
+   */
+  fps?: number;
   style?: CSSProperties;
 }
 
@@ -63,6 +68,7 @@ type Settings = {
   fontFamily: string;
   dpr?: number;
   scrollFps?: number;
+  fps?: number;
 };
 
 type Program = {
@@ -526,6 +532,7 @@ const GradientASCII = ({
   fontFamily = DEFAULT_FONT,
   dpr,
   scrollFps,
+  fps,
   className = "",
   style,
   ...rest
@@ -560,11 +567,44 @@ const GradientASCII = ({
     fontFamily: fontFamily || DEFAULT_FONT,
     dpr,
     scrollFps,
+    fps,
   };
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
 
+  // Nothing is set up (no WebGL context, shader compile or glyph atlas) until the canvas is about
+  // to come on screen or the browser is first idle, whichever is sooner. So a canvas further down
+  // the page never competes with the first paint, and its one-off setup cost lands in a quiet
+  // moment rather than mid-scroll. (Off screen it then sits still: the loop only runs in view.)
+  const [near, setNear] = useState(false);
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return undefined;
+    const idle = "requestIdleCallback" in window;
+    let handle = 0;
+    const go = () => {
+      gate.disconnect();
+      if (idle) window.cancelIdleCallback(handle);
+      else window.clearTimeout(handle);
+      setNear(true);
+    };
+    const gate = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) go();
+      },
+      { rootMargin: "300px 0px" },
+    );
+    gate.observe(container);
+    handle = idle ? window.requestIdleCallback(go, { timeout: 4000 }) : window.setTimeout(go, 2000);
+    return () => {
+      gate.disconnect();
+      if (idle) window.cancelIdleCallback(handle);
+      else window.clearTimeout(handle);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!near) return undefined;
     const container = containerRef.current;
     const canvas = canvasRef.current;
     const gl = canvas?.getContext("webgl2", {
@@ -790,7 +830,9 @@ const GradientASCII = ({
       const haloHeight = Math.max(1, Math.round(canvas.height / 4));
       sizeTarget(gl, haloA, haloWidth, haloHeight);
       sizeTarget(gl, haloB, haloWidth, haloHeight);
-      draw();
+      // Resizing clears the canvas: repaint now if it's on screen (offscreen, the first frame
+      // after it scrolls back in paints it).
+      if (visible) draw();
       wake();
     };
 
@@ -827,8 +869,9 @@ const GradientASCII = ({
     const frame = (now: number) => {
       raf = 0;
       if (disposed || !visible || document.hidden) return;
-      const cap = settingsRef.current.scrollFps;
-      if (cap && now < scrollingUntil && now - lastDraw < 1000 / cap - 2) {
+      const { scrollFps: scrollCap, fps: idleCap } = settingsRef.current;
+      const cap = scrollCap && now < scrollingUntil ? scrollCap : idleCap;
+      if (cap && now - lastDraw < 1000 / cap - 2) {
         raf = requestAnimationFrame(frame);
         return;
       }
@@ -955,7 +998,7 @@ const GradientASCII = ({
     };
 
     return dispose;
-  }, []);
+  }, [near]);
 
   // New props: redraw once (matters when reduced motion has stopped the loop).
   useEffect(() => {

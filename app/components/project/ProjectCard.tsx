@@ -95,7 +95,11 @@ export function ProjectCard({
               uniform && "absolute inset-[7%] flex items-center justify-center",
             )}
           >
-            <DeviceStill devices={project.devices} sizes={sizes ?? sizesFor[variant]} decorative />
+            {/* Drifts against the scroll (ScrollReveal). Its own wrapper: the one above eases
+              its transform on hover, which would drag a per-frame parallax. */}
+            <div data-parallax={variant === "feature" ? 3 : undefined}>
+              <DeviceStill devices={project.devices} sizes={sizes ?? sizesFor[variant]} decorative />
+            </div>
           </div>
         ) : (
           <div className="absolute inset-[3%] overflow-clip rounded-md shadow-[0_18px_45px_-26px_rgba(0,0,0,0.55)] transition-transform duration-700 ease-out-expo group-hover:scale-[1.035]">

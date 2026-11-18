@@ -39,7 +39,7 @@ export function HorizontalGallery({ images, label, hint, address }: Props) {
               {String(images.length).padStart(2, "0")} <span aria-hidden="true">—</span> {hint}
             </span>
           </div>
-          {/* The lens: screenshots blur in and out at the edges as the strip moves. */}
+          {/* The lens: screenshots fade in and out at the edges as the strip moves. */}
           <div className="motion-safe:lens-edges">
             <div
               ref={track}
