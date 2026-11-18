@@ -129,7 +129,7 @@ function Hero({ portrait }: { portrait: Picture | undefined }) {
                 most of it, so there it stays in front. The LCP line rises from partly visible, so
                 it counts as painted on frame one. */}
               <span
-                className="relative z-[3] line-mask text-[clamp(4.25rem,0.5rem+15.5vw,19rem)] leading-[0.86] lg:z-[1]"
+                className="relative z-[3] line-mask text-[clamp(3.75rem,0.75rem+12vw,14.5rem)] leading-[0.88] lg:z-[1]"
                 style={{ paddingBottom: "0.08em", marginBottom: "-0.08em" }}
               >
                 <span className="block motion-safe:animate-rise-short" style={delay(80)}>
