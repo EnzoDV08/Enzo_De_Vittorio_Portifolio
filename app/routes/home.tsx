@@ -133,11 +133,12 @@ function Hero({ portrait }: { portrait: Picture | undefined }) {
                 cheek and "you" starts just at his right, each tucked a little behind him (it sits
                 under the portrait), so both words read in full and he still stands in front of
                 them. The gap is sized in svh because his head scales with the hero's height while
-                the type scales with its width; it's nudged right a touch, as his face sits just
-                right of centre in the cut-out. Each word slides out from behind his head, from
-                partly visible, so the LCP text is painted on frame one. On phones and tablets his
-                head sits apart from the line, so it's one plain line in front of him. */}
-              <span className="relative z-[3] block text-[clamp(3.75rem,0.75rem+12vw,14.5rem)] leading-[0.88] lg:z-[1] lg:grid lg:grid-cols-[1fr_16svh_1fr] lg:items-baseline lg:pl-[1.5svh]">
+                the type scales with its width. It sits right of centre: his face is right of centre
+                in the cut-out, and "Code" tucks further behind him than "you". Each word slides out
+                from behind his head, from partly visible, so the LCP text is painted on frame one.
+                On phones and tablets his head sits apart from the line, so it's one plain line in
+                front of him. */}
+              <span className="relative z-[3] block text-[clamp(3.75rem,0.75rem+12vw,14.5rem)] leading-[0.88] lg:z-[1] lg:grid lg:grid-cols-[1fr_16svh_1fr] lg:items-baseline lg:pl-[6svh]">
                 <span className={heroWord + " lg:justify-self-end"}>
                   <span
                     className="block motion-safe:animate-rise-short lg:motion-safe:animate-emerge-left"

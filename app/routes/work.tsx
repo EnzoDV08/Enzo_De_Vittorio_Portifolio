@@ -162,7 +162,16 @@ export default function Work({ loaderData }: Route.ComponentProps) {
       <Container className="pt-32 md:pt-40">
         <h1 className="display text-display">
           {/* Rises out of a mask at first paint: CSS only, no JS to wait for. */}
-          <span className="line-mask" style={{ paddingBottom: "0.12em", marginBottom: "-0.12em" }}>
+          {/* Room above too: the count sits above the cap height and the mask would clip it. */}
+          <span
+            className="line-mask"
+            style={{
+              paddingTop: "0.4em",
+              marginTop: "-0.4em",
+              paddingBottom: "0.12em",
+              marginBottom: "-0.12em",
+            }}
+          >
             <span className="block motion-safe:animate-rise-short">
               {work.heading}
               <sup className="ml-2 align-top text-[0.28em] font-bold tracking-normal text-accent tabular-nums">
