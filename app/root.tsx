@@ -17,9 +17,12 @@ import { Island } from "./components/motion/Island";
 import { PageTransition } from "./components/motion/PageTransition";
 import { SmoothScroll } from "./components/motion/SmoothScroll";
 import { ui } from "./content/pages";
+import { useHydrated } from "./lib/useHydrated";
 import { usePathname } from "./lib/usePathname";
 
-declare const __SITE_BUILD_ID__: string;
+// Moves open tabs onto a newer deploy. Loaded after hydration: none of it is needed for the
+// first paint, so it stays out of every page's initial JavaScript.
+const SiteVersionCheck = lazy(() => import("./components/SiteVersionCheck"));
 
 // Only needed when something throws a 404 at runtime (e.g. /work/<unknown> on client nav).
 const NotFound = lazy(() => import("./routes/not-found").then((m) => ({ default: m.NotFound })));
@@ -80,78 +83,6 @@ function RouteFocus() {
   return null;
 }
 
-const RELOADED_FOR = "site-reloaded-for";
-
-/**
- * Refresh an open tab when Netlify publishes a newer build: checked on load, every minute, when
- * the tab comes back into focus, and on every in-app navigation (so a link clicked after a
- * deploy lands on the new site, not the old app's cached code).
- */
-function SiteVersionCheck() {
-  const pathname = usePathname();
-  const checkNow = useRef<() => void>(() => {});
-
-  useEffect(() => {
-    if (import.meta.env.DEV) return;
-
-    // Back from an update reload: tidy the cache-busting query out of the address bar.
-    const here = new URL(window.location.href);
-    if (here.searchParams.has("_site_v")) {
-      here.searchParams.delete("_site_v");
-      window.history.replaceState(window.history.state, "", here.href);
-    }
-
-    let inFlight = false;
-    const check = async () => {
-      if (document.hidden || inFlight) return;
-      inFlight = true;
-      try {
-        const response = await fetch(`/version.json?t=${Date.now()}`, { cache: "no-store" });
-        if (!response.ok) return;
-        const latest = (await response.json()) as { version?: unknown };
-        if (typeof latest.version !== "string" || latest.version === __SITE_BUILD_ID__) return;
-
-        // Reload once per new version: if an edge briefly serves the old HTML after publishing
-        // the new version file, this stops a reload loop (the next check after it settles, or
-        // the next visit, picks the new site up).
-        try {
-          if (sessionStorage.getItem(RELOADED_FOR) === latest.version) return;
-          sessionStorage.setItem(RELOADED_FOR, latest.version);
-        } catch {
-          // Storage blocked: the query below still makes the reload fetch fresh HTML.
-        }
-        // A new URL bypasses any cached copy of the document: a hard refresh.
-        const url = new URL(window.location.href);
-        url.searchParams.set("_site_v", latest.version);
-        window.location.replace(url.href);
-      } catch {
-        // Keep the current page usable when the visitor is offline.
-      } finally {
-        inFlight = false;
-      }
-    };
-    checkNow.current = () => void check();
-
-    void check();
-    const timer = window.setInterval(() => void check(), 60_000);
-    const onReturn = () => void check();
-    window.addEventListener("focus", onReturn);
-    document.addEventListener("visibilitychange", onReturn);
-    return () => {
-      window.clearInterval(timer);
-      window.removeEventListener("focus", onReturn);
-      document.removeEventListener("visibilitychange", onReturn);
-    };
-  }, []);
-
-  // Every in-app navigation is a moment to look for a newer build too.
-  useEffect(() => {
-    checkNow.current();
-  }, [pathname]);
-
-  return null;
-}
-
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <SmoothScroll>
@@ -174,9 +105,14 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const hydrated = useHydrated();
   return (
     <>
-      <SiteVersionCheck />
+      {hydrated && (
+        <Island>
+          <SiteVersionCheck />
+        </Island>
+      )}
       <Shell>
         <Outlet />
       </Shell>
