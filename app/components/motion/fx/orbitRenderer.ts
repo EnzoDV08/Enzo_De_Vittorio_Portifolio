@@ -338,21 +338,35 @@ export function createOrbit(
   const aniso = gl.getExtension("EXT_texture_filter_anisotropic");
   if (aniso) gl.texParameterf(gl.TEXTURE_2D_ARRAY, aniso.TEXTURE_MAX_ANISOTROPY_EXT, 4);
 
+  // Placeholder: a light card in the page's own greys until the screenshot arrives. Cleared on
+  // the GPU, every layer and mip level, so nothing is drawn or uploaded from the CPU for it.
+  {
+    const fb = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
+    gl.clearColor(0xd5 / 255, 0xda / 255, 0xe2 / 255, 1);
+    for (let level = 0; level < levels; level++) {
+      for (let layer = 0; layer < count; layer++) {
+        gl.framebufferTextureLayer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, texture, level, layer);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+      }
+    }
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.deleteFramebuffer(fb);
+  }
+
+  // Fallback for the rare browser that can't crop/resize in createImageBitmap.
   const scratch = document.createElement("canvas");
   scratch.width = layerW;
   scratch.height = layerH;
   const ctx = scratch.getContext("2d");
-  const upload = (layer: number) => {
+  /** The array's mips are out of date; regenerated once, just before the next draw. */
+  let mipsStale = false;
+  const upload = (layer: number, source: TexImageSource) => {
     gl.bindTexture(gl.TEXTURE_2D_ARRAY, texture);
-    gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layer, layerW, layerH, 1, gl.RGBA, gl.UNSIGNED_BYTE, scratch);
-    gl.generateMipmap(gl.TEXTURE_2D_ARRAY);
+    gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layer, layerW, layerH, 1, gl.RGBA, gl.UNSIGNED_BYTE, source);
+    // Mipmapping an array rebuilds every layer, so several posters landing at once share one.
+    mipsStale = true;
   };
-  // Placeholder: a light card in the page's own greys until the screenshot arrives.
-  if (ctx) {
-    ctx.fillStyle = "#d5dae2";
-    ctx.fillRect(0, 0, layerW, layerH);
-    for (let i = 0; i < count; i++) upload(i);
-  }
 
   let disposed = false;
   /** Something changed since the last draw (a new frame, a poster, a resize). */
@@ -366,17 +380,32 @@ export function createOrbit(
     images.push(img);
     img
       .decode()
-      .then(() => {
-        if (disposed || !ctx) return;
+      .then(async () => {
+        if (disposed) return;
         // Cover-fit into the layer, anchored to the top (screens show the top of the page).
         const scale = Math.max(layerW / img.naturalWidth, layerH / img.naturalHeight);
-        const w = img.naturalWidth * scale;
-        const h = img.naturalHeight * scale;
-        ctx.clearRect(0, 0, layerW, layerH);
-        ctx.drawImage(img, (layerW - w) / 2, 0, w, h);
+        const sw = layerW / scale;
+        const sh = layerH / scale;
+        // Crop and resize off the main thread, then upload the bitmap as is: no canvas to draw,
+        // and no read-back of one into the texture.
+        const bitmap = await createImageBitmap(img, (img.naturalWidth - sw) / 2, 0, sw, sh, {
+          resizeWidth: layerW,
+          resizeHeight: layerH,
+          resizeQuality: "high",
+        }).catch(() => null);
         // A playing video already owns this layer; don't paint the poster over it.
-        if ((clips[layer]?.time ?? -1) >= 0) return;
-        upload(layer);
+        if (disposed || (clips[layer]?.time ?? -1) >= 0) {
+          bitmap?.close();
+          return;
+        }
+        if (bitmap && bitmap.width === layerW && bitmap.height === layerH) {
+          upload(layer, bitmap);
+        } else if (ctx) {
+          ctx.clearRect(0, 0, layerW, layerH);
+          ctx.drawImage(img, (layerW - img.naturalWidth * scale) / 2, 0, img.naturalWidth * scale, img.naturalHeight * scale);
+          upload(layer, scratch);
+        }
+        bitmap?.close();
         dirty = true;
         wake();
       })
@@ -474,14 +503,12 @@ export function createOrbit(
   /** Copy a video's current frame into its own array layer, so it stays as a still. */
   const freeze = (layer: number, el: HTMLVideoElement) => {
     if (el.readyState < 2 || !el.videoWidth) return;
-    gl.bindTexture(gl.TEXTURE_2D_ARRAY, texture);
     if (el.videoWidth === layerW && el.videoHeight === layerH) {
-      gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layer, layerW, layerH, 1, gl.RGBA, gl.UNSIGNED_BYTE, el);
+      upload(layer, el);
     } else if (ctx) {
       ctx.drawImage(el, 0, 0, layerW, layerH);
-      gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, layer, layerW, layerH, 1, gl.RGBA, gl.UNSIGNED_BYTE, scratch);
+      upload(layer, scratch);
     }
-    gl.generateMipmap(gl.TEXTURE_2D_ARRAY);
   };
 
   /** Create, play and pause videos for where the room is (and is heading). */
@@ -572,6 +599,11 @@ export function createOrbit(
     const eased = 1 - (1 - intro) ** 3;
     const warp = 1 + 0.12 * energy + 0.25 * (1 - eased);
     const shrink = (1 - 0.07 * energy) * (0.8 + 0.2 * eased);
+    if (mipsStale) {
+      gl.bindTexture(gl.TEXTURE_2D_ARRAY, texture);
+      gl.generateMipmap(gl.TEXTURE_2D_ARRAY);
+      mipsStale = false;
+    }
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);

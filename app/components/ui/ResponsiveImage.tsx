@@ -57,6 +57,18 @@ export function ResponsiveImage({
         loading={priority || eager ? "eager" : "lazy"}
         decoding={priority ? "sync" : "async"}
         fetchPriority={priority ? "high" : "auto"}
+        // Blur-up: the inline preview fills the box from first paint; the photo (opaque) covers
+        // it once decoded. Only photos carry one, so nothing shows around transparent images.
+        style={
+          picture.placeholder
+            ? {
+                backgroundImage: `url(${picture.placeholder})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }
+            : undefined
+        }
         className={cn(fill ? "size-full object-cover" : "h-auto w-full", className)}
       />
     </picture>

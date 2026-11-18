@@ -1,5 +1,6 @@
 import { useRef, type PointerEvent } from "react";
 import { useSearchParams } from "react-router";
+import { ScrollReveal } from "~/components/motion/ScrollReveal";
 import { ProjectCard } from "~/components/project/ProjectCard";
 import { Container } from "~/components/ui/Container";
 import { FilterChips } from "~/components/ui/FilterChips";
@@ -61,7 +62,10 @@ function YearCarousel({ year, projects }: { year: string; projects: ProjectSumma
 
   return (
     <section aria-labelledby={`year-${year}`}>
-      <div className="flex items-center justify-between gap-4 border-t border-line pt-5">
+      <div
+        data-reveal="up"
+        className="flex items-center justify-between gap-4 border-t border-line pt-5"
+      >
         <h2 id={`year-${year}`} className="display text-3xl tabular-nums">
           {year === TBC ? work.unknownYear : year}
         </h2>
@@ -109,6 +113,7 @@ function YearCarousel({ year, projects }: { year: string; projects: ProjectSumma
           {projects.map((project) => (
             <li
               key={project.slug}
+              data-reveal="left"
               className="w-[85%] shrink-0 snap-start sm:w-[52%] lg:w-[calc((min(100vw,var(--container-site))-2*var(--spacing-gutter))/4)]"
             >
               <ProjectCard project={project} variant="earlier" />
@@ -156,14 +161,31 @@ export default function Work({ loaderData }: Route.ComponentProps) {
     <>
       <Container className="pt-32 md:pt-40">
         <h1 className="display text-display">
-          {work.heading}
-          <sup className="ml-2 align-top text-[0.28em] font-bold tracking-normal text-accent tabular-nums">
-            {String(
-              featuredProjects.length + moreProjects.length + earlierProjects.length,
-            ).padStart(2, "0")}
-          </sup>
+          {/* Rises out of a mask at first paint: CSS only, no JS to wait for. */}
+          {/* Room above too: the count sits above the cap height and the mask would clip it. */}
+          <span
+            className="line-mask"
+            style={{
+              paddingTop: "0.4em",
+              marginTop: "-0.4em",
+              paddingBottom: "0.12em",
+              marginBottom: "-0.12em",
+            }}
+          >
+            <span className="block motion-safe:animate-rise-short">
+              {work.heading}
+              <sup className="ml-2 align-top text-[0.28em] font-bold tracking-normal text-accent tabular-nums">
+                {String(
+                  featuredProjects.length + moreProjects.length + earlierProjects.length,
+                ).padStart(2, "0")}
+              </sup>
+            </span>
+          </span>
         </h1>
-        <div className="mt-10 flex flex-col gap-8 border-t border-line pt-8 md:flex-row md:items-start md:justify-between">
+        <div
+          className="mt-10 flex flex-col gap-8 border-t border-line pt-8 motion-safe:animate-fade-up md:flex-row md:items-start md:justify-between"
+          style={{ animationDelay: "200ms" }}
+        >
           <p className="max-w-[40ch] text-lg text-muted">{work.intro}</p>
           <FilterChips
             label={work.filterLabel}
@@ -191,7 +213,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
           {/* auto-rows-fr: every row as tall as the tallest card, so all case studies match. */}
           <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-16 md:auto-rows-fr md:grid-cols-2 md:gap-y-20">
             {featured.map((project) => (
-              <li key={project.slug} className="flex">
+              <li key={project.slug} data-reveal="scale" className="flex">
                 <ProjectCard
                   project={project}
                   index={featuredProjects.indexOf(project) + 1}
@@ -208,7 +230,7 @@ export default function Work({ loaderData }: Route.ComponentProps) {
         <Section index={2} label={work.moreLabel}>
           <ul className="grid gap-x-[var(--spacing-gutter)] gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {more.map((project) => (
-              <li key={project.slug}>
+              <li key={project.slug} data-reveal="up">
                 <ProjectCard project={project} variant="compact" headingLevel="h2" />
               </li>
             ))}
@@ -218,7 +240,10 @@ export default function Work({ loaderData }: Route.ComponentProps) {
 
       {earlierProjects.some(matches) && (
         <Section index={3} label={work.earlierLabel}>
-          <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+          <div
+            data-reveal="up"
+            className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between"
+          >
             <p className="max-w-[40ch] text-muted">{work.earlierIntro}</p>
             <FilterChips
               label={work.yearFilterLabel}
@@ -240,6 +265,9 @@ export default function Work({ loaderData }: Route.ComponentProps) {
           </div>
         </Section>
       )}
+
+      {/* Re-keyed by the filters, so a filtered list gets its reveals again. */}
+      <ScrollReveal key={`${discipline ?? "all"}-${year ?? "all"}`} />
     </>
   );
 }

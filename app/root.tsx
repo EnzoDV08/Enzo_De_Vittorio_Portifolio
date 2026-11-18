@@ -42,9 +42,13 @@ export const links: Route.LinksFunction = () => [
   { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
 ];
 
+/** Pages that open on a night hero (data-nav="night"); see the scrollbar rule in app.css. */
+const NIGHT_TOP = new Set(["/"]);
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   return (
-    <html lang="en-ZA">
+    <html lang="en-ZA" data-night-top={NIGHT_TOP.has(pathname) ? "" : undefined}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -76,10 +80,26 @@ function RouteFocus() {
   return null;
 }
 
-/** Refresh an open tab when Netlify publishes a newer build. */
+const RELOADED_FOR = "site-reloaded-for";
+
+/**
+ * Refresh an open tab when Netlify publishes a newer build: checked on load, every minute, when
+ * the tab comes back into focus, and on every in-app navigation (so a link clicked after a
+ * deploy lands on the new site, not the old app's cached code).
+ */
 function SiteVersionCheck() {
+  const pathname = usePathname();
+  const checkNow = useRef<() => void>(() => {});
+
   useEffect(() => {
     if (import.meta.env.DEV) return;
+
+    // Back from an update reload: tidy the cache-busting query out of the address bar.
+    const here = new URL(window.location.href);
+    if (here.searchParams.has("_site_v")) {
+      here.searchParams.delete("_site_v");
+      window.history.replaceState(window.history.state, "", here.href);
+    }
 
     let inFlight = false;
     const check = async () => {
@@ -91,10 +111,17 @@ function SiteVersionCheck() {
         const latest = (await response.json()) as { version?: unknown };
         if (typeof latest.version !== "string" || latest.version === __SITE_BUILD_ID__) return;
 
-        // A new URL bypasses the cached document. The query also prevents a reload loop if an
-        // edge briefly serves the old HTML after publishing the new version file.
+        // Reload once per new version: if an edge briefly serves the old HTML after publishing
+        // the new version file, this stops a reload loop (the next check after it settles, or
+        // the next visit, picks the new site up).
+        try {
+          if (sessionStorage.getItem(RELOADED_FOR) === latest.version) return;
+          sessionStorage.setItem(RELOADED_FOR, latest.version);
+        } catch {
+          // Storage blocked: the query below still makes the reload fetch fresh HTML.
+        }
+        // A new URL bypasses any cached copy of the document: a hard refresh.
         const url = new URL(window.location.href);
-        if (url.searchParams.get("_site_v") === latest.version) return;
         url.searchParams.set("_site_v", latest.version);
         window.location.replace(url.href);
       } catch {
@@ -103,6 +130,7 @@ function SiteVersionCheck() {
         inFlight = false;
       }
     };
+    checkNow.current = () => void check();
 
     void check();
     const timer = window.setInterval(() => void check(), 60_000);
@@ -115,6 +143,12 @@ function SiteVersionCheck() {
       document.removeEventListener("visibilitychange", onReturn);
     };
   }, []);
+
+  // Every in-app navigation is a moment to look for a newer build too.
+  useEffect(() => {
+    checkNow.current();
+  }, [pathname]);
+
   return null;
 }
 

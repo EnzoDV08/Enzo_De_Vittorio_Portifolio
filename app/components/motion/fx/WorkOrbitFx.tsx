@@ -130,33 +130,47 @@ export default function WorkOrbitFx({ projects, onFail }: Props) {
     const el = canvas.current;
     const stage = section.current;
     if (!el || !stage) return;
-    const instance = createOrbit(el, {
-      // A project with a preview loop starts on its first frame, so play-in is seamless.
-      urls: projects.map((p) => p.video?.poster ?? textureUrl(p.picture)),
-      videos: projects.map(videoSources),
-      onActive: setActive,
-    });
-    if (!instance) {
-      onFail();
-      return;
-    }
-    orbit.current = instance;
-    // The entrance plays once, when most of the section is on screen.
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((e) => e.isIntersecting)) return;
-        instance.reveal();
-        setRevealed(true);
-        io.disconnect();
-      },
-      // Later: once the section is well into view (its middle past the lower third of the
-      // screen), not as soon as its top peeks in.
-      { threshold: 0.6, rootMargin: "0px 0px -12% 0px" },
-    );
-    io.observe(stage);
+    let instance: Orbit | null = null;
+    let io: IntersectionObserver | null = null;
+    // Build the room (shader compile, texture storage) once the browser is idle, not in the
+    // frames right after hydration, where it would stutter the hero's entrance. The room sits
+    // below the hero, so it is ready long before anyone scrolls to it.
+    const build = () => {
+      instance = createOrbit(el, {
+        // A project with a preview loop starts on its first frame, so play-in is seamless.
+        urls: projects.map((p) => p.video?.poster ?? textureUrl(p.picture)),
+        videos: projects.map(videoSources),
+        onActive: setActive,
+      });
+      if (!instance) {
+        onFail();
+        return;
+      }
+      orbit.current = instance;
+      const built = instance;
+      // The entrance plays once, when most of the section is on screen.
+      io = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          built.reveal();
+          setRevealed(true);
+          io?.disconnect();
+        },
+        // Later: once the section is well into view (its middle past the lower third of the
+        // screen), not as soon as its top peeks in.
+        { threshold: 0.6, rootMargin: "0px 0px -12% 0px" },
+      );
+      io.observe(stage);
+    };
+    const idle = "requestIdleCallback" in window;
+    const handle = idle
+      ? window.requestIdleCallback(build, { timeout: 1200 })
+      : window.setTimeout(build, 200);
     return () => {
-      io.disconnect();
-      instance.dispose();
+      if (idle) window.cancelIdleCallback(handle);
+      else window.clearTimeout(handle);
+      io?.disconnect();
+      instance?.dispose();
       orbit.current = null;
     };
   }, [projects, onFail]);

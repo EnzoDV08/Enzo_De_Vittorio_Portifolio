@@ -16,8 +16,11 @@ export const home = {
   },
   hero: {
     eyebrow: "Full-stack Developer · UX Designer",
-    // The headline, split so the last phrase takes the italic accent.
-    lead: "Code you can",
+    // The headline in parts: the first line's two words part around the portrait's head, the
+    // last phrase takes the italic accent.
+    leadLeft: "Code",
+    leadRight: "you",
+    leadRest: "can",
     accent: "count on.",
     intro:
       "I'm Enzo De Vittorio. I design and build websites and apps, from what people see to the systems behind them.",

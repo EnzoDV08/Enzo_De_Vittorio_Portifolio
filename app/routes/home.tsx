@@ -50,6 +50,11 @@ export function meta() {
 /** Staggered CSS entrance, runs at first paint without waiting for JS, off with reduced motion. */
 const delay = (ms: number) => ({ animationDelay: `${ms}ms` });
 
+/** A word in the hero's first line: its own clip box (both axes, with room for the descender
+ *  and the glyphs' overhang), so it can rise or slide out of it. */
+const heroWord =
+  "inline-block overflow-clip px-[0.06em] -mx-[0.06em] pt-[0.04em] -mt-[0.04em] pb-[0.12em] -mb-[0.12em]";
+
 
 /**
  * Full-bleed night frame with the ASCII light behind centred copy. From the first scroll,
@@ -81,65 +86,96 @@ function Hero({ portrait }: { portrait: Picture | undefined }) {
                   // Soft, glowing glyphs: 1.25x looks the same as 1.5x for ~30% fewer pixels.
                   dpr={1.25}
                   scrollFps={30}
+                  // 120/144Hz screens would otherwise draw it twice as often for no visible gain.
+                  fps={60}
                 />
               </Island>
             )}
           </div>
 
-          {/* Enzo, behind the copy. Its own layer, untouched by HeroFrameFx: while the frame closes
-            in on scroll, the portrait keeps its size and the frame crops around it. Decorative
-            (the name is in the copy), so no alt. */}
-          {portrait && (
-            <div
-              aria-hidden="true"
-              data-hero-portrait
-              // Larger than the frame and lifted, so the frame crops at the waist: in the cut-out the
-              // head starts ~20% down, so -16% / 155% puts it ~15% from the top of the hero.
-              className="pointer-events-none absolute inset-x-0 top-[-8%] -z-10 flex h-[125%] justify-center motion-safe:animate-portrait-in md:top-[-16%] md:h-[155%]"
-              style={delay(150)}
-            >
-              <ResponsiveImage
-                picture={portrait}
-                alt=""
-                sizes="(orientation: landscape) 104vh, 140vw"
-                eager
-                className="h-full! w-auto! max-w-none hero-portrait"
-              />
-            </div>
-          )}
           <div aria-hidden="true" className="absolute inset-0 -z-10 hero-scrim" />
 
+          {/* The copy and Enzo share one stack, in three layers: the first headline line (z-1)
+            stands large behind him, the portrait (z-2) in front of it, and the rest (z-3) in
+            front of both. They also share HeroFrameFx's settle on scroll, so his head stays put
+            over the words while the frame closes in. */}
           <div
             ref={content}
-            className="flex flex-1 flex-col items-center justify-center container-site pt-28 pb-24 text-center"
+            className="relative isolate flex flex-1 flex-col items-center justify-center container-site pt-28 pb-24 text-center"
           >
+            {/* Decorative (the name is in the copy), so no alt. */}
+            {portrait && (
+              <div
+                aria-hidden="true"
+                data-hero-portrait
+                // Larger than the frame and lifted, so the frame crops at the waist: in the cut-out
+                // the head starts ~20% down, so -16% / 155% puts it ~15% from the top of the hero.
+                className="pointer-events-none absolute inset-x-0 top-[-8%] z-[2] flex h-[125%] justify-center motion-safe:animate-portrait-in md:top-[-16%] md:h-[155%]"
+                style={delay(150)}
+              >
+                <ResponsiveImage
+                  picture={portrait}
+                  alt=""
+                  sizes="(orientation: landscape) 104vh, 140vw"
+                  eager
+                  className="h-full! w-auto! max-w-none hero-portrait"
+                />
+              </div>
+            )}
             <p
-              className="glass rounded-full px-4 py-2 meta text-fg motion-safe:animate-fade-up"
+              className="relative z-[3] glass rounded-full px-4 py-2 meta text-fg motion-safe:animate-fade-up"
               style={delay(0)}
             >
               {home.hero.eyebrow}
             </p>
-            <h1
-              id="hero-heading"
-              className="mt-7 max-w-[11ch] display text-[clamp(3.5rem,1rem+10vw,11.5rem)] md:mt-9"
-            >
+            <h1 id="hero-heading" className="mt-6 display md:mt-8">
+              {/* From lg up the first line parts around his head: "Code" ends just at his left
+                cheek and "you" starts just at his right, each tucked a little behind him (it sits
+                under the portrait), so both words read in full and he still stands in front of
+                them. The gap is sized in svh because his head scales with the hero's height while
+                the type scales with its width. It sits right of centre: his face is right of centre
+                in the cut-out, and "Code" tucks further behind him than "you". Each word slides out
+                from behind his head, from partly visible, so the LCP text is painted on frame one.
+                On phones and tablets his head sits apart from the line, so it's one plain line in
+                front of him. */}
+              <span className="relative z-[3] block text-[clamp(3.75rem,0.75rem+12vw,14.5rem)] leading-[0.88] lg:z-[1] lg:grid lg:grid-cols-[1fr_16svh_1fr] lg:items-baseline lg:pl-[6svh]">
+                <span className={heroWord + " lg:justify-self-end"}>
+                  <span
+                    className="block motion-safe:animate-rise-short lg:motion-safe:animate-emerge-left"
+                    style={delay(80)}
+                  >
+                    {home.hero.leadLeft}
+                  </span>
+                </span>{" "}
+                <span aria-hidden="true" className="hidden lg:block" />
+                <span className={heroWord + " lg:justify-self-start"}>
+                  <span
+                    className="block motion-safe:animate-rise-short lg:motion-safe:animate-emerge-right"
+                    style={delay(140)}
+                  >
+                    {home.hero.leadRight}
+                  </span>
+                </span>
+              </span>{" "}
               {/* Extra room below keeps italic descenders inside the line mask. */}
-              <span className="line-mask" style={{ paddingBottom: "0.24em", marginBottom: "-0.24em" }}>
-                {/* The LCP line rises from partly visible, so it counts as painted on frame one. */}
-                <span className="block motion-safe:animate-rise-short" style={delay(80)}>
-                  {home.hero.lead}{" "}
+              <span
+                className="relative z-[3] line-mask text-[clamp(3.5rem,1rem+10vw,11.5rem)]"
+                style={{ paddingBottom: "0.24em", marginBottom: "-0.24em" }}
+              >
+                <span className="block motion-safe:animate-rise-short" style={delay(160)}>
+                  {home.hero.leadRest}{" "}
                   <span className="italic-accent pr-[0.06em]">{home.hero.accent}</span>
                 </span>
               </span>
             </h1>
             <p
-              className="mt-7 max-w-[44ch] text-lg text-fg/80 motion-safe:animate-fade-up md:mt-9"
+              className="relative z-[3] mt-7 max-w-[44ch] text-lg text-fg/80 motion-safe:animate-fade-up md:mt-9"
               style={delay(320)}
             >
               {home.hero.intro}
             </p>
             <div
-              className="mt-9 flex flex-wrap justify-center gap-3 motion-safe:animate-fade-up"
+              className="relative z-[3] mt-9 flex flex-wrap justify-center gap-3 motion-safe:animate-fade-up"
               style={delay(420)}
             >
               <Button to="/work" variant="solid" icon={<ArrowRight />}>

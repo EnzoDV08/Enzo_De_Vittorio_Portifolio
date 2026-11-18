@@ -204,17 +204,19 @@ export function IntroBento({ data }: { data: IntroData }) {
 
           {/* Spinning badge, with a thin outer ring, over the line's right end. */}
           <span aria-hidden="true" className="absolute right-5 bottom-5 rounded-full border border-white/50 p-1.5">
-            <svg viewBox="0 0 120 120" className="block size-24 rounded-full bg-night text-white md:size-28">
-              <defs>
-                <path id={`${headingId}-ring`} d="M60 60 m-42 0 a42 42 0 1 1 84 0 a42 42 0 1 1 -84 0" />
-              </defs>
-              <g className="origin-center motion-safe:animate-spin-slow">
+            <span className="relative block size-24 rounded-full bg-night text-white md:size-28">
+              {/* The spin is on the <svg> box itself, not a <g> inside it: an HTML-level box
+                rotates on the compositor, an SVG group is re-laid out and repainted every frame. */}
+              <svg viewBox="0 0 120 120" className="absolute inset-0 size-full motion-safe:animate-spin-slow">
+                <defs>
+                  <path id={`${headingId}-ring`} d="M60 60 m-42 0 a42 42 0 1 1 84 0 a42 42 0 1 1 -84 0" />
+                </defs>
                 <text className="fill-current text-[9.4px] font-semibold tracking-[0.14em] uppercase">
                   <textPath href={`#${headingId}-ring`}>{copy.badge}</textPath>
                 </text>
-              </g>
-              <circle cx="60" cy="60" r="10" className="fill-white" />
-            </svg>
+              </svg>
+              <span className="absolute top-1/2 left-1/2 size-[16.667%] -translate-1/2 rounded-full bg-white" />
+            </span>
           </span>
         </TransitionLink>
 

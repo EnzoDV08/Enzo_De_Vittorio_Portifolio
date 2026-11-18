@@ -3,6 +3,7 @@ import { data } from "react-router";
 import { ScreenScroll } from "~/components/project/ScreenScroll";
 import { DeviceStill } from "~/components/devices/DeviceStill";
 import { RevealText } from "~/components/motion/RevealText";
+import { ScrollReveal } from "~/components/motion/ScrollReveal";
 import { TransitionLink } from "~/components/motion/TransitionLink";
 import { HorizontalGallery } from "~/components/project/HorizontalGallery";
 import { ProjectMedia } from "~/components/project/ProjectMedia";
@@ -108,7 +109,10 @@ function Credits({ project }: { project: ProjectDetail }) {
     cells.push({ label: copy.meta.client, value: project.client });
   return (
     <>
-      <dl className="grid gap-px overflow-clip rounded-lg border border-line bg-line sm:grid-cols-2">
+      <dl
+        data-reveal="up"
+        className="grid gap-px overflow-clip rounded-lg border border-line bg-line sm:grid-cols-2"
+      >
         {cells.map((cell) => (
           <div key={cell.label} className="bg-bg p-6">
             <dt className="text-sm text-muted">{cell.label}</dt>
@@ -149,7 +153,8 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
     // key the device and gallery islands would keep the previous project's frames and triggers.
     <article key={project.slug} style={{ "--project-accent": accent } as React.CSSProperties}>
       <Container className="pt-32 md:pt-40">
-        <p className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+        {/* First paint: the title rises out of a mask and the rest follows in (CSS only). */}
+        <p className="flex flex-wrap items-center gap-2 text-sm font-semibold motion-safe:animate-fade-up">
           <TransitionLink
             to="/work"
             className="inline-flex min-h-11 items-center text-muted transition-colors hover:text-fg"
@@ -170,7 +175,10 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
           ))}
         </p>
         {project.wordmarkPicture && (
-          <span className="mt-8 inline-flex w-fit items-center rounded-md bg-[#111216] px-5 py-3">
+          <span
+            className="mt-8 inline-flex w-fit items-center rounded-md bg-[#111216] px-5 py-3 motion-safe:animate-fade-up"
+            style={{ animationDelay: "60ms" }}
+          >
             <ResponsiveImage
               picture={project.wordmarkPicture}
               alt=""
@@ -179,8 +187,17 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
             />
           </span>
         )}
-        <h1 className="mt-6 display text-[clamp(3rem,10vw,10.5rem)]">{project.title}</h1>
-        <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:items-end">
+        <h1 className="mt-6 display text-[clamp(3rem,10vw,10.5rem)]">
+          <span className="line-mask" style={{ paddingBottom: "0.16em", marginBottom: "-0.16em" }}>
+            <span className="block motion-safe:animate-rise-short" style={{ animationDelay: "80ms" }}>
+              {project.title}
+            </span>
+          </span>
+        </h1>
+        <div
+          className="mt-8 grid gap-10 motion-safe:animate-fade-up lg:grid-cols-12 lg:items-end"
+          style={{ animationDelay: "220ms" }}
+        >
           <p className="max-w-[36ch] text-xl text-fg/85 lg:col-span-7">{project.tagline}</p>
           {(links.length > 0 || project.recognition) && (
             <div className="flex flex-wrap items-center gap-3 lg:col-span-5 lg:justify-end">
@@ -204,7 +221,10 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
           )}
         </div>
 
-        <dl className="mt-12 grid gap-px overflow-clip rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+        <dl
+          className="mt-12 grid gap-px overflow-clip rounded-lg border border-line bg-line motion-safe:animate-fade-up sm:grid-cols-2 lg:grid-cols-4"
+          style={{ animationDelay: "320ms" }}
+        >
           {metaRow.map((item) => (
             <div key={item.label} className="bg-bg p-5 md:p-6">
               <dt className="text-sm text-muted">{item.label}</dt>
@@ -262,6 +282,7 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
           {cs.approach.map((block, i) => (
             <li
               key={block.heading}
+              data-reveal="up"
               className="flex flex-col rounded-lg border border-line bg-surface p-6 md:p-8 lg:p-6"
             >
               <span
@@ -293,7 +314,7 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
       <Row label={copy.highlights} index={3}>
         <ol className="divide-y divide-line border-y border-line">
           {cs.highlights.map((item, i) => (
-            <li key={item} className="flex items-baseline gap-6 py-5 md:gap-10">
+            <li key={item} data-reveal="left" className="flex items-baseline gap-6 py-5 md:gap-10">
               <span className="meta text-muted">{indexLabel(i + 1)}</span>
               <span className="text-xl font-semibold tracking-tight">{item}</span>
             </li>
@@ -302,7 +323,7 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
         <h3 className="mt-12 text-sm font-semibold text-muted">{copy.stack}</h3>
         <ul className="mt-4 flex flex-wrap gap-2">
           {project.stack.map((entry) => (
-            <li key={entry}>
+            <li key={entry} data-reveal="scale">
               <ToolChip tool={toolFor(entry)} />
             </li>
           ))}
@@ -315,6 +336,7 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
 
       <Container as="nav" aria-label={copy.next} className="pt-20 md:pt-32">
         <article
+          data-reveal="scale"
           className={cn(
             "group relative grid overflow-clip rounded-xl lg:grid-cols-12",
             nextSurface.className,
@@ -345,11 +367,14 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
           <div className="px-6 pb-12 sm:px-12 lg:col-span-7 lg:py-14 lg:pr-14 lg:pl-0">
             {next.devices.laptop ? (
               <div className="transition-transform duration-700 ease-out-expo group-hover:-translate-y-[2%]">
-                <DeviceStill
-                  devices={next.devices}
-                  sizes="(min-width: 1024px) 50vw, 88vw"
-                  decorative
-                />
+                {/* Parallax on its own wrapper: the hover ease above would drag it. */}
+                <div data-parallax="5">
+                  <DeviceStill
+                    devices={next.devices}
+                    sizes="(min-width: 1024px) 50vw, 88vw"
+                    decorative
+                  />
+                </div>
               </div>
             ) : (
               <div className="relative aspect-[16/10] overflow-clip rounded-md">
@@ -359,6 +384,8 @@ export default function CaseStudy({ loaderData }: Route.ComponentProps) {
           </div>
         </article>
       </Container>
+      {/* Inside the keyed article, so the next case study gets its own reveals. */}
+      <ScrollReveal />
     </article>
   );
 }

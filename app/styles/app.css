@@ -165,6 +165,13 @@
   --animate-drift: drift 80s linear infinite;
   /* The hero portrait surfacing out of the light: slow, soft, in step with the ASCII intro. */
   --animate-portrait-in: portrait-in 2.4s var(--ease-out-expo) both;
+  /* The About portrait's arches sliding out from behind the photo to their offsets (they're
+     placed with Tailwind's translate-*, i.e. the `translate` property). */
+  --animate-arch-in: arch-in 1.4s var(--ease-out-expo) both;
+  /* The hero's "Code" / "you" sliding out from behind the portrait's head, each out of its own
+     clip box: left for the word on the left of the head, right for the one on the right. */
+  --animate-emerge-left: emerge-left 1.4s var(--ease-out-expo) both;
+  --animate-emerge-right: emerge-right 1.4s var(--ease-out-expo) both;
 
   @keyframes marquee {
     to {
@@ -192,6 +199,23 @@
       opacity: 0;
       transform: translate3d(0, 3%, 0) scale(1.06);
       filter: blur(16px);
+    }
+  }
+  /* From partly visible (not fully hidden), so the LCP line counts as painted on frame one. */
+  @keyframes emerge-left {
+    from {
+      transform: translate3d(55%, 0, 0);
+    }
+  }
+  @keyframes emerge-right {
+    from {
+      transform: translate3d(-55%, 0, 0);
+    }
+  }
+  @keyframes arch-in {
+    from {
+      opacity: 0;
+      translate: 0 0;
     }
   }
   @keyframes drift {
@@ -274,17 +298,24 @@
     background: var(--color-bg);
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    /* No transition: scrollbar-color is inherited, so animating it on <html> restyled every
+       element on the page on every frame of the fade. */
     scrollbar-color: var(--color-bg-3) var(--color-bg);
-    transition: scrollbar-color 0.4s var(--ease-out-3);
   }
 
   /* On a page that opens on a night hero, the scrollbar blends into it until the visitor
-     scrolls; Nav sets data-scrolled. CSS-only at first paint, so it's right before hydration. */
-  html:has([data-nav="night"]):not([data-scrolled]) {
+     scrolls; Nav sets data-scrolled. data-night-top is prerendered on <html> (root.tsx), so it's
+     right before hydration. An attribute, not html:has(...): a :has() on the root makes the
+     browser re-check the whole document on every DOM change, which costs frames. */
+  html[data-night-top]:not([data-scrolled]) {
     scrollbar-color: #2a2f45 #0c0e16;
   }
 
   body {
+    /* Set again here (it is inherited) so the page's own scrollbar switching colours on
+       <html> stops at <body> instead of restyling the whole document. Inner scrollers keep
+       the default colours, as before. */
+    scrollbar-color: var(--color-bg-3) var(--color-bg);
     min-height: 100svh;
     background: var(--color-bg);
     color: var(--color-fg);
@@ -418,34 +449,24 @@
 }
 
 /*
- * The lens: the work carousel's soft, blurred sides, as a site-wide signature for anything that
- * moves sideways (tickers, the case-study gallery). A band at each edge blurs and lifts what
- * passes under it, strongest at the very edge, so content drifts in and out of focus.
- * Use sparingly: only on horizontal motion. --lens-width / --lens-blur tune it per use.
+ * The lens: soft sides for anything that moves sideways (tickers, carousels, the case-study
+ * gallery), so content drifts in and out at the edges instead of being cut off.
+ * A mask, not a backdrop blur: the GPU applies it to the already-painted strip, so a strip that
+ * moves every frame costs nothing extra (a backdrop blur re-blurs everything under it each
+ * frame, which was the biggest source of dropped frames on the work and case-study pages).
+ * Use sparingly: only on horizontal motion. --lens-width tunes it per use.
  */
 @utility lens-edges {
   position: relative;
-  &::before,
-  &::after {
-    content: "";
-    position: absolute;
-    inset-block: 0;
-    z-index: 2;
-    width: var(--lens-width, clamp(3rem, 11vw, 11rem));
-    pointer-events: none;
-    -webkit-backdrop-filter: blur(var(--lens-blur, 7px)) saturate(1.35);
-    backdrop-filter: blur(var(--lens-blur, 7px)) saturate(1.35);
-  }
-  &::before {
-    left: 0;
-    -webkit-mask-image: linear-gradient(to right, #000 20%, transparent);
-    mask-image: linear-gradient(to right, #000 20%, transparent);
-  }
-  &::after {
-    right: 0;
-    -webkit-mask-image: linear-gradient(to left, #000 20%, transparent);
-    mask-image: linear-gradient(to left, #000 20%, transparent);
-  }
+  --lens-mask: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--lens-width, clamp(3rem, 11vw, 11rem)),
+    #000 calc(100% - var(--lens-width, clamp(3rem, 11vw, 11rem))),
+    transparent
+  );
+  -webkit-mask-image: var(--lens-mask);
+  mask-image: var(--lens-mask);
 }
 
 /* The hero's backdrop before (or without) the WebGL canvas: the same cobalt light, as CSS. */
@@ -459,11 +480,13 @@
    duotone, dimmed) so it sits inside the light instead of on top of it, and dissolving into the
    frame towards the bottom. */
 @utility hero-portrait {
-  filter: grayscale(1) sepia(1) hue-rotate(190deg) saturate(2.6) brightness(0.58) contrast(1.1);
-  opacity: 0.9;
-  /* The frame shows the image down to ~75-80% (waist); fade out just before that. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 48%, transparent 80%);
-  mask-image: linear-gradient(to bottom, #000 48%, transparent 80%);
+  /* He stands in front of the headline's first line, so he is fully opaque (the words never
+     show through his head) and above the scrim; the dimming the scrim used to add is here. */
+  filter: grayscale(1) sepia(1) hue-rotate(190deg) saturate(2.6) brightness(0.44) contrast(1.1);
+  /* Head and shoulders solid; the torso, where the rest of the copy sits, sinks back into the
+     dark backdrop; gone before the waist (the frame shows the image down to ~75-80%). */
+  -webkit-mask-image: linear-gradient(to bottom, #000 44%, rgb(0 0 0 / 0.55) 58%, transparent 80%);
+  mask-image: linear-gradient(to bottom, #000 44%, rgb(0 0 0 / 0.55) 58%, transparent 80%);
 }
 
 /* Darkens the middle of the hero just enough that the headline always reads over the light, and
@@ -487,6 +510,9 @@
 /* Soft floor shadow under a device still. */
 @utility device-shadow {
   filter: drop-shadow(0 40px 40px rgb(12 14 22 / 0.18)) drop-shadow(0 8px 12px rgb(12 14 22 / 0.12));
+  /* Its own GPU layer: the blurred shadow is drawn once and reused. Otherwise every reveal,
+     parallax or hover on a card around it redraws two large blurs, which dropped frames. */
+  will-change: transform;
 }
 
 /* ---------------------------------------------------------------------------

@@ -3,6 +3,7 @@ import { lazy, useRef, useState } from "react";
 import { Island } from "~/components/motion/Island";
 import { RevealMedia } from "~/components/motion/RevealMedia";
 import { RevealText } from "~/components/motion/RevealText";
+import { ScrollReveal } from "~/components/motion/ScrollReveal";
 import { Button } from "~/components/ui/Button";
 import { Container } from "~/components/ui/Container";
 import { Marquee } from "~/components/ui/Marquee";
@@ -56,6 +57,7 @@ function Timeline({ entries, pictures }: { entries: TimelineEntry[]; pictures: P
       {entries.map((entry) => (
         <li
           key={`${entry.title}-${entry.org}`}
+          data-reveal="up"
           className="relative grid gap-x-[var(--spacing-gutter)] gap-y-2 rounded-lg border border-line bg-surface p-6 md:grid-cols-12 md:items-center md:p-8"
         >
           <p className="text-sm font-semibold text-muted md:col-span-3">
@@ -89,15 +91,26 @@ export default function About({ loaderData }: Route.ComponentProps) {
       <Container className="pt-28 pb-8 lg:flex lg:min-h-svh lg:items-center lg:pt-28 lg:pb-10">
         <div className="grid gap-x-gutter gap-y-16 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-7">
+            {/* First paint: the heading rises out of a mask and the rest follows in (CSS only). */}
             <h1 className="display text-[clamp(3rem,4.6vw,6.25rem)]">
-              {about.heading} <span className="italic-accent">{about.accent}</span>
+              <span className="line-mask" style={{ paddingBottom: "0.24em", marginBottom: "-0.24em" }}>
+                <span className="block motion-safe:animate-rise-short">
+                  {about.heading} <span className="italic-accent pr-[0.06em]">{about.accent}</span>
+                </span>
+              </span>
             </h1>
-            <div className="mt-6 max-w-prose space-y-3 text-base text-fg/85 lg:leading-[1.45]">
+            <div
+              className="mt-6 max-w-prose space-y-3 text-base text-fg/85 motion-safe:animate-fade-up lg:leading-[1.45]"
+              style={{ animationDelay: "180ms" }}
+            >
               {about.bio.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
-            <dl className="mt-6 flex flex-wrap gap-2">
+            <dl
+              className="mt-6 flex flex-wrap gap-2 motion-safe:animate-fade-up"
+              style={{ animationDelay: "280ms" }}
+            >
               {about.quick.map((item) => (
                 <div
                   key={item.label}
@@ -110,7 +123,10 @@ export default function About({ loaderData }: Route.ComponentProps) {
                 </div>
               ))}
             </dl>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div
+              className="mt-6 flex flex-wrap gap-3 motion-safe:animate-fade-up"
+              style={{ animationDelay: "360ms" }}
+            >
               <Button
                 href={site.cv.href}
                 download={site.cv.fileName}
@@ -138,7 +154,7 @@ export default function About({ loaderData }: Route.ComponentProps) {
         </div>
         <ul className="core-stack-grid">
           {coreStack.map((tool) => (
-            <li key={tool.name} className="core-stack-card">
+            <li key={tool.name} data-reveal="scale" className="core-stack-card">
               <span aria-hidden="true" className="core-stack-orbit" />
               <span className="core-stack-mark">
                 <ToolLogo tool={tool} className="core-stack-logo" />
@@ -155,7 +171,10 @@ export default function About({ loaderData }: Route.ComponentProps) {
       {/* 02, Tools & frameworks */}
       <section aria-labelledby="toolkit-label" className="pt-section">
         <Container>
-          <div className="relative isolate overflow-hidden rounded-xl theme-night p-6 sm:p-10 lg:p-16">
+          <div
+            data-reveal="scale"
+            className="relative isolate overflow-hidden rounded-xl theme-night p-6 sm:p-10 lg:p-16"
+          >
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
               <div className="absolute inset-0 hero-glow" />
               {hydrated && (
@@ -167,8 +186,11 @@ export default function About({ loaderData }: Route.ComponentProps) {
                     density={0.75}
                     gradientOpacity={0.75}
                     glow={0.35}
-                    dpr={1.25}
-                    scrollFps={30}
+                    // Seen through a 75-90% scrim, so half the resolution and frame rate of
+                    // the home hero look the same here and leave the GPU free for scrolling.
+                    dpr={1}
+                    scrollFps={24}
+                    fps={30}
                     mouseInteraction={false}
                     clickEffect="none"
                   />
@@ -183,7 +205,7 @@ export default function About({ loaderData }: Route.ComponentProps) {
               <p className="max-w-[34ch] text-lg text-fg/85">{about.toolkitIntro}</p>
               <div className="mt-12 grid gap-x-[var(--spacing-gutter)] gap-y-12 md:grid-cols-2 lg:grid-cols-3">
                 {toolkit.map((group) => (
-                  <div key={group.group} className="border-t border-line pt-6">
+                  <div key={group.group} data-reveal="up" className="border-t border-line pt-6">
                     <h3 className="display text-2xl">{group.group}</h3>
                     <p className="mt-2 text-sm text-muted">{group.blurb}</p>
                     <ul className="mt-6 flex flex-wrap gap-2">
@@ -203,13 +225,13 @@ export default function About({ loaderData }: Route.ComponentProps) {
 
       {/* 03, My experiences */}
       <Section index={3} label={about.experience}>
-        <h2 className="mb-8 display text-3xl">{about.experience}</h2>
+        <RevealText className="mb-8 display text-3xl">{about.experience}</RevealText>
         <Timeline entries={experience} pictures={loaderData.pictures} />
       </Section>
 
       {/* 04, My qualifications */}
       <Section index={4} label={about.education} spacing="tight">
-        <h2 className="mb-8 display text-3xl">{about.education}</h2>
+        <RevealText className="mb-8 display text-3xl">{about.education}</RevealText>
         <Timeline entries={education} pictures={loaderData.pictures} />
       </Section>
 
@@ -230,6 +252,7 @@ export default function About({ loaderData }: Route.ComponentProps) {
       {/* 06, Off-screen */}
       <Section index={6} label={about.offScreen} spacing="tight" />
       <Marquee label={about.offScreen} items={offScreen} className="mt-6" />
+      <ScrollReveal />
     </>
   );
 }
@@ -243,13 +266,16 @@ function Portrait({ photo }: { photo: Photo }) {
   return (
     <figure className="relative mx-auto w-full max-w-md lg:max-w-[min(100%,calc(75svh-9rem))]">
       {/* Cobalt arch behind the frame, and a hairline arch echoing it the other way. */}
+      {/* Both slide out from behind the photo at first paint (CSS only). */}
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 arch translate-x-3 -translate-y-3 bg-cobalt md:translate-x-5 md:-translate-y-5"
+        className="absolute inset-x-0 top-0 arch translate-x-3 -translate-y-3 bg-cobalt motion-safe:animate-arch-in md:translate-x-5 md:-translate-y-5"
+        style={{ animationDelay: "250ms" }}
       />
       <div
         aria-hidden="true"
-        className="absolute inset-x-0 top-0 arch -translate-x-3 translate-y-3 border border-line-strong md:-translate-x-5 md:translate-y-5"
+        className="absolute inset-x-0 top-0 arch -translate-x-3 translate-y-3 border border-line-strong motion-safe:animate-arch-in md:-translate-x-5 md:translate-y-5"
+        style={{ animationDelay: "400ms" }}
       />
       <RevealMedia className="relative arch bg-bg-2">
         <ResponsiveImage
@@ -269,7 +295,8 @@ function Portrait({ photo }: { photo: Photo }) {
       </RevealMedia>
       <span
         aria-hidden="true"
-        className="absolute top-[30%] -left-3 grid size-24 place-items-center rounded-full bg-lime text-night shadow-xl sm:size-28 md:-left-8 md:size-32"
+        className="absolute top-[30%] -left-3 grid size-24 place-items-center rounded-full bg-lime text-night shadow-xl motion-safe:animate-fade-up sm:size-28 md:-left-8 md:size-32"
+        style={{ animationDelay: "650ms" }}
       >
         <svg
           viewBox="0 0 120 120"
@@ -306,6 +333,7 @@ function RecognitionCard({ item, index, pictures }: Props) {
 
   return (
     <li
+      data-reveal="up"
       className={`flex min-w-0 flex-col overflow-hidden rounded-lg border ${
         index === 0 ? "border-lime bg-lime text-night" : "border-line bg-surface"
       }`}
@@ -357,9 +385,11 @@ function RecognitionCard({ item, index, pictures }: Props) {
               const image = images[(active + offset + images.length) % images.length];
               if (!image) return null;
               return (
+                // Keyed by photo, not slot: stepping reorders the three decoded images (and
+                // eases their size) instead of remounting and re-decoding all of them.
                 <div
-                  key={`${offset}-${image.src}`}
-                  className={`relative shrink-0 overflow-hidden rounded-sm border border-white/20 shadow-lg transition-all duration-300 ${
+                  key={image.src}
+                  className={`relative shrink-0 overflow-hidden rounded-sm border border-white/20 shadow-lg transition-[height,opacity] duration-300 ${
                     offset === 0 ? "z-10 aspect-[3/4] h-[92%]" : "aspect-[3/4] h-[78%] opacity-65"
                   }`}
                 >

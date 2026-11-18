@@ -13,7 +13,7 @@ const buildId =
 // routes, so case studies do not preload the About and Home components.
 const isSharedAppCode = (id: string) =>
   /\/app\/(components\/(layout|motion)\/|lib\/|content\/(pages|site|todo)\.ts)/.test(id) &&
-  !/\/motion\/fx\/|\/lib\/(gsap|images|gallery-images|content\.server)\.ts/.test(id);
+  !/\/motion\/fx\/|\/lib\/(gsap|images|gallery-images|placeholders|content\.server)\.ts/.test(id);
 
 export default defineConfig({
   plugins: [tailwindcss(), imagetools(), reactRouter()],

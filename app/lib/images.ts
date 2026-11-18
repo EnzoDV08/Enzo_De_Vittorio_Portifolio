@@ -5,10 +5,14 @@
  * Covers and the portrait are needed on most pages and live here. Case-study gallery images
  * live in ./gallery-images so their metadata only ships with case-study pages.
  */
+import { getPlaceholder } from "./placeholders";
+
 export type Picture = {
   /** format → srcset */
   sources: Record<string, string>;
   img: { src: string; w: number; h: number };
+  /** Tiny inline preview shown until the image loads (photos only, see ./placeholders). */
+  placeholder?: string;
 };
 
 const pictures = import.meta.glob<Picture>(
@@ -26,7 +30,13 @@ const pictures = import.meta.glob<Picture>(
 );
 
 export function toMap(modules: Record<string, Picture>) {
-  return new Map(Object.entries(modules).map(([file, p]) => [file.replace("../assets/", ""), p]));
+  return new Map(
+    Object.entries(modules).map(([file, p]) => {
+      const key = file.replace("../assets/", "");
+      const placeholder = getPlaceholder(key);
+      return [key, placeholder ? { ...p, placeholder } : p];
+    }),
+  );
 }
 
 const byKey = toMap(pictures);
