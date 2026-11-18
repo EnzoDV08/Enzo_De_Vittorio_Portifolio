@@ -16,9 +16,10 @@ export const home = {
   },
   hero: {
     eyebrow: "Full-stack Developer · UX Designer",
-    // The headline in three parts: the first line stands large behind the portrait, the last
-    // phrase takes the italic accent.
-    lead: "Code you",
+    // The headline in parts: the first line's two words part around the portrait's head, the
+    // last phrase takes the italic accent.
+    leadLeft: "Code",
+    leadRight: "you",
     leadRest: "can",
     accent: "count on.",
     intro:

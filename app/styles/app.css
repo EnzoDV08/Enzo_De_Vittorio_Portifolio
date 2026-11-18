@@ -168,6 +168,10 @@
   /* The About portrait's arches sliding out from behind the photo to their offsets (they're
      placed with Tailwind's translate-*, i.e. the `translate` property). */
   --animate-arch-in: arch-in 1.4s var(--ease-out-expo) both;
+  /* The hero's "Code" / "you" sliding out from behind the portrait's head, each out of its own
+     clip box: left for the word on the left of the head, right for the one on the right. */
+  --animate-emerge-left: emerge-left 1.4s var(--ease-out-expo) both;
+  --animate-emerge-right: emerge-right 1.4s var(--ease-out-expo) both;
 
   @keyframes marquee {
     to {
@@ -195,6 +199,17 @@
       opacity: 0;
       transform: translate3d(0, 3%, 0) scale(1.06);
       filter: blur(16px);
+    }
+  }
+  /* From partly visible (not fully hidden), so the LCP line counts as painted on frame one. */
+  @keyframes emerge-left {
+    from {
+      transform: translate3d(55%, 0, 0);
+    }
+  }
+  @keyframes emerge-right {
+    from {
+      transform: translate3d(-55%, 0, 0);
     }
   }
   @keyframes arch-in {

@@ -50,6 +50,11 @@ export function meta() {
 /** Staggered CSS entrance, runs at first paint without waiting for JS, off with reduced motion. */
 const delay = (ms: number) => ({ animationDelay: `${ms}ms` });
 
+/** A word in the hero's first line: its own clip box (both axes, with room for the descender
+ *  and the glyphs' overhang), so it can rise or slide out of it. */
+const heroWord =
+  "inline-block overflow-clip px-[0.06em] -mx-[0.06em] pt-[0.04em] -mt-[0.04em] pb-[0.12em] -mb-[0.12em]";
+
 
 /**
  * Full-bleed night frame with the ASCII light behind centred copy. From the first scroll,
@@ -124,16 +129,31 @@ function Hero({ portrait }: { portrait: Picture | undefined }) {
               {home.hero.eyebrow}
             </p>
             <h1 id="hero-heading" className="mt-6 display md:mt-8">
-              {/* Behind the portrait from lg up, and larger, so his head stands in front of the
-                words. On phones and tablets his head is large next to the line and would hide
-                most of it, so there it stays in front. The LCP line rises from partly visible, so
-                it counts as painted on frame one. */}
-              <span
-                className="relative z-[3] line-mask text-[clamp(3.75rem,0.75rem+12vw,14.5rem)] leading-[0.88] lg:z-[1]"
-                style={{ paddingBottom: "0.08em", marginBottom: "-0.08em" }}
-              >
-                <span className="block motion-safe:animate-rise-short" style={delay(80)}>
-                  {home.hero.lead}
+              {/* From lg up the first line parts around his head: "Code" ends just at his left
+                cheek and "you" starts just at his right, each tucked a little behind him (it sits
+                under the portrait), so both words read in full and he still stands in front of
+                them. The gap is sized in svh because his head scales with the hero's height while
+                the type scales with its width; it's nudged right a touch, as his face sits just
+                right of centre in the cut-out. Each word slides out from behind his head, from
+                partly visible, so the LCP text is painted on frame one. On phones and tablets his
+                head sits apart from the line, so it's one plain line in front of him. */}
+              <span className="relative z-[3] block text-[clamp(3.75rem,0.75rem+12vw,14.5rem)] leading-[0.88] lg:z-[1] lg:grid lg:grid-cols-[1fr_16svh_1fr] lg:items-baseline lg:pl-[1.5svh]">
+                <span className={heroWord + " lg:justify-self-end"}>
+                  <span
+                    className="block motion-safe:animate-rise-short lg:motion-safe:animate-emerge-left"
+                    style={delay(80)}
+                  >
+                    {home.hero.leadLeft}
+                  </span>
+                </span>{" "}
+                <span aria-hidden="true" className="hidden lg:block" />
+                <span className={heroWord + " lg:justify-self-start"}>
+                  <span
+                    className="block motion-safe:animate-rise-short lg:motion-safe:animate-emerge-right"
+                    style={delay(140)}
+                  >
+                    {home.hero.leadRight}
+                  </span>
                 </span>
               </span>{" "}
               {/* Extra room below keeps italic descenders inside the line mask. */}
